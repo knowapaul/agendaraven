@@ -22,8 +22,11 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Flask
+# flask
 /venv
 
-# Video
+# video
 homepage.mp4
+
+# debug logs
+ui-debug.log

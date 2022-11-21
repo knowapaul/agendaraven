@@ -6,6 +6,7 @@ import { Navigate, useNavigate } from "react-router-dom"
 import Form from "./Form"
 import { useState } from "react"
 import { AuthContext } from "../Auth"
+import CenterForm from "./CenterForm"
 
 
 function SignIn(auth, fields) {
@@ -22,65 +23,52 @@ export default function Login(props) {
     const navigate = useNavigate();
 
     return (
-        <ThemeProvider theme={mTheme}>
-            <CssBaseline />
-            <Paper
-            variant="outlined"
+        <CenterForm>
+            <Typography 
+            variant='h5'
+            noWrap
             sx={{
-                maxWidth: 400,
-                mx: 'auto', // margin left & right
-                my: 4, // margin top & botom
-                py: 3, // padding top & bottom
-                px: 2, // padding left & right
-                mt: 12,
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 2,
-                borderRadius: 'sm',
-                boxShadow: 'md',
+                fontFamily: 'Quicksand'
             }}
+            textAlign='center'
             >
-                <Container>
-                    <Typography 
-                    variant='h5'
-                    noWrap
-                    sx={{
-                        fontFamily: 'Quicksand'
+                Login
+            </Typography>
+            <AuthContext.Consumer>
+                {auth => (
+                    <Form 
+                    inputs={[
+                        {
+                        title: "Email",
+                        type: "email",
+                        placeholder: "example@gmail.com",
+                        validate: "none",
+                        required: true
+                        },
+                        {
+                        title: "Password",
+                        type: "password",
+                        placeholder: "",
+                        validate: "none",
+                        required: true
+                        },
+                    ]}
+                    buttonText="Continue to Dashboard"
+                    handleSubmit={(event) => {
+                        SignIn(auth, fields)
+                        event.preventDefault()
                     }}
-                    textAlign='center'
-                    >
-                        Login
-                    </Typography>
-                </Container>
-                <AuthContext.Consumer>
-                    {auth => (
-                        <Form 
-                        inputs={[
-                            {title: "Email",
-                            type: "email",
-                            placeholder: "example@gmail.com"},
-                            {title: "Password",
-                            type: "password",
-                            placeholder: ""},
-                        ]}
-                        buttonText="Continue to Dashboard"
-                        handleSubmit={(event) => {
-                            SignIn(auth, fields)
-                            event.preventDefault()
-                        }}
-                        data={fields}
-                        setData={setFields}
-                        />
-                    )}
-                </AuthContext.Consumer>
-                <Button 
-                variant="contained"
-                onClick={() => {navigate('/createaccount')}}
-                >
-                    Create Account
-                </Button>
-        </Paper>
-            
-        </ThemeProvider>
+                    data={fields}
+                    setData={setFields}
+                    />
+                )}
+            </AuthContext.Consumer>
+            <Button 
+            variant="contained"
+            onClick={() => {navigate('/createaccount')}}
+            >
+                Create Account
+            </Button>
+        </CenterForm>
     )
 }

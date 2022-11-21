@@ -27,11 +27,7 @@ import { Navigate } from 'react-router-dom';
 
 
 const pages = ['Dashboard', 'About Us', 'Help'];
-const settings = {
-    'Account' : (event) => {},
-    'Dashboard' : (event) => {},
-    'Logout' : (event, auth) => {signOut(auth); window.location.href = './'},
-};
+const settings = ['Account', 'Dashboard', 'Logout'];
 
 
 function nameToURL(name) {
@@ -167,7 +163,7 @@ const ResponsiveAppBar = () => {
                         <UserContext.Consumer>
                             {user => (
                                 <div>
-                                    <Tooltip title="Open settings">
+                                    <Tooltip title={user ? "Open settings" : "Login"}>
                                         <IconButton onClick={(event) => handleOpenUserMenu(event, user)} sx={{ p: 0 }}>
                                             <Avatar 
                                             alt={user ? user.displayName : '?'} 
@@ -191,9 +187,9 @@ const ResponsiveAppBar = () => {
                                     open={Boolean(anchorElUser)}
                                     onClose={handleCloseUserMenu}
                                     >
-                                    {Object.entries(settings).map((item) => (
-                                        <MenuItem key={item[0]} onClick={(event) => {item[1](event, auth)}}>
-                                        <Typography textAlign="center">{item[0]}</Typography>
+                                    {settings.map((item) => (
+                                        <MenuItem key={item} onClick={() => {navigate('/' + nameToURL(item))}}>
+                                        <Typography textAlign="center">{item}</Typography>
                                         </MenuItem>
                                     ))}
                                     </Menu>

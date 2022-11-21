@@ -1,16 +1,12 @@
-import { createContext, useState }  from 'react';
+import { createContext }  from 'react';
 
-import { getAuth, onAuthStateChanged, connectAuthEmulator, authListener } from "firebase/auth";
-import { UNSAFE_RouteContext } from 'react-router-dom';
+import { getAuth, connectAuthEmulator } from "firebase/auth";
 
 import { useAuthState } from 'react-firebase-hooks/auth'
 
 export const AuthContext = createContext({});
 export const UserContext = createContext({});
 
-function update(f, value) {
-    f(value)
-}
 
 export function Auth(props) {
     const auth = getAuth(props.app);

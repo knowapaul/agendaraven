@@ -1,6 +1,7 @@
 // Import pages for router
 import Home from './pages/Home.js'
 import Dashboard from './pages/Dashboard.js'
+import Logout from './pages/Logout.js'
 
 import { Auth } from './Auth'
 import { Db } from './Db'
@@ -14,6 +15,7 @@ import {
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
+import CreateAccount from './pages/CreateAccount.js'
 // import { getAnalytics } from "firebase/analytics";
 
 const firebaseConfig = {
@@ -39,6 +41,8 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="dashboard" element={<Dashboard />} />
+            <Route path="logout" element={<Logout />} />
+            <Route path="createaccount" element={<CreateAccount /> } />
           </Routes>
         </Router>
       </Db>
