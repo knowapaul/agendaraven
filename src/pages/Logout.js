@@ -3,8 +3,8 @@ import { CircularProgress } from "@mui/material";
 import { Container } from "@mui/system";
 import { signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../Auth";
-import { mTheme } from "../Themes";
+import { AuthContext } from "../resources/Auth";
+import { mTheme } from "./Themes";
 import Loading from "../components/Loading";
 
 

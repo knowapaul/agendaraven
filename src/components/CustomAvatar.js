@@ -1,9 +1,9 @@
 import { Tooltip, IconButton, Avatar, Menu, MenuItem, Typography, Box } from '@mui/material'
 import { useState } from 'react';
-import { AuthContext, UserContext } from '../Auth'
+import { AuthContext, UserContext } from '../resources/Auth'
 import { useNavigate } from 'react-router-dom';
 import { ThemeProvider } from '@mui/system';
-import { mTheme } from '../Themes'
+import { mTheme } from '../pages/Themes'
 
 
 function nameToURL(name) {

@@ -19,7 +19,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack'
 import { ThemeProvider } from '@emotion/react';
-import { bTheme } from '../Themes';
+import { bTheme } from './Themes';
 import { Router, Routes, Route, useNavigate } from 'react-router-dom';
 import Organizations from '../windows/Organizations';
 import Availability from '../windows/Availability';

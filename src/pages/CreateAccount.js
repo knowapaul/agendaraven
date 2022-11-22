@@ -1,14 +1,14 @@
 import { ThemeProvider } from "@emotion/react";
 import { useState } from "react";
 import Form from "../components/Form";
-import { bTheme } from "../Themes";
+import { bTheme } from "./Themes";
 import Nav from '../components/Nav'
 import { CssBaseline, Typography } from "@mui/material";
 import CenterForm from "../components/CenterForm";
-import { AuthContext } from "../Auth";
+import { AuthContext } from "../resources/Auth";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { addUserAccount } from "../resources/HandleDb";
-import { DbContext } from "../Db";
+import { DbContext } from "../resources/Db";
 import { useNavigate } from "react-router-dom";
 
 

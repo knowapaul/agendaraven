@@ -1,7 +1,7 @@
 import { ThemeProvider } from "@emotion/react";
 import { CircularProgress, CssBaseline, Typography, Stack } from "@mui/material";
 import { Box } from "@mui/system";
-import { mTheme } from "../Themes";
+import { mTheme } from "../pages/Themes";
 
 
 export default function Loading() {

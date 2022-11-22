@@ -1,11 +1,11 @@
 import { Paper, TextField, Button, Typography, CssBaseline, Container, Stack, Box, Alert, AlertTitle } from "@mui/material"
-import { mTheme } from "../Themes"
+import { mTheme } from "../pages/Themes"
 import { ThemeProvider } from "@emotion/react"
 import { signInWithEmailAndPassword } from "firebase/auth"
 import { Navigate, useNavigate } from "react-router-dom"
 import Form from "./Form"
 import { useState } from "react"
-import { AuthContext } from "../Auth"
+import { AuthContext } from "../resources/Auth"
 import CenterForm from "./CenterForm"
 import Nav from './Nav';
 

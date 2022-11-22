@@ -1,6 +1,6 @@
 import { onAuthStateChanged } from "firebase/auth";
 import React, { useState } from "react";
-import { AuthContext } from "../Auth";
+import { AuthContext } from "../resources/Auth";
 import Login from "./Login"
 import { useAuthState } from 'react-firebase-hooks/auth';
 import Loading from "./Loading";

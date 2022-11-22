@@ -1,7 +1,7 @@
 import { Card, CardContent, Grid, Box, Typography } from "@mui/material";
 import { useState } from "react";
 import { accessImage } from "../resources/HandleStorage";
-import { StorageContext } from "../Storage";
+import { StorageContext } from "../resources/Storage";
 import { CircularProgress } from "@mui/material"
 
 function OrgCard(props) {

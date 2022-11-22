@@ -13,11 +13,11 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { ThemeProvider } from '@emotion/react';
-import { mTheme } from '../Themes.js'
+import { mTheme } from '../pages/Themes.js'
 
 import { signOut } from 'firebase/auth';
 
-import { AuthContext, UserContext } from '../Auth'
+import { AuthContext, UserContext } from '../resources/Auth'
 
 import AuthCheck from './AuthCheck.js';
 

@@ -11,9 +11,9 @@ import Account from './windows/Account.js';
 
 import Loading from './components/Loading.js';
 
-import { Auth } from './Auth'
-import { Db } from './Db'
-import { Storage } from './Storage.js';
+import { Auth } from './resources/Auth'
+import { Db } from './resources/Db'
+import { Storage } from './resources/Storage.js';
 
 import { 
   BrowserRouter as Router, 

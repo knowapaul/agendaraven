@@ -1,10 +1,11 @@
 import { ThemeProvider } from '@emotion/react';
 import React from 'react';
 import Nav from '../components/Nav.js'
-import { mTheme, bTheme, oTheme, wTheme } from '../Themes.js';
+import { mTheme, bTheme, oTheme, wTheme } from './Themes.js';
 import SideVideo from '../components/SideVideo.js';
 import { CssBaseline } from '@mui/material';
 import Footer from '../components/Footer.js';
+import {Box} from '@mui/material'
 
 export default function Home() {
     return (
@@ -12,10 +13,13 @@ export default function Home() {
             <ThemeProvider theme={oTheme}>
                 <CssBaseline />
                 <Nav />
-                <video width="100%" autoPlay muted loop>
-                    <source src="homepage.mp4" type="video/mp4"/>
-                    Your browser does not support the video tag.
-                </video>
+                <Box padding={7} bgcolor={oTheme.palette.primary.main}>
+                    <video width="100%" autoPlay muted loop>
+                        <source src="homepage.mp4" type="video/mp4"/>
+                        Your browser does not support the video tag.
+                    </video>
+                </Box>
+                
                 <SideVideo videoURL='https://www.youtube.com/embed/Ww_tuVeGmYU'>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Aliquam vestibulum morbi blandit cursus risus at ultrices. Eu scelerisque felis imperdiet proin fermentum leo vel orci. Amet cursus sit amet dictum sit amet justo. Est ullamcorper eget nulla facilisi etiam dignissim diam. Nisi porta lorem mollis aliquam ut porttitor. Faucibus vitae aliquet nec ullamcorper sit amet. Elit ut aliquam purus sit amet. Eget sit amet tellus cras adipiscing enim eu turpis. Mattis pellentesque id nibh tortor. Integer feugiat scelerisque varius morbi enim nunc. Aliquam ultrices sagittis orci a scelerisque purus semper.
 
