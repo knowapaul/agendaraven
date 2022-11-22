@@ -24,10 +24,10 @@ import AuthCheck from './AuthCheck.js';
 import { useNavigate } from 'react-router-dom';
 
 import { Navigate } from 'react-router-dom';
+import CustomAvatar from './CustomAvatar.js';
 
 
 const pages = ['Dashboard', 'About Us', 'Help'];
-const settings = ['Account', 'Dashboard', 'Logout'];
 
 
 function nameToURL(name) {
@@ -36,29 +36,14 @@ function nameToURL(name) {
 
 const ResponsiveAppBar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
   const navigate = useNavigate();
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
-  const handleOpenUserMenu = (event, user) => {
-    console.log(event, user)
-    if (!user) {
-        if (!document.URL.endsWith('dashboard')) {
-            navigate('/dashboard')
-        }
-    } else {
-        setAnchorElUser(event.currentTarget);
-    }
-  };
-
+  
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
   };
 
   return (
@@ -156,49 +141,7 @@ const ResponsiveAppBar = () => {
                 </Button>
                 ))}
             </Box>
-
-            <Box sx={{ flexGrow: 0 }}>
-                <AuthContext.Consumer>
-                    {auth => (
-                        <UserContext.Consumer>
-                            {user => (
-                                <div>
-                                    <Tooltip title={user ? "Open settings" : "Login"}>
-                                        <IconButton onClick={(event) => handleOpenUserMenu(event, user)} sx={{ p: 0 }}>
-                                            <Avatar 
-                                            alt={user ? user.displayName : '?'} 
-                                            src={user ? user.photoURL : ''} 
-                                            />
-                                        </IconButton>
-                                    </Tooltip>
-                                    <Menu
-                                    sx={{ mt: '45px' }}
-                                    id="menu-appbar"
-                                    anchorEl={anchorElUser}
-                                    anchorOrigin={{
-                                        vertical: 'top',
-                                        horizontal: 'right',
-                                    }}
-                                    keepMounted
-                                    transformOrigin={{
-                                        vertical: 'top',
-                                        horizontal: 'right',
-                                    }}
-                                    open={Boolean(anchorElUser)}
-                                    onClose={handleCloseUserMenu}
-                                    >
-                                    {settings.map((item) => (
-                                        <MenuItem key={item} onClick={() => {navigate('/' + nameToURL(item))}}>
-                                        <Typography textAlign="center">{item}</Typography>
-                                        </MenuItem>
-                                    ))}
-                                    </Menu>
-                                </div>
-                            )}
-                        </UserContext.Consumer>
-                    )}
-                </AuthContext.Consumer>
-            </Box>
+            <CustomAvatar />
             </Toolbar>
         </Container>
         </AppBar>

@@ -1,15 +1,29 @@
 import { onAuthStateChanged } from "firebase/auth";
 import React, { useState } from "react";
-import { UserContext } from "../Auth";
+import { AuthContext } from "../Auth";
 import Login from "./Login"
 import { useAuthState } from 'react-firebase-hooks/auth';
+import Loading from "./Loading";
 
 export default function AuthCheck(props) {
     return (
-        <UserContext.Consumer>
-            {user => (
-                user ? props.children : <Login />
+        <AuthContext.Consumer>
+            {auth => (
+                <Internal auth={auth}>{props.children}</Internal>
             )}
-        </UserContext.Consumer>
+        </AuthContext.Consumer>
+    )
+}
+
+function Internal(props) {
+    const [user, loading, error] = useAuthState(props.auth);
+
+    return (
+        loading ? <Loading /> :
+        (
+            user ? props.children
+            :
+            <Login />
+        )
     )
 }

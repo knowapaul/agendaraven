@@ -14,4 +14,3 @@ export function addUserAccount(db, data, user) {
         }
     )
 }
-

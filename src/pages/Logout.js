@@ -5,7 +5,7 @@ import { signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../Auth";
 import { mTheme } from "../Themes";
-
+import Loading from "../components/Loading";
 
 
 export default function Logout() {
@@ -16,14 +16,13 @@ export default function Logout() {
             <AuthContext.Consumer>
                 {auth => {
                     signOut(auth).then(() => {
+                        console.log('success', auth)
                         navigate('/')
                     }).catch((error) => {
                         console.error(error)
                     })
                     return (
-                        <Container maxWidth>
-                            <CircularProgress />
-                        </Container>
+                        <Loading />
                     )
                 }}
             </AuthContext.Consumer>
