@@ -27,6 +27,19 @@ function phone(input) {
 function title(input) {
     const format = /^\w{2,20}$/
     if (format.test(input)) {
+        
+        return [false, '']
+    } else {
+        return [
+            true,
+            'Please input a name between 2 and 20 characters'
+        ]
+    }
+}
+
+function schedule(input) {
+    const format = /^\w{2,20}$/
+    if (format.test(input) || input.length=== 0) {
         return [false, '']
     } else {
         return [
@@ -58,6 +71,8 @@ function confirm(input, password) {
     }
 }
 
+
+
 export default function vaildate(type, input, pass) {
     const func = {
         email: email,
@@ -65,7 +80,8 @@ export default function vaildate(type, input, pass) {
         title: title,
         password: password,
         confirm: confirm,
-        none: () => (false, '')
+        none: () => {return ([false, ''])},
+        schedule: schedule
     }
     return func[type](input, pass)
 }

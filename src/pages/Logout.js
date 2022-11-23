@@ -4,7 +4,7 @@ import { Container } from "@mui/system";
 import { signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../resources/Auth";
-import { mTheme } from "./Themes";
+import { mTheme } from "../resources/Themes";
 import Loading from "../components/Loading";
 
 

@@ -8,8 +8,12 @@ import Availability from './windows/Availability.js';
 import Insights from './windows/Insights.js';
 import Payments from './windows/Payments.js';
 import Account from './windows/Account.js';
+import { OrgDash, orgLoader } from './pages/OrgDash'
+
 
 import Loading from './components/Loading.js';
+
+import Error from './components/Error'
 
 import { Auth } from './resources/Auth'
 import { Db } from './resources/Db'
@@ -48,58 +52,39 @@ const app = initializeApp(firebaseConfig);
 
 
 const router = createBrowserRouter([
-  { path: "/", element: <Home />},
-  { path: "dashboard", element: <Dashboard><Organizations /></Dashboard>},
-  { path: "/dashboard/organizations", element: <Dashboard><Organizations /></Dashboard>},
-  { path: "/dashboard/inbox", element: <Dashboard><Inbox /></Dashboard>},
-  { path: "/dashboard/schedules", element: <Dashboard><Schedules /></Dashboard>},
-  { path: "/dashboard/availability", element: <Dashboard><Availability /></Dashboard>},
-  { path: "/dashboard/insights", element: <Dashboard><Insights /></Dashboard>},
-  { path: "/dashboard/payments", element: <Dashboard><Payments /></Dashboard>},
-  { path: "/dashboard/account", element: <Dashboard><Account /></Dashboard>},
-  { path: "logout", element: <Logout />},
-  { path: "createaccount", element: <CreateAccount /> },
-  { path: "page/:organization", element: <OrgHome />},
-  { path: "/:contactId", element: <Contact />, loader: loader},
-  { path: "loading", element: <Loading />}
+  { errorElement: <Error />, path: "/", element: <Home />},
+  { errorElement: <Error />, path: "dashboard", element: <Dashboard><Organizations /></Dashboard>},
+  { errorElement: <Error />, path: "/dashboard/organizations", element: <Dashboard><Organizations /></Dashboard>},
+  { errorElement: <Error />, path: "/dashboard/inbox", element: <Dashboard><Inbox /></Dashboard>},
+  { errorElement: <Error />, path: "/dashboard/schedules", element: <Dashboard><Schedules /></Dashboard>},
+  { errorElement: <Error />, path: "/dashboard/availability", element: <Dashboard><Availability /></Dashboard>},
+  { errorElement: <Error />, path: "/dashboard/insights", element: <Dashboard><Insights /></Dashboard>},
+  { errorElement: <Error />, path: "/dashboard/payments", element: <Dashboard><Payments /></Dashboard>},
+  { errorElement: <Error />, path: "/dashboard/account", element: <Dashboard><Account /></Dashboard>},
+  { errorElement: <Error />, path: "logout", element: <Logout />},
+  { errorElement: <Error />, path: "createaccount", element: <CreateAccount /> },
+  { errorElement: <Error />, path: "/:org", element: <OrgDash />, loader: orgLoader},
+  { errorElement: <Error />, path: "loading", element: <Loading />}
 ]);
 
 
-async function loader({ params }) {
-  console.log(params.contactId)
-  return params.contactId;
-}
 
-function Contact() {
-  const contact = useLoaderData();
-  return (
-    <p>{contact}</p>
-  )
-}
-
-function OrgHome(props) {
-  console.log(props)
-  const org = useLoaderData();
-  return (
-    <p>{org}</p>
-  )
-}
 
 
 /* <Router>
             <Routes>
-              { path: "/", element: <Home />} />
-              { path: "dashboard", element: <Dashboard><Organizations /></Dashboard>} />
-              { path: "/dashboard/organizations", element: <Dashboard><Organizations /></Dashboard>} />
-              { path: "/dashboard/inbox", element: <Dashboard><Inbox /></Dashboard>} />
-              { path: "/dashboard/schedules", element: <Dashboard><Schedules /></Dashboard>} />
-              { path: "/dashboard/availability", element: <Dashboard><Availability /></Dashboard>} />
-              { path: "/dashboard/insights", element: <Dashboard><Insights /></Dashboard>} />
-              { path: "/dashboard/payments", element: <Dashboard><Payments /></Dashboard>} />
-              { path: "/dashboard/account", element: <Dashboard><Account /></Dashboard>} />
-              { path: "logout", element: <Logout />} />
-              { path: "createaccount", element: <CreateAccount /> } />
-              { path: "page/:organization", element: <OrgHome />} loader={load}/>
+              { errorElement: <Error />, path: "/", element: <Home />} />
+              { errorElement: <Error />, path: "dashboard", element: <Dashboard><Organizations /></Dashboard>} />
+              { errorElement: <Error />, path: "/dashboard/organizations", element: <Dashboard><Organizations /></Dashboard>} />
+              { errorElement: <Error />, path: "/dashboard/inbox", element: <Dashboard><Inbox /></Dashboard>} />
+              { errorElement: <Error />, path: "/dashboard/schedules", element: <Dashboard><Schedules /></Dashboard>} />
+              { errorElement: <Error />, path: "/dashboard/availability", element: <Dashboard><Availability /></Dashboard>} />
+              { errorElement: <Error />, path: "/dashboard/insights", element: <Dashboard><Insights /></Dashboard>} />
+              { errorElement: <Error />, path: "/dashboard/payments", element: <Dashboard><Payments /></Dashboard>} />
+              { errorElement: <Error />, path: "/dashboard/account", element: <Dashboard><Account /></Dashboard>} />
+              { errorElement: <Error />, path: "logout", element: <Logout />} />
+              { errorElement: <Error />, path: "createaccount", element: <CreateAccount /> } />
+              { errorElement: <Error />, path: "page/:organization", element: <OrgHome />} loader={load}/>
             </Routes>
           </Router> */
 

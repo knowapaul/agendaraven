@@ -1,6 +1,6 @@
 import { ThemeContext, ThemeProvider } from "@emotion/react";
 import { Paper } from "@mui/material";
-import { mTheme } from "../pages/Themes";
+import { mTheme } from "../resources/Themes";
 import {CssBaseline} from "@mui/material";
 
 export default function CenterForm(props) {

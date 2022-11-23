@@ -7,6 +7,6 @@ export function accessImage(storage, location, setURL) {
             setURL(url)
         })
         .catch((error) => {
-            console.log(error.message)
+            setURL('ERROR')
         });
 }

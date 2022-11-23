@@ -1,5 +1,4 @@
-import { onAuthStateChanged } from "firebase/auth";
-import React, { useState } from "react";
+import React from "react";
 import { AuthContext } from "../resources/Auth";
 import Login from "./Login"
 import { useAuthState } from 'react-firebase-hooks/auth';
@@ -16,7 +15,7 @@ export default function AuthCheck(props) {
 }
 
 function Internal(props) {
-    const [user, loading, error] = useAuthState(props.auth);
+    const [user, loading] = useAuthState(props.auth);
 
     return (
         loading ? <Loading /> :

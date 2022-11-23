@@ -1,6 +1,7 @@
 import { Button, TextField, Stack } from "@mui/material";
 import React, { useState } from "react";
 import validate from "./Validate";
+import { Alert, AlertTitle } from "@mui/material";
 
 function cleanName(name) {
     return name.toLowerCase().split(' ').join('')
@@ -24,6 +25,10 @@ class Input extends React.Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleBlur = this.handleBlur.bind(this);
       }
+
+    validate() {
+
+    }
     
     handleChange(event) {
         const [error, help] = validate(
@@ -49,16 +54,14 @@ class Input extends React.Component {
         }
         
         this.props.setData(Object.assign(this.props.data, {[cleanName(this.props.name)]: event.target.value}))
-        console.log(event.target.value, this.props.data)
     }
 
     handleBlur(event) {
         this.setState({check: true})
-        console.log('blurring')
     }
 
     render() {
-        const error = (this.props.validate === 'confirm') && (this.props.password != this.state.value)
+        const error = (this.props.validate === 'confirm') && (this.props.password !== this.state.value)
         const help = error ? 'Passwords must match' : this.state.help
         return (
             <TextField 
@@ -71,7 +74,7 @@ class Input extends React.Component {
             error={((this.state.check || this.props.check) && (this.state.error || error))}
             helperText={(this.state.check || this.props.check) ? help : ''}
             onChange={this.handleChange} 
-            onBlur={this.handleBlur}
+            onBlur={(event) => {this.handleBlur(event); this.handleChange(event)}}
             />
         )
       }
@@ -129,6 +132,12 @@ function Form(props) {
                 />
                 ))}
                 <Button type="submit" variant='contained'>{props.buttonText}</Button>
+                {props.formError ? 
+                <Alert severity="error">
+                    <AlertTitle>Error</AlertTitle>
+                    {props.formError}
+                </Alert> : ''
+                }
             </Stack>
             
         </form>

@@ -1,8 +1,6 @@
-import { Paper, TextField, Button, Typography, CssBaseline, Container, Stack, Box, Alert, AlertTitle } from "@mui/material"
-import { mTheme } from "../pages/Themes"
-import { ThemeProvider } from "@emotion/react"
+import { Button, Typography } from "@mui/material"
 import { signInWithEmailAndPassword } from "firebase/auth"
-import { Navigate, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import Form from "./Form"
 import { useState } from "react"
 import { AuthContext } from "../resources/Auth"
@@ -20,6 +18,7 @@ function SignIn(auth, fields, setError) {
         let message = error.message;
 
         if (message.includes('wrong-password') || message.includes('user-not-found')) {
+            console.log(message)
             message = <div>
                         <strong>Incorrect credentials.</strong> Please double check your spelling. Passwords are case sensitive.
                     </div>
@@ -69,20 +68,13 @@ export default function Login(props) {
                     buttonText="Continue to Dashboard"
                     handleSubmit={(event) => {
                         SignIn(auth, fields, setError)
-                        event.preventDefault()
                     }}
                     data={fields}
                     setData={setFields}
+                    formError={error}
                     />
                 )}
             </AuthContext.Consumer>
-            {error ?
-                <Alert severity="error">
-                    <AlertTitle>Error</AlertTitle>
-                    {error}
-                </Alert>
-                : ''
-            }
             <Button 
             variant="contained"
             onClick={() => {navigate('/createaccount')}}

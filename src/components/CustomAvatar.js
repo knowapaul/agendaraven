@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { AuthContext, UserContext } from '../resources/Auth'
 import { useNavigate } from 'react-router-dom';
 import { ThemeProvider } from '@mui/system';
-import { mTheme } from '../pages/Themes'
+import { mTheme } from '../resources/Themes'
 
 
 function nameToURL(name) {

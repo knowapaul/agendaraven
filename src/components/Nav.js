@@ -13,7 +13,7 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { ThemeProvider } from '@emotion/react';
-import { mTheme } from '../pages/Themes.js'
+import { mTheme } from '../resources/Themes.js'
 
 import { signOut } from 'firebase/auth';
 
@@ -102,7 +102,7 @@ const ResponsiveAppBar = () => {
                 }}
                 >
                 {pages.map((page) => (
-                    <MenuItem key={page} onClick={handleCloseNavMenu}>
+                    <MenuItem key={page} onClick={() => {navigate('/' + nameToURL(page))}} >
                     <Typography textAlign="center">{page}</Typography>
                     </MenuItem>
                 ))}
@@ -115,7 +115,7 @@ const ResponsiveAppBar = () => {
                 variant="h5"
                 noWrap
                 component="a"
-                href=""
+                href="/"
                 sx={{
                 mr: 2,
                 display: { xs: 'flex', md: 'none' },

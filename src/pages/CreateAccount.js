@@ -1,40 +1,55 @@
-import { ThemeProvider } from "@emotion/react";
 import { useState } from "react";
 import Form from "../components/Form";
-import { bTheme } from "./Themes";
 import Nav from '../components/Nav'
-import { CssBaseline, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import CenterForm from "../components/CenterForm";
 import { AuthContext } from "../resources/Auth";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { addUserAccount } from "../resources/HandleDb";
 import { DbContext } from "../resources/Db";
 import { useNavigate } from "react-router-dom";
 
 
-function createNewAccount(auth, db, data, navigate) {
+function createNewAccount(auth, db, inData, navigate, setError) {
+    let data = Object.assign({}, inData)
     createUserWithEmailAndPassword(auth, data.email, data.password)
-        .then(() => {
-            delete data.email;
-            delete data.password;
-            delete data.confirmpassword;
+        .then((userCred) => {
+            console.log(userCred)
+            
 
-            addUserAccount(db, data, auth.currentUser)
+            const displayName = data.firstname + ' ' + data.lastname;
+            updateProfile(userCred.user, {displayName: displayName})
+                .then(() => {
+                    if (!data.schedulename) {
+                        data.schedulename = data.firstname
+                    }
+                    
+                    const acountInfo = {
+                        schedulename: data.schedulename,
+                        phonenumber: data.phonenumber
+                    }
+        
+                    return addUserAccount(db, acountInfo, auth.currentUser)
+                })
                 .then(() => {
                     navigate('/dashboard')
                 })
                 .catch((error) => {
-                    alert(error)
-                });
+                    alert(`The following error occured while creating your account. 
+                        It may affect the functionality of the site. ${error.message}`)
+                })
         })
         .catch((error) => {
-            alert(error)
+            setError(error.message)
         })
+        
+        
 }
 
 export default function CreateAccount() {
     const [data, setData] = useState({});
     const navigate = useNavigate();
+    const [error, setError] = useState()
 
     return (
         <div>
@@ -88,7 +103,7 @@ export default function CreateAccount() {
                                         title: 'Schedule Name',
                                         type: 'text',
                                         placeholder: 'John',
-                                        validate: 'title'
+                                        validate: 'schedule'
                                     },
                                     {
                                         title: 'Password',
@@ -108,12 +123,14 @@ export default function CreateAccount() {
                                 buttonText="Continue to Dashboard"
                                 data={data}
                                 setData={setData}
-                                handleSubmit={() => {createNewAccount(auth, db, data, navigate)}}
+                                handleSubmit={() => {createNewAccount(auth, db, data, navigate, setError)}}
+                                formError={error}
                                 />
                             )}
                         </DbContext.Consumer>
                     )}
                 </AuthContext.Consumer>
+
             </CenterForm>
         </div>
     )

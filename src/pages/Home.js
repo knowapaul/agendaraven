@@ -1,7 +1,7 @@
 import { ThemeProvider } from '@emotion/react';
 import React from 'react';
 import Nav from '../components/Nav.js'
-import { mTheme, bTheme, oTheme, wTheme } from './Themes.js';
+import { mTheme, bTheme, oTheme, wTheme } from '../resources/Themes.js';
 import SideVideo from '../components/SideVideo.js';
 import { CssBaseline } from '@mui/material';
 import Footer from '../components/Footer.js';
