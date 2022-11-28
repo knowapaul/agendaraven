@@ -8,6 +8,9 @@ import { accessImage } from '../resources/HandleStorage'
 import { StorageContext } from "../resources/Storage";
 import { useState } from "react";
 import Chat from "../components/Chat";
+import ScheduleList from "../components/ScheduleList";
+import { FbContext } from "../resources/Firebase";
+import AuthCheck from "../components/AuthCheck";
 
 export async function orgLoader({ params }) {
     return params.org;
@@ -36,24 +39,27 @@ export function OrgDash(props) {
  
 
     return (
-      <ThemeProvider theme={bTheme}>
-        <CssBaseline />
-        <Nav />
-        <StorageContext.Consumer >
-            {storage => {
-                accessImage(storage, 'image.jpg', setSource)
-                return (
-                    <div>
-                      <img src={source} className='orgBg' />                      
-                    </div>
-                )
-            }}
-        </StorageContext.Consumer>
-        <Grid container spacing={1} sx={{padding: 1}}>
-          <GridItem title="Messages" md={6}><Chat /></GridItem>
-          <GridItem title="Schedules" md={6}>Schedules</GridItem>
-          <GridItem title="Information" md={12}>Info</GridItem>
-        </Grid>
-      </ThemeProvider>
+      <AuthCheck >
+        <ThemeProvider theme={bTheme}>
+          <CssBaseline />
+          <Nav />
+          <FbContext.Consumer >
+              {firebase => {
+                  const storage = firebase.storage;
+                  accessImage(storage, 'image.jpg', setSource)
+                  return (
+                      <div>
+                        <img src={source} className='orgBg' />                      
+                      </div>
+                  )
+              }}
+          </FbContext.Consumer>
+          <Grid container spacing={1} sx={{padding: 1}}>
+            <GridItem title="Messages" md={6}><Chat org={org}/></GridItem>
+            <GridItem title="Schedules" md={6}><ScheduleList /></GridItem>
+            <GridItem title="Information" md={12}>Info</GridItem>
+          </Grid>
+        </ThemeProvider>
+      </AuthCheck>
     )
 }

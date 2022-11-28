@@ -1,16 +1,19 @@
 import React from "react";
-import { AuthContext } from "../resources/Auth";
+import { FbContext } from "../resources/Firebase";
 import Login from "./Login"
 import { useAuthState } from 'react-firebase-hooks/auth';
 import Loading from "./Loading";
 
 export default function AuthCheck(props) {
     return (
-        <AuthContext.Consumer>
-            {auth => (
-                <Internal auth={auth}>{props.children}</Internal>
-            )}
-        </AuthContext.Consumer>
+        <FbContext.Consumer>
+            {firebase => {
+                const auth = firebase.auth;
+                return (
+                    <Internal auth={auth}>{props.children}</Internal>
+                )
+            }}  
+        </FbContext.Consumer>
     )
 }
 

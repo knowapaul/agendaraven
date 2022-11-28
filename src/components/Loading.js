@@ -8,30 +8,36 @@ export default function Loading() {
     return (
         <ThemeProvider theme={mTheme}>
             <CssBaseline />
-            <Box
+            <MiniLoad />
+        </ThemeProvider>
+    )
+}
+
+export function MiniLoad() {
+    return (
+        <Box
             display='flex'
             justifyContent={'center'}
             alignContent={'center'}
             
             >
-                <Stack >
-                    <Typography
-                    textAlign={'center'}
-                    mt={5}
-                    mb={3}
-                    >
-                        Loading...
-                    </Typography>
-                    <Box
-                    display='flex'
-                    justifyContent={'center'}
-                    alignContent={'center'}
-                    
-                    >
-                        <CircularProgress color="secondary" />
-                    </Box>
-                </Stack>
-            </Box>
-        </ThemeProvider>
-    )
+            <Stack >
+                <Typography
+                textAlign={'center'}
+                mt={5}
+                mb={3}
+                >
+                    Loading...
+                </Typography>
+                <Box
+                display='flex'
+                justifyContent={'center'}
+                alignContent={'center'}
+                
+                >
+                    <CircularProgress color="secondary" />
+                </Box>
+            </Stack>
+        </Box>
+)
 }

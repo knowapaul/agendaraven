@@ -3,7 +3,7 @@ import { signInWithEmailAndPassword } from "firebase/auth"
 import { useNavigate } from "react-router-dom"
 import Form from "./Form"
 import { useState } from "react"
-import { AuthContext } from "../resources/Auth"
+import { FbContext } from '../resources/Firebase'
 import CenterForm from "./CenterForm"
 import Nav from './Nav';
 
@@ -46,35 +46,38 @@ export default function Login(props) {
             >
                 Login
             </Typography>
-            <AuthContext.Consumer>
-                {auth => (
-                    <Form 
-                    inputs={[
-                        {
-                        title: "Email",
-                        type: "email",
-                        placeholder: "example@gmail.com",
-                        validate: "none",
-                        required: true
-                        },
-                        {
-                        title: "Password",
-                        type: "password",
-                        placeholder: "",
-                        validate: "none",
-                        required: true
-                        },
-                    ]}
-                    buttonText="Continue to Dashboard"
-                    handleSubmit={(event) => {
-                        SignIn(auth, fields, setError)
-                    }}
-                    data={fields}
-                    setData={setFields}
-                    formError={error}
-                    />
-                )}
-            </AuthContext.Consumer>
+            <FbContext.Consumer>
+                {firebase => {
+                    const auth = firebase.auth;
+                    return (
+                        <Form 
+                        inputs={[
+                            {
+                            title: "Email",
+                            type: "email",
+                            placeholder: "example@gmail.com",
+                            validate: "none",
+                            required: true
+                            },
+                            {
+                            title: "Password",
+                            type: "password",
+                            placeholder: "",
+                            validate: "none",
+                            required: true
+                            },
+                        ]}
+                        buttonText="Continue to Dashboard"
+                        handleSubmit={(event) => {
+                            SignIn(auth, fields, setError)
+                        }}
+                        data={fields}
+                        setData={setFields}
+                        formError={error}
+                        />
+                    )
+                }}
+            </FbContext.Consumer>
             <Button 
             variant="contained"
             onClick={() => {navigate('/createaccount')}}

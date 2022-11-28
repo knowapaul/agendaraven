@@ -9,7 +9,7 @@ import Insights from './windows/Insights.js';
 import Payments from './windows/Payments.js';
 import Account from './windows/Account.js';
 import { OrgDash, orgLoader } from './pages/OrgDash'
-
+import { createContext } from 'react';
 
 import Loading from './components/Loading.js';
 
@@ -18,6 +18,7 @@ import Error from './components/Error'
 import { Auth } from './resources/Auth'
 import { Db } from './resources/Db'
 import { Storage } from './resources/Storage.js';
+import { Firebase } from './resources/Firebase.js';
 
 import { 
   BrowserRouter as Router, 
@@ -88,15 +89,29 @@ const router = createBrowserRouter([
             </Routes>
           </Router> */
 
+
+// export const AppContext = createContext(null);
+          
+// function App() {
+//   return (
+//     <Auth app={app}>
+//       <Db app={app}>
+//         <Storage app={app}>
+//           <AppContext.Provider value={app}>
+//             <RouterProvider router={router} />
+//           </AppContext.Provider>
+//         </Storage>
+//       </Db>
+//     </Auth>
+//   );
+// }
+
+          
 function App() {
   return (
-    <Auth app={app}>
-      <Db app={app}>
-        <Storage app={app}>
-          <RouterProvider router={router} />
-        </Storage>
-      </Db>
-    </Auth>
+    <Firebase app={app}>
+        <RouterProvider router={router} />
+    </Firebase>
   );
 }
 

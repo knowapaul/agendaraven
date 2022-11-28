@@ -1,5 +1,5 @@
 import { Card, CardContent, Grid, Box, Typography } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { accessImage } from "../resources/HandleStorage";
 import { StorageContext } from "../resources/Storage";
 import { CircularProgress } from "@mui/material"
@@ -8,6 +8,9 @@ import { Fab } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import { Container } from "@mui/system";
 import CreateOrJoin from '../components/CreateOrJoin'
+import { FbContext } from "../resources/Firebase";
+import { getUserData } from "../resources/HandleDb";
+import { MiniLoad } from "../components/Loading";
  
 function OrgCard(props) {
     const [source, setSource] = useState('');
@@ -93,18 +96,47 @@ function Add() {
         </Grid>
     )
 }
+function OrgGrid(props) {
+    const [ orgs, setOrgs ] = useState([]);
+    console.log('first', orgs)
 
-export default function Organizations() {
+    const storage = props.firebase.storage;
+    const db = props.firebase.db;
+    const auth = props.firebase.auth;
+
+    useEffect(() => {
+        getUserData(db, auth.currentUser.uid)
+            .then((data) => {
+                console.log('heredat', data)
+                setOrgs(data.orgs);
+            })
+    }, [])
+
     return (
-        <StorageContext.Consumer>
-            {storage => (
+        <div>
+            {orgs !== {} ? 
                 <Grid container spacing={3}>
-                    {['card1', 'card2', 'card3'].map((text) => {
+                    {orgs.map((text) => {
                         return (<OrgCard key={text} text={text} storage={storage}/>)
                     })}
                     <Add />
-                </Grid>
-            )}
-        </StorageContext.Consumer>
+                </Grid> :
+                <MiniLoad />
+            }
+        </div>
+        
     )
 }
+
+export default function Organizations() {
+    return (
+        <FbContext.Consumer>
+            {firebase => {
+                return (
+                    <OrgGrid firebase={firebase}/>
+                )
+            }}
+        </FbContext.Consumer>
+    )
+}
+

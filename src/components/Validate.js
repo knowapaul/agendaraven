@@ -81,7 +81,7 @@ export default function vaildate(type, input, pass) {
         password: password,
         confirm: confirm,
         none: () => {return ([false, ''])},
-        schedule: schedule
+        schedule: schedule,
     }
     return func[type](input, pass)
 }

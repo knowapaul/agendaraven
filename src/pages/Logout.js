@@ -3,7 +3,7 @@ import { CircularProgress } from "@mui/material";
 import { Container } from "@mui/system";
 import { signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../resources/Auth";
+import { FbContext } from "../resources/Firebase";
 import { mTheme } from "../resources/Themes";
 import Loading from "../components/Loading";
 
@@ -13,8 +13,9 @@ export default function Logout() {
     
     return (
         <ThemeProvider theme={mTheme}>
-            <AuthContext.Consumer>
-                {auth => {
+            <FbContext.Consumer>
+                {firebase => {
+                    const auth = firebase.auth;
                     signOut(auth).then(() => {
                         console.log('success', auth)
                         navigate('/')
@@ -25,7 +26,7 @@ export default function Logout() {
                         <Loading />
                     )
                 }}
-            </AuthContext.Consumer>
+            </FbContext.Consumer>
         </ThemeProvider>
     )
 }
