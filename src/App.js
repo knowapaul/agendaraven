@@ -54,6 +54,7 @@ const app = initializeApp(firebaseConfig);
 
 const router = createBrowserRouter([
   { errorElement: <Error />, path: "/", element: <Home />},
+
   { errorElement: <Error />, path: "dashboard", element: <Dashboard><Organizations /></Dashboard>},
   { errorElement: <Error />, path: "/dashboard/organizations", element: <Dashboard><Organizations /></Dashboard>},
   { errorElement: <Error />, path: "/dashboard/inbox", element: <Dashboard><Inbox /></Dashboard>},
@@ -62,9 +63,13 @@ const router = createBrowserRouter([
   { errorElement: <Error />, path: "/dashboard/insights", element: <Dashboard><Insights /></Dashboard>},
   { errorElement: <Error />, path: "/dashboard/payments", element: <Dashboard><Payments /></Dashboard>},
   { errorElement: <Error />, path: "/dashboard/account", element: <Dashboard><Account /></Dashboard>},
+
   { errorElement: <Error />, path: "logout", element: <Logout />},
   { errorElement: <Error />, path: "createaccount", element: <CreateAccount /> },
+
   { errorElement: <Error />, path: "/:org", element: <OrgDash />, loader: orgLoader},
+
+  
   { errorElement: <Error />, path: "loading", element: <Loading />}
 ]);
 

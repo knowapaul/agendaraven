@@ -8,7 +8,10 @@
   border-radius: 5px;
 }
 .orgBg {
-  aspect-ratio: 14 / 3;
-  width: 100%;
+  aspect-ratio: 11 / 4;
+  width: 40%;
   margin-top: 64px;
+}
+.firebase-emulator-warning {
+  display: none;
 }

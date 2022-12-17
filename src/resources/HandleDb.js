@@ -35,3 +35,36 @@ export async function getUserData(db, uid) {
     console.log('data', data)
     return data;
 }
+
+export async function initDatabase(db) {
+    console.log(db)
+    const orgs = doc(db, 'index/organizations')
+    console.log(orgs)
+    const orgDocSnap = await getDoc(orgs)
+    console.log(orgs, orgDocSnap)
+    if (!orgDocSnap.exists()) {
+        // Set invalid organization names
+        setDoc(
+            orgs,
+            {
+                dashboard: true,
+                about: true,
+                logout: true,
+                createaccount: true,
+                loading: true,
+            }
+        )
+    }
+
+    // const users = doc(db, `users`, 'index')
+    // const usersSnap = await getDoc(orgs)
+    // if (!usersSnap.exists) {
+    //     // Guarantees the users collection exists
+    //     setDoc(
+    //         doc('users', 'index'),
+    //         {
+                
+    //         }
+    //     )
+    // }
+}

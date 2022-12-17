@@ -1,6 +1,4 @@
-// ?Experiment to see if it is more convenient to bundle all firebase services into one context provider
-// ! If this succeeds, it will outdate older context providers like Auth.js and Db.js, 
-// ! and require a reconfiguration of all consuming functions
+// Bundles all firebase services into one context provider
 
 import { createContext }  from 'react';
 
@@ -8,6 +6,7 @@ import { getAuth, connectAuthEmulator } from "firebase/auth";
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
 import { getStorage, connectStorageEmulator } from "firebase/storage";
+import { initDatabase } from './HandleDb';
 
 export const FbContext = createContext({});
 
@@ -22,6 +21,11 @@ export function Firebase(props) {
     const storage = getStorage(props.app)
     connectStorageEmulator(storage, 'localhost', 9199);
 
+    // Clean the database if it has not already been initialized
+    // ! Do not use this in production! 
+    setTimeout(() => {
+        initDatabase(db)
+    }, 5000)
 
     const firebase = {
         auth: auth, 

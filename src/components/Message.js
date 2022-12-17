@@ -18,8 +18,10 @@ export default function Message(props) {
                 borderBottomLeftRadius: l,
 
                 borderBottomRightRadius: r,
-                backgroundColor: theme.palette.background.default, 
-                maxWidth: '50%'}}>
+                backgroundColor: theme.palette.background.paper, 
+                maxWidth: '50%',
+                minHeight: '32px'
+                }}>
                 {props.body}
             </Paper>
         </Box>

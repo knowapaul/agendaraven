@@ -31,4 +31,4 @@ homepage.mp4
 # debug logs
 ui-debug.log
 firebase-debug.log
-firestor-debug.log
+firestore-debug.log

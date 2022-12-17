@@ -29,7 +29,7 @@ before beginning the tier that is two or more levels below it.
     - () Dashboard availability
     - () Dashboard inbox
     - () Dashboard schedules
-    - () Database init function
+    - (x) Database init function
     - () Error boundaries
     - () Firebase rules
     - () Help page

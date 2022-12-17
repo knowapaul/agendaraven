@@ -27,14 +27,11 @@ import { Navigate } from 'react-router-dom';
 import CustomAvatar from './CustomAvatar.js';
 
 
-const pages = ['Dashboard', 'About Us', 'Help'];
-
-
 function nameToURL(name) {
     return name.toLowerCase().split(' ').join('')
 }
 
-const ResponsiveAppBar = () => {
+function Nav() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const navigate = useNavigate();
 
@@ -45,6 +42,9 @@ const ResponsiveAppBar = () => {
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
+
+  const pages = ['Dashboard', 'About Us', 'Help'];
+  const title = 'AgendaRaven';
 
   return (
     <ThemeProvider theme={mTheme}>
@@ -58,7 +58,7 @@ const ResponsiveAppBar = () => {
                 variant="h6"
                 noWrap
                 component="a"
-                href="/"
+                href={"/"}
                 sx={{
                 mr: 2,
                 display: { xs: 'none', md: 'flex' },
@@ -69,7 +69,7 @@ const ResponsiveAppBar = () => {
                 textDecoration: 'none',
                 }}
             >
-                AgendaRaven
+                {title}
             </Typography>
 
             <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -145,8 +145,10 @@ const ResponsiveAppBar = () => {
             </Toolbar>
         </Container>
         </AppBar>
+        <Box sx={{height: 64, display: { xs: 'none', md: 'flex' }}}  />
+        <Box sx={{height: 56, display: { xs: 'flex', md: 'none' }}} />
     </ThemeProvider>
     
   );
 };
-export default ResponsiveAppBar;
+export default Nav;

@@ -40,12 +40,14 @@ export default function CreateOrJoin(props) {
         const orgName = cFields.nameyourorganization;
 
         console.log('new')
-        await cFunc({ 
+        const time = await cFunc({ 
             orgName: orgName, 
             phonenumber: data.info.phonenumber, 
             schedulename: data.info.schedulename 
         })
+        console.log('Organization created at:', time)
         navigate(`/${orgName}`)
+        
     }
 
     return (

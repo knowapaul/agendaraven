@@ -106,7 +106,7 @@ async function sendChatMessage(orgName, sender, body, recipients, oldChat) {
         // Set the recipients' subscription
         for (i in recipients) {
             console.log('logging', i, recipients, users)
-            return await db.collection(chatRef)
+            return await db.collection(chatCol)
                 .doc(users[recipients[i]].uid)
                 .set({ 
                     [newDoc.path]: subscribers
