@@ -1,6 +1,6 @@
 import { Button, TextField, Stack } from "@mui/material";
 import React, { useState } from "react";
-import validate from "./Validate";
+import validate from "../resources/Validate";
 import { Alert, AlertTitle } from "@mui/material";
 
 function cleanName(name) {
@@ -69,6 +69,7 @@ class Input extends React.Component {
             label={this.props.name}
             type={this.props.type} 
             required={this.props.required}
+            multiline={this.props.multiline}
             value={this.state.value} 
             placeholder={this.props.placeholder}
             error={((this.state.check || this.props.check) && (this.state.error || error))}
@@ -84,7 +85,7 @@ class Input extends React.Component {
  * Create a form component with automatic data updates and validation.
  * 
  * @param {list} inputs 
- * {title: title, type: type, placeholder: placeholder, required: required}
+ * {title, type, placeholder, required, validate}
  * 
  * @param {map} data
  * the state access for form data
@@ -102,7 +103,6 @@ function Form(props) {
     const [password, setPassword] = useState(false);
 
     const submit = (event) => {
-        console.log(errors)
         event.preventDefault()
         if (!Object.values(errors).includes(true)) {
             props.handleSubmit()
@@ -120,6 +120,7 @@ function Form(props) {
                 name={input.title}
                 type={input.type}
                 required={input.required}
+                multiline={input.multiline}
                 placeholder={input.placeholder}
                 setData={props.setData}
                 data={props.data}
@@ -131,6 +132,7 @@ function Form(props) {
                 setPassword={setPassword}
                 />
                 ))}
+                {props.children}
                 <Button type="submit" variant='contained'>{props.buttonText}</Button>
                 {props.formError ? 
                 <Alert severity="error">

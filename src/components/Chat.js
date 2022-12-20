@@ -1,5 +1,5 @@
 import { useTheme } from "@emotion/react";
-import { Avatar, Box, Button, CircularProgress, IconButton, LinearProgress, Paper, Stack, TextField, Tooltip } from "@mui/material";
+import { Avatar, Box, Button, CircularProgress, Divider, IconButton, LinearProgress, Paper, Stack, TextField, Tooltip } from "@mui/material";
 import { GroupAdd, Send, Visibility } from "@mui/icons-material";
 import Message from './Message'
 import { createRef, useEffect, useState } from "react";
@@ -47,15 +47,11 @@ const topHeight = 57.5;
             <Box 
             sx={{
             padding: 1, 
-            backgroundColor: props.path===props.chat ? white : back, 
-            ':hover': {backgroundColor: props.path===props.chat ? white : hover},
             }} 
             onClick={() => {props.setChat(props.path)}}
             >
                 <Avatar 
                 sx={{
-                color: theme.palette.text.primary, 
-                backgroundColor: theme.palette.background.default, 
                 }}
                 >
                     {letter}
@@ -135,8 +131,8 @@ function Write(props) {
     
 
     return (
-            <div>
-                <Box sx={{ display: 'flex', borderBottom: 'solid', outlineColor: theme.palette.background.default, height: '57.5px'}}>
+            <Box>
+                <Paper elevation={12} sx={{ display: 'flex', borderRadius: '0px', height: '57.5px'}}>
                     <Box sx={{display: 'flex', flexGrow: 1}} >
                         <Stack direction="row" spacing={1}>
                             {subs ? Object.entries(subs).map(ent => {
@@ -152,12 +148,9 @@ function Write(props) {
                             disableElevation 
                             variant="contained" 
                             sx={{ width: buttonWidth,
-                                backgroundColor: theme.palette.text.primary, 
                                 borderRadius: '0px',
                                 height: '100%',
                                 width: topHeight,
-                                color: theme.palette.background.default, 
-                                ':hover': {backgroundColor: 'rgba(255, 255, 255, .5)'}
                             }}
                             onClick={() => {props.setWidget('view')}}
                             >
@@ -169,12 +162,9 @@ function Write(props) {
                             disableElevation 
                             variant="contained" 
                             sx={{ width: buttonWidth,
-                                backgroundColor: theme.palette.text.primary, 
                                 borderRadius: '0px',
                                 height: '100%',
                                 width: topHeight,
-                                color: theme.palette.background.default, 
-                                ':hover': {backgroundColor: 'rgba(255, 255, 255, .5)'}
                             }}
                             onClick={() => {props.setWidget('new')}}
                             >
@@ -182,8 +172,8 @@ function Write(props) {
                             </Button>
                         </Tooltip>
                     </Box>
-                </Box>
-                <Box  sx={{margin: 1 }} height={`${window.innerHeight - 149 -64}px`} overflow='auto'>
+                </Paper>
+                <Box height={'calc(100vh - 58px - 72px - 64px)'} overflow='auto'>
                     {messages ? 
                             messages.messages.map(message => {
                                 const side = message.sender === user.email ? 'right' : 'left'
@@ -197,8 +187,8 @@ function Write(props) {
                         ref={messagesEndRef}>
                     </div>
                 </Box>
-                <Box sx={{height: '2px'}}>{sending ? <LinearProgress sx={{backgroundColor: 'white'}}/> : ''}</Box>
-                <Box sx={{padding: 1, borderTop: 'solid', outlineColor: theme.palette.background.default, borderRadius: 0, }}>
+                <Paper square elevation={24} sx={{height: '2px'}}>{sending ? <LinearProgress sx={{}}/> : ''}</Paper>
+                <Paper square sx={{padding: 1}}>
                     
                     <TextField 
                     placeholder="Type message here" 
@@ -219,8 +209,8 @@ function Write(props) {
                     >
                         <Send />
                     </Button>
-                </Box>
-            </div>
+                </Paper>
+            </Box>
     )
 
 }
@@ -236,7 +226,7 @@ function NewChat(props) {
     const theme = useTheme();
     return (
         <div>
-            <Box sx={{ display: 'flex', borderBottom: 'solid', outlineColor: theme.palette.background.default, height: '57.5px'}}>
+            <Box sx={{ display: 'flex', borderBottom: 'solid', height: '57.5px'}}>
 
             </Box>
         </div>

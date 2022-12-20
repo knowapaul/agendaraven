@@ -7,17 +7,16 @@ import { AuthContext } from "../resources/Auth";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { addUserAccount } from "../resources/HandleDb";
 import { DbContext } from "../resources/Db";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FbContext } from "../resources/Firebase";
+import { ArrowBack } from "@mui/icons-material";
+import { Box } from "@mui/system";
 
 
 function createNewAccount(auth, db, inData, navigate, setError) {
     let data = Object.assign({}, inData)
     createUserWithEmailAndPassword(auth, data.email, data.password)
         .then((userCred) => {
-            console.log(userCred)
-            
-
             const displayName = data.firstname + ' ' + data.lastname;
             updateProfile(userCred.user, {displayName: displayName})
                 .then(() => {
@@ -56,10 +55,24 @@ export default function CreateAccount() {
         <div>
             <Nav />
             <CenterForm>
+                <Link to='/dashboard'>
+                    <Box sx={{mt: -2, ml: -1, verticalAlign:'middle', display: 'flex', flexWrap: 'wrap', alignItems: 'center',}}>
+                        <ArrowBack fontSize="small" />
+                        <Typography 
+                        variant='body'
+                        noWrap
+                        textAlign='left'
+                        sx={{margin: 0, padding: 0}}
+                        >
+                            Back to login
+                        </Typography>
+                    </Box>
+                </Link>
                 <Typography 
                 variant='h5'
                 noWrap
                 sx={{
+                    mt: -2,
                     fontFamily: 'Quicksand'
                 }}
                 textAlign='center'

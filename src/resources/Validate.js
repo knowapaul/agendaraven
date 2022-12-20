@@ -71,6 +71,16 @@ function confirm(input, password) {
     }
 }
 
+function role(input) {
+    if ((input.length > 2 && input.length < 20) || input.length=== 0) {
+        return [false, '']
+    } else {
+        return [
+            true,
+            'Please input a role name between 2 and 20 characters'
+        ]
+    }
+}
 
 
 export default function vaildate(type, input, pass) {
@@ -80,6 +90,7 @@ export default function vaildate(type, input, pass) {
         title: title,
         password: password,
         confirm: confirm,
+        role: role,
         none: () => {return ([false, ''])},
         schedule: schedule,
     }

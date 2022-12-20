@@ -14,7 +14,6 @@ function Paragraph(props) {
 }
 
 export default function Error(props) {
-    console.log('error', props)
     return (
         <div>
             <Nav />

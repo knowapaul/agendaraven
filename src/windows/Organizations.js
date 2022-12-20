@@ -26,7 +26,7 @@ function OrgCard(props) {
         <Grid item
         xs={12} sm={12} md={6} lg={4} xl={3}
         >
-            <Link to={'../' + props.text}
+            <Link to={`../${props.text}/home`}
             style={{textDecoration: 'none'}}
             >
                 <Card >
@@ -65,10 +65,10 @@ function OrgCard(props) {
 }
 
 function Add() {
-    const [open, setOpen] = useState(false)
+    const [ open, setOpen ] = useState(false)
 
     return (
-        <Grid item xs={12} sm={12} md={6} lg={4} xl={3}>
+        <Grid item xs={12} sm={12} md={6} lg={4} xl={3} >
             <Box 
             width='100%'
             className="orgImg"
@@ -98,7 +98,6 @@ function Add() {
 }
 function OrgGrid(props) {
     const [ orgs, setOrgs ] = useState([]);
-    console.log('first', orgs)
 
     const storage = props.firebase.storage;
     const db = props.firebase.db;
@@ -107,15 +106,14 @@ function OrgGrid(props) {
     useEffect(() => {
         getUserData(db, auth.currentUser.uid)
             .then((data) => {
-                console.log('heredat', data)
                 setOrgs(data.orgs);
             })
     }, [])
 
     return (
-        <div>
+        <Box height='calc(100vh - 64px)' overflow='auto' padding={2}>
             {orgs !== {} ? 
-                <Grid container spacing={3}>
+                <Grid container spacing={2}>
                     {orgs.map((text) => {
                         return (<OrgCard key={text} text={text} storage={storage}/>)
                     })}
@@ -123,7 +121,7 @@ function OrgGrid(props) {
                 </Grid> :
                 <MiniLoad />
             }
-        </div>
+        </Box>
         
     )
 }

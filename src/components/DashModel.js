@@ -1,4 +1,5 @@
 import { AccountCircle, CalendarToday, DashboardCustomize, EventAvailable, Insights, Mail, Payments, Logout } from '@mui/icons-material'
+
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import AppBar from '@mui/material/AppBar';
@@ -18,7 +19,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack'
-import { ThemeProvider } from '@emotion/react';
+import { ThemeProvider, useTheme } from '@emotion/react';
 import { bTheme, mTheme } from '../resources/Themes';
 import { Router, Routes, Route, useNavigate } from 'react-router-dom';
 import Organizations from '../windows/Organizations';
@@ -28,73 +29,189 @@ import Inbox from '../windows/Inbox';
 import Account from '../windows/Account';
 import AuthCheck from '../components/AuthCheck';
 import CustomAvatar from '../components/CustomAvatar';
+import { createTheme } from '@mui/material';
 
 const drawerWidth = 250;
 
+
+
+function MenuItem(props) {
+    const navigate = useNavigate();
+    const theme = useTheme();
+
+    const handleClick = (text) => {
+        if (text === 'Log Out') {
+            navigate('/logout')
+        } else {
+            // Just use the last word of the button's string
+            navigate(props.path + text.split(' ').slice(-1)[0].toLowerCase())
+        }
+    }
+
+    return (
+        <ListItem 
+        disablePadding
+        onClick={() => {handleClick(props.text)}}
+        >
+            <ListItemButton>
+                <ListItemIcon color={props.menuColor}>
+                    {props.icon}
+                </ListItemIcon>
+            <ListItemText primary={props.text} />
+            </ListItemButton>
+        </ListItem>
+    )
+}
+
+function CustomDiv() {
+    return (
+        <Divider sx={{margin: 1}} />
+    )
+}
+
+function Menu(props) {
+    return (
+        <List>
+            {props.items.map((item, n) => {
+                const text = item[0]; 
+                const Icon = item[1];
+                return (
+                    Icon ? 
+                    <MenuItem key={n} path={props.path} text={text} icon={Icon} menuColor={props.menuColor} />
+                    :
+                    <CustomDiv key={n} />
+                )
+            })}
+        </List>
+    )
+}
+
+/**
+ * A universal shell for dashboard formats
+ * 
+ * @param  {Map} props
+ * *React props:*
+ * - props.menuItems: map of menu items in the format *name : icon*
+ * - props.menuColor: the icon color of menu items (if different from default)
+ * - props.logo: the upper-left hand corner logo
+ * - props.path: the root path of the page
+ * - props.title: the page's title
+ */
 export default function DashModel(props) {
-    const { window } = props;
-    const [mobileOpen, setMobileOpen] = React.useState(false);
+    const { win } = props;
+    const [ mobileOpen, setMobileOpen ] = React.useState(false);
+    const theme = useTheme();
   
     const handleDrawerToggle = () => {
       setMobileOpen(!mobileOpen);
     };
+
+    const contrastTheme = createTheme({
+        components: {
+            MuiPaper: {
+              styleOverrides: {
+                outlined: {
+                  backgroundColor: theme.palette.background.paper,
+                  color: theme.palette.text.primary,
+                },
+              },
+            },
+          },
+        palette: {
+            type: theme.palette.type,
+            primary: {
+              main: theme.palette.background.default,
+            },
+            secondary: {
+              main: theme.palette.secondary.main,
+            },
+            background: {
+              paper: theme.palette.background.default,
+            },
+            text: {
+              primary: theme.palette.background.paper,
+              secondary: theme.palette.background.default,
+            },
+            warning: {
+              main: 'rgb(178, 149, 0)',
+            },
+            divider: theme.palette.background.default,
+          },
+    })
   
+    console.log('ct', contrastTheme)
+
     const drawer = (
       <div>
           <Toolbar 
           disableGutters
           elevation={0}
           >
-              <Stack
-              direction="row"
-              spacing={2} 
-              margin={1}
-              >
               {props.logo}
-              </Stack>
           </Toolbar>
-          <Divider />
-          {props.menu}
+          <Divider sx={{borderColor: theme.palette.background.default}}/>
+          <Menu path={props.path} items={props.menuItems} menuColor={props.menuColor}/>
       </div>
     );
+
+    const [windowSize, setWindowSize] = React.useState({
+        width: undefined,
+        height: undefined,
+      });
+    React.useEffect(() => {
+    // Handler to call on window resize
+    function handleResize() {
+        // Set window width/height to state
+        setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+        });
+        // Add event listener
+        window.addEventListener("resize", handleResize);
+        // Call handler right away so state gets updated with initial window size
+        handleResize();
+    }})
+    
   
-    const container = window !== undefined ? () => window().document.body : undefined;
+    const container = win !== undefined ? () => win().document.body : undefined;
   
     return (
       <AuthCheck>
-        <Box sx={{ display: 'flex' }}>
-        <AppBar
+        <Box sx={{ display: 'flex'}}>
+            
+            <AppBar
             position="fixed"
             elevation={0}
             sx={{
             width: { sm: `calc(100% - ${drawerWidth}px)` },
             ml: { sm: `${drawerWidth}px` },
             }}
-        >
-            <Toolbar  sx={{height: '100%', backgroundColor: mTheme.palette.background.paper}}>
-            <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                edge="start"
-                onClick={handleDrawerToggle}
-                sx={{ mr: 2, display: { sm: 'none' } }}
             >
-                <MenuIcon />
-            </IconButton>
-            <Box sx={{ flexGrow: 1, display:'flex', justifyContent: 'center', 
-}}>
-                <Typography 
-                variant="h6" 
-                noWrap 
-                component="div"
-                textAlign='center'
+                <Toolbar  sx={{height: '100%'}}>
+                <IconButton
+                    color="inherit"
+                    aria-label="open drawer"
+                    edge="start"
+                    onClick={handleDrawerToggle}
+                    sx={{ mr: 2, display: { sm: 'none' } }}
                 >
-                    {props.subPage}
-                </Typography>
-            </Box>
-            <CustomAvatar />
-            </Toolbar>
-        </AppBar>
+                    <MenuIcon />
+                </IconButton>
+                <Box sx={{ flexGrow: 1, display:'flex', justifyContent: 'center', 
+    }}>
+                    <Typography 
+                    variant="h6" 
+                    noWrap 
+                    component="div"
+                    textAlign='center'
+                    >
+                        {props.title[0].toUpperCase() + props.title.slice(1)}
+                    </Typography>
+                </Box>
+                <CustomAvatar />
+                </Toolbar>
+                <Divider sx={{borderColor: theme.palette.background.default}}/>
+            </AppBar>
         <Box
             component="nav"
             sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
@@ -121,21 +238,25 @@ export default function DashModel(props) {
             variant="permanent"
             sx={{
                 display: { xs: 'none', sm: 'block' },
-                '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+                '& .MuiDrawer-paper': { boxSizing: 'border-box', borderColor: theme.palette.background.default, width: drawerWidth },
             }}
             open
             >
             {drawer}
             </Drawer>
         </Box>
-        <Box
-            component="main"
-            sx={{ flexGrow: 1, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
-        >   
-            <Box component='main' sx={{height: 64, display: { xs: 'none', sm: 'flex' }}}  />
-            <Box component='main' sx={{height: 56, display: { xs: 'flex', sm: 'none' }}} />
-            {props.children}
-        </Box>
+        <ThemeProvider theme={contrastTheme}>
+            <Box
+                component="main"
+                sx={{ flexGrow: 1, position: 'fixed', top: '0px', right: '0px', width: { sm: `calc(100% - ${drawerWidth}px)` } }}
+            >   
+                <Box component='main' sx={{height: 64, display: { xs: 'none', sm: 'flex' }}}  />
+                <Box component='main' sx={{height: 56, display: { xs: 'flex', sm: 'none' }}} />
+                <Box sx={{backgroundColor: theme.palette.background.paper, height: 'calc(100vh - 64px)'}}>
+                    {props.children}
+                </Box>
+            </Box>
+        </ThemeProvider>
         </Box>
       </AuthCheck>
     );

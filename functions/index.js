@@ -105,7 +105,6 @@ async function sendChatMessage(orgName, sender, body, recipients, oldChat) {
 
         // Set the recipients' subscription
         for (i in recipients) {
-            console.log('logging', i, recipients, users)
             return await db.collection(chatCol)
                 .doc(users[recipients[i]].uid)
                 .set({ 
@@ -182,4 +181,31 @@ exports.joinOrganization = functions.https.onCall(async (data, context) => {
     const role = doc.data()[data.code]
     
     return await join(data.orgName, role, uid, email, name, data.phonenumber, data.schedulename)
+});
+
+// TODO: Add a role to an organization
+
+
+async function addRole(org, roleName, roleKey, roleDescription) {
+    const doc = await db.collection(org + 'data')
+        .doc('roles')
+        .set({
+            [roleName]: {
+                roleKey: roleKey,
+                roleDescription: roleDescription,
+            }
+        }, {merge: true})
+}
+
+
+
+exports.addRole = functions.https.onCall(async (data, context) => {
+    // TODO: Check user admin status
+    // const uid = context.auth.uid;
+    // const name = context.auth.token.name || null;
+    // const email = context.auth.token.email || null;
+
+    await addRole(data.orgName, data.roleName, data.roleKey, data.roleDescription)
+    
+    return true
 });

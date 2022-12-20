@@ -32,16 +32,12 @@ export async function getChatMessaging(db, location, setMessages) {
 export async function getUserData(db, uid) {
     const users = collection(db, 'users')
     const data = (await getDoc(doc(users, uid))).data()
-    console.log('data', data)
     return data;
 }
 
 export async function initDatabase(db) {
-    console.log(db)
     const orgs = doc(db, 'index/organizations')
-    console.log(orgs)
     const orgDocSnap = await getDoc(orgs)
-    console.log(orgs, orgDocSnap)
     if (!orgDocSnap.exists()) {
         // Set invalid organization names
         setDoc(
@@ -67,4 +63,9 @@ export async function initDatabase(db) {
     //         }
     //     )
     // }
+}
+
+export function getRolesDoc(db, org) {
+    const orgData = collection(db, org + 'data')
+    return doc(orgData, 'roles');
 }

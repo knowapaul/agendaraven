@@ -20,23 +20,34 @@ export const mTheme = createTheme({
 });
 
 export const wTheme = createTheme({
+  overrides: {
+    MuiButton: { // Name of the component ⚛️ / style sheet
+      root: { // Name of the rule
+        color: 'pink', // Some CSS
+        backgroundColor: 'purple'
+      },
+    },
+  },
   palette: {
     type: 'light',
     primary: {
-      main: '#001f3d',
+      main: '#ffffff',
     },
     secondary: {
-      main: '#045174',
+      main: '#e87a00',
     },
     background: {
-      paper: '#e87a00',
+      paper: '#ffffff',
+      default: '#045174',
     },
     text: {
-      primary: '#001f3d',
+      primary: '#045174',
+      secondary: '#001f3d',
     },
     warning: {
       main: 'rgb(178, 149, 0)',
     },
+    divider: '#045174',
   },
 });
 
@@ -82,5 +93,27 @@ export const bTheme = createTheme({
     warning: {
       main: 'rgb(178, 149, 0)',
     },
+    divider: '#ffffff',
   },
 });
+
+export const cTheme = createTheme({
+  palette: {
+    type: 'light',
+    primary: {
+      main: '#045174',
+    },
+    secondary: {
+      main: '#001f3d',
+    },
+    text: {
+      primary: '#001f3d',
+      secondary: '#ffffff',
+    },
+    background: {
+      default: '#ffffff',
+      paper: '#045174',
+    },
+    divider: '#ffffff',
+  },
+})

@@ -1,3 +1,6 @@
+//! This file is deprecated. For future context uses, use Firebase.js
+
+
 import { createContext }  from 'react';
 
 import { getStorage, connectStorageEmulator } from "firebase/storage";

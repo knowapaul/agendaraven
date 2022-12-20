@@ -40,7 +40,6 @@ function InternalAvatar(props) {
 
 
     const handleOpenUserMenu = (event, user) => {
-        console.log(event, user)
         if (!user) {
             if (!document.URL.endsWith('dashboard')) {
                 navigate('/dashboard')
