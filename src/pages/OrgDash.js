@@ -9,12 +9,12 @@ import { wTheme } from '../resources/Themes'
 import { accessImage } from '../resources/HandleStorage'
 import { StorageContext } from "../resources/Storage";
 import { useState } from "react";
-import Chat from '../components/Chat'
+import Chat from '../subpages/Chat'
 import ScheduleList from "../components/ScheduleList";
 import { FbContext } from "../resources/Firebase";
 import AuthCheck from "../components/AuthCheck";
 import DashModel from '../components/DashModel'
-import People from "../components/People";
+import People from "../subpages/People";
 
 export async function orgLoader({ params }) {
     return [params.org, params.page];

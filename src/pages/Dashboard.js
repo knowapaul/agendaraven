@@ -45,7 +45,6 @@ function Logo() {
         <Typography
         variant="h6"
         noWrap
-        component="a"
         sx={{
         fontFamily: 'quicksand',
         fontWeight: 700,

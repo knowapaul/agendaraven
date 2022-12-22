@@ -20,14 +20,6 @@ export const mTheme = createTheme({
 });
 
 export const wTheme = createTheme({
-  overrides: {
-    MuiButton: { // Name of the component ⚛️ / style sheet
-      root: { // Name of the rule
-        color: 'pink', // Some CSS
-        backgroundColor: 'purple'
-      },
-    },
-  },
   palette: {
     type: 'light',
     primary: {

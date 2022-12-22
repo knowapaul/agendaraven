@@ -63,12 +63,6 @@ function MenuItem(props) {
     )
 }
 
-function CustomDiv() {
-    return (
-        <Divider sx={{margin: 1}} />
-    )
-}
-
 function Menu(props) {
     return (
         <List>
@@ -79,7 +73,7 @@ function Menu(props) {
                     Icon ? 
                     <MenuItem key={n} path={props.path} text={text} icon={Icon} menuColor={props.menuColor} />
                     :
-                    <CustomDiv key={n} />
+                    <Divider key={n} sx={{margin: 1}} />
                 )
             })}
         </List>
@@ -200,10 +194,11 @@ export default function DashModel(props) {
                 <Box sx={{ flexGrow: 1, display:'flex', justifyContent: 'center', 
     }}>
                     <Typography 
-                    variant="h6" 
+                    variant="h5" 
                     noWrap 
                     component="div"
                     textAlign='center'
+                    color={contrastTheme.palette.text.secondary}
                     >
                         {props.title[0].toUpperCase() + props.title.slice(1)}
                     </Typography>
@@ -248,7 +243,7 @@ export default function DashModel(props) {
         <ThemeProvider theme={contrastTheme}>
             <Box
                 component="main"
-                sx={{ flexGrow: 1, position: 'fixed', top: '0px', right: '0px', width: { sm: `calc(100% - ${drawerWidth}px)` } }}
+                sx={{ flexGrow: 1, position: 'fixed', top: '0px', right: '0px', width: {xs: '100%', sm: `calc(100% - ${drawerWidth}px)` } }}
             >   
                 <Box component='main' sx={{height: 64, display: { xs: 'none', sm: 'flex' }}}  />
                 <Box component='main' sx={{height: 56, display: { xs: 'flex', sm: 'none' }}} />

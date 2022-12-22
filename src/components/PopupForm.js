@@ -20,7 +20,7 @@ export default function PopupForm(props) {
 
     return (
         <Backdrop
-        sx={{ color: '#fff', zIndex: theme.zIndex.drawer + 1, position: "absolute", top: 0, left: 0 }}
+        sx={{ color: '#fff', position: "absolute", zIndex: "appBar", top: 0, left: 0 }}
         open={props.open}
         >
             {props.open ?
@@ -30,7 +30,7 @@ export default function PopupForm(props) {
                         padding: 3, 
                         pt: 0, 
                         backgroundColor: theme.palette.secondary.main,
-                        width: props.width
+                        width: props.width,
                     }}
                     >   
                         <IconButton sx={{ml: -3, height: "32px", width: "32px", float: 'left'}} onClick={() => {props.setOpen(false)}}>

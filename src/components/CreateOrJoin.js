@@ -22,7 +22,8 @@ import PopupForm from "./PopupForm";
 export default function CreateOrJoin(props) {
     const [ cFields, setCFields ] = useState({});
     const [ jFields, setJFields ] = useState({});
-    const [ error, setError ] = useState('');
+    const [ cError, setCError ] = useState('');
+    const [ jError, setJError ] = useState('');
     const navigate = useNavigate();
     const theme = useTheme();
 
@@ -31,13 +32,34 @@ export default function CreateOrJoin(props) {
         const data = await getUserData(db, auth.currentUser.uid)
         const orgName = cFields.nameyourorganization;
 
-        const time = await cFunc({ 
+        const e = await cFunc({ 
             orgName: orgName, 
             phonenumber: data.info.phonenumber, 
             schedulename: data.info.schedulename 
         })
+        console.log('error', e)
+        if (e.data) {
+            setCError(e.data)
+        } else {
+            navigate(`/${orgName}/home`)
+        }
+        
+    }
+
+    const joinOrg = async (db, auth, jFunc) => {
+        // TODO: Perform checks here
+        const data = await getUserData(db, auth.currentUser.uid)
+        const orgName = jFields.organizationname;
+        const joinCode = jFields.joincode;
+
+        const time = await jFunc({ 
+            orgName: orgName, 
+            joinCode: joinCode.toUpperCase(),
+            phonenumber: data.info.phonenumber, 
+            schedulename: data.info.schedulename 
+        })
         console.log('Organization created at:', time)
-        navigate(`/${orgName}`)
+        navigate(`/${orgName}/home`)
         
     }
 
@@ -50,10 +72,11 @@ export default function CreateOrJoin(props) {
                     const auth = firebase.auth;
 
                     const createOrganization = httpsCallable(functions, 'createOrganization');
+                    const joinOrganization = httpsCallable(functions, 'joinOrganization');
 
                     return (
                         <PopupForm open={props.open} setOpen={props.setOpen} title="Create or Join">
-                            <Paper sx={{padding: 3, backgroundColor: theme.palette.primary}}>
+                            <Paper sx={{padding: 2, backgroundColor: theme.palette.primary}}>
                                 <Typography
                                 variant='h6'
                                 textAlign='center'
@@ -80,15 +103,15 @@ export default function CreateOrJoin(props) {
                                 ]}
                                 buttonText="Continue to Organiztion"
                                 handleSubmit={(event) => {
-                                    event.preventDefault()
+                                    joinOrg(db, auth, joinOrganization)
                                 }}
                                 data={jFields}
                                 setData={setJFields}
-                                formError={error}
+                                formError={jError}
                                 />
                             </Paper>
                             <Divider sx={{margin: 2}}/>
-                            <Paper sx={{padding: 3, backgroundColor: theme.palette.primary}}>
+                            <Paper sx={{padding: 2, backgroundColor: theme.palette.primary}}>
                                 <Typography
                                 variant='h6'
                                 textAlign='center'
@@ -112,7 +135,7 @@ export default function CreateOrJoin(props) {
                                 }}
                                 data={cFields}
                                 setData={setCFields}
-                                formError={error}
+                                formError={cError}
                                 />
                             </Paper>
                         </PopupForm>

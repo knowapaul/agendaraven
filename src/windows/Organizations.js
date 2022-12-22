@@ -96,8 +96,9 @@ function Add() {
         </Grid>
     )
 }
+
 function OrgGrid(props) {
-    const [ orgs, setOrgs ] = useState([]);
+    const [ orgs, setOrgs ] = useState({});
 
     const storage = props.firebase.storage;
     const db = props.firebase.db;
@@ -114,7 +115,7 @@ function OrgGrid(props) {
         <Box height='calc(100vh - 64px)' overflow='auto' padding={2}>
             {orgs !== {} ? 
                 <Grid container spacing={2}>
-                    {orgs.map((text) => {
+                    {Object.keys(orgs).map((text) => {
                         return (<OrgCard key={text} text={text} storage={storage}/>)
                     })}
                     <Add />

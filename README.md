@@ -22,16 +22,19 @@ before beginning the tier that is two or more levels below it.
 (*"s" => started / "x" => complete*)
 
 1. **Basic Operation**
-    - (s) Add organization users
+    - (x) Add organization users
     - () Availability turnin
+    - () Bug testing
     - () Buletin board
     - () Contact page
+    - () Dashboard Home
     - () Dashboard availability
     - () Dashboard inbox
     - () Dashboard schedules
     - (x) Database init function
     - () Error boundaries
     - () Firebase rules
+    - (s) Finish Chat
     - () Help page
     - () Home page
     - () No broken links

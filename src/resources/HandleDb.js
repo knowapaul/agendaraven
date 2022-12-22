@@ -10,7 +10,7 @@ export function addUserAccount(db, data, user) {
         doc(users, user.uid),
         {
             info: cData,
-            orgs: [],
+            orgs: {},
         }
     )
 }
@@ -68,4 +68,18 @@ export async function initDatabase(db) {
 export function getRolesDoc(db, org) {
     const orgData = collection(db, org + 'data')
     return doc(orgData, 'roles');
+}
+
+export async function getPeople(db, org, setPeople) {
+    const orgData = collection(db, org + 'chat')
+    const docSnap = await getDoc(doc(orgData, 'index'));
+    const people = docSnap.data();
+
+
+    let adaptedPeople = {};
+    for (let i in people) {
+        adaptedPeople[people[i].fullname] = Object.assign(people[i], {email: i})
+    }
+
+    setPeople(adaptedPeople)
 }

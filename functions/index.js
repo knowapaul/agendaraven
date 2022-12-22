@@ -3,6 +3,7 @@ const admin = require('firebase-admin');
 admin.initializeApp();
 
 const db = admin.firestore();
+const auth = admin.auth();
 
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions
@@ -17,7 +18,7 @@ const db = admin.firestore();
  * @param  {Map} data provide: orgName, phonenumber, schedulename
  * @param  {Map} context (provided by default)
  */
-exports.createOrganization = functions.https.onCall((data, context) => {
+exports.createOrganization = functions.https.onCall(async (data, context) => {
     const orgName = data.orgName;
     const orgIndex = 'index';
     const orgChat = orgName + 'chat'
@@ -26,48 +27,42 @@ exports.createOrganization = functions.https.onCall((data, context) => {
     const orgRef = db.collection(orgIndex).doc('organizations');
 
     const uid = context.auth.uid;
-    const name = context.auth.token.name || null;
-    const picture = context.auth.token.picture || null;
-    const email = context.auth.token.email || null;
+    const name = await auth.getUser(uid);
+    const picture = context.auth.token.picture;
+    const email = context.auth.token.email;
 
     const chatRef = db.collection(orgChat).doc()
 
-    
-    db.collection('index').doc('organizations').get()
-    .then((doc) => {
-        // Double check to make sure the organization name is not forbidden 
-        // TODO: also do this in the front end code
+    const doc = await db.collection('index').doc('organizations').get()
 
-        const data = doc.data();
+    // Double check to make sure the organization name is not forbidden 
+    // TODO: also do this in the front end code
 
-        if (Object.keys(data).includes(data.orgName)) {
-            throw new functions.https.HttpsError('invalid-name', 'This organization name is not available.')
-        }
-    }).then(() => {
-        // Add the organization to the forbidden list
-        return orgRef.set({[data.orgName]: true}, { merge: true})
-    })
-    .then(() => {
-        // Create an org subscription file
-        // TODO: add any other relevant fields
-        return db.collection(orgData)
-                .doc('subscription')
-                .set({ canAdd: true, userLimit: 20, })
-    })
-    .then(() => {
-        return join(orgName, 'owner', uid, email, name, data.phonenumber, data.schedulename)
-    })
-    .then(() => {
-        // Send a welcome message to the owner
-        return sendChatMessage(
+    if (Object.keys(doc.data()).includes(data.orgName)) {
+        // throw new functions.https.HttpsError('invalid-name', 'This organization name is not available.')
+        return 'Sorry, that organization name is not available.'
+    }
+
+    // Add the organization to the forbidden list
+    await orgRef.set({[data.orgName]: true}, { merge: true})
+
+    // Create an org subscription file
+    // TODO: add any other relevant fields
+    await db.collection(orgData)
+            .doc('subscription')
+            .set({ canAdd: true, userLimit: 20, })
+
+    await join(orgName, 'owner', uid, email, name.displayName, data.phonenumber, data.schedulename)
+
+    // Send a welcome message to the owner
+    await sendChatMessage(
             orgName, 
             'AgendaRaven', 
             'Welcome to your new organization! Go to settings and add other users to get started.', 
             [email]
             )
-    }).then(() => {
-        return false
-    })
+
+    return false;
     // .catch((error) => {
     //     throw new functions.https.HttpsError('The follwing error occured', error.message);
     // })
@@ -127,7 +122,7 @@ async function join(orgName, role, uid, email, displayName, phonenumber, schedul
 
     // Add to user account
     const orgs = (await userDoc.get()).data().orgs;
-    await userDoc.set({ orgs: orgs.concat(orgName) }, {merge: true})
+    await userDoc.set({ orgs: Object.assign(orgs, {[orgName]: true}) }, {merge: true})
 
     // Add to roles
     await db.collection(orgUsers)
@@ -153,6 +148,7 @@ async function join(orgName, role, uid, email, displayName, phonenumber, schedul
                     uid: uid, 
                     schedulename: schedulename,
                     fullname: displayName,
+                    roles: [role]
                 } 
             }, {merge: true})
         
@@ -169,18 +165,26 @@ async function join(orgName, role, uid, email, displayName, phonenumber, schedul
 
 // Runs join with ordinary user parameters
 exports.joinOrganization = functions.https.onCall(async (data, context) => {
+    functions.logger.log('data' , data)
 
     const uid = context.auth.uid;
-    const name = context.auth.token.name || null;
-    const email = context.auth.token.email || null;
+    const name = await auth.getUser(uid);
+    const email = context.auth.token.email;
 
     const doc = await db.collection(data.orgName + 'data')
-                .doc('codes')
+                .doc('roles')
                 .get()
 
-    const role = doc.data()[data.code]
+    functions.logger.log('name', name.displayName)
+    functions.logger.log('roles', doc.data())
+
+    const role = doc.data()[data.joinCode].roleName;
+
+    await join(data.orgName, role, uid, email, name.displayName, data.phonenumber, data.schedulename)
     
-    return await join(data.orgName, role, uid, email, name, data.phonenumber, data.schedulename)
+    // Send welcome message
+    const messageBody = `Congratulations on joining ${data.orgName}! For information from your organization's owner, visit the home page, or for insights on how to use AgendaRaven, visit the 'Insights' tab.`
+    await sendChatMessage(data.orgName, 'AgendaRaven', messageBody, [email])
 });
 
 // TODO: Add a role to an organization
@@ -190,14 +194,12 @@ async function addRole(org, roleName, roleKey, roleDescription) {
     const doc = await db.collection(org + 'data')
         .doc('roles')
         .set({
-            [roleName]: {
-                roleKey: roleKey,
+            [roleKey]: {
+                roleName: roleName,
                 roleDescription: roleDescription,
             }
         }, {merge: true})
 }
-
-
 
 exports.addRole = functions.https.onCall(async (data, context) => {
     // TODO: Check user admin status

@@ -1,4 +1,4 @@
-import { Button, TextField, Stack } from "@mui/material";
+import { Button, TextField, Stack, Box } from "@mui/material";
 import React, { useState } from "react";
 import validate from "../resources/Validate";
 import { Alert, AlertTitle } from "@mui/material";
@@ -96,6 +96,8 @@ class Input extends React.Component {
  * @param {text} buttonText
  * 
  * @param {function} handleSubmit
+ * 
+ * @param {string} formError
  */
 function Form(props) {
     const [errors, setErrors] = useState({});
@@ -112,37 +114,39 @@ function Form(props) {
     }
 
     return (
-        <form onSubmit={submit} noValidate>
-            <Stack spacing={2}>
-                {props.inputs.map((input) => (
-                <Input 
-                key={input.title}
-                name={input.title}
-                type={input.type}
-                required={input.required}
-                multiline={input.multiline}
-                placeholder={input.placeholder}
-                setData={props.setData}
-                data={props.data}
-                errors={errors}
-                setErrors={setErrors}
-                check={check}
-                validate={input.validate}
-                password={password}
-                setPassword={setPassword}
-                />
-                ))}
-                {props.children}
-                <Button type="submit" variant='contained'>{props.buttonText}</Button>
-                {props.formError ? 
-                <Alert severity="error">
-                    <AlertTitle>Error</AlertTitle>
-                    {props.formError}
-                </Alert> : ''
-                }
-            </Stack>
-            
-        </form>
+        <Box>
+            <form onSubmit={submit} noValidate>
+                <Stack spacing={2}>
+                    {props.inputs.map((input) => (
+                    <Input 
+                    key={input.title}
+                    name={input.title}
+                    type={input.type}
+                    required={input.required}
+                    multiline={input.multiline}
+                    placeholder={input.placeholder}
+                    setData={props.setData}
+                    data={props.data}
+                    errors={errors}
+                    setErrors={setErrors}
+                    check={check}
+                    validate={input.validate}
+                    password={password}
+                    setPassword={setPassword}
+                    />
+                    ))}
+                    {props.children}
+                    <Button type="submit" variant='contained'>{props.buttonText}</Button>
+                    {props.formError ? 
+                    <Alert severity="error" >
+                        <AlertTitle>Error</AlertTitle>
+                        {props.formError}
+                    </Alert> : ''
+                    }
+                </Stack>
+                
+            </form>
+        </Box>
     );
 }
 

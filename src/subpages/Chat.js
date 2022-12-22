@@ -1,7 +1,7 @@
 import { useTheme } from "@emotion/react";
-import { Avatar, Box, Button, CircularProgress, Divider, IconButton, LinearProgress, Paper, Stack, TextField, Tooltip } from "@mui/material";
-import { GroupAdd, Send, Visibility } from "@mui/icons-material";
-import Message from './Message'
+import { Avatar, Box, Button, Chip, CircularProgress, Divider, IconButton, LinearProgress, Paper, Stack, TextField, Tooltip, Typography } from "@mui/material";
+import { ArrowBack, GroupAdd, Send, Visibility } from "@mui/icons-material";
+import Message from '../components/Message'
 import { createRef, useEffect, useState } from "react";
 import { getMessaging } from 'firebase/messaging'
 import { DbContext } from "../resources/Db";
@@ -10,7 +10,8 @@ import { AppContext } from "../App";
 import { getSubscriptions, getChatMessaging } from '../resources/HandleDb'
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { FbContext } from "../resources/Firebase";
-import Loading, { MiniLoad } from "./Loading";
+import Loading, { MiniLoad } from "../components/Loading";
+import UserSearch from "../components/UserSearch";
 
 
 // This is one of the most complex widgets that is packaged in a single
@@ -20,6 +21,7 @@ import Loading, { MiniLoad } from "./Loading";
 
 const widgetHeight = 400;
 const topHeight = 57.5;
+const buttonWidth = '70px'
 
 /**
  * ### Internal component (used by Write)
@@ -38,26 +40,26 @@ const topHeight = 57.5;
     people[index] = 'Me';
     const letter = props.people[(index === 0) ? 1 : 0][0].toUpperCase();
     const theme = useTheme();
-    const white = 'white';
+    const front = theme.palette.background.default;
     const back = theme.palette.primary.main;
     const hover = 'rgba(255,255,255, .5)';
     
     return (
-        <Tooltip title={people.join(',\n')}>
-            <Box 
+        <NavButton 
+        bg = {props.chat === props.path ? front : back}
+        hover={props.chat === props.path ? front : hover}
+        handleClick={props.handleClick}
+        tab={true}
+        title={people.join(',\n')}
+        >
+            <Avatar 
             sx={{
-            padding: 1, 
-            }} 
-            onClick={() => {props.setChat(props.path)}}
+                margin: '0px'
+            }}
             >
-                <Avatar 
-                sx={{
-                }}
-                >
-                    {letter}
-                </Avatar>
-            </Box>
-        </Tooltip>
+                {letter}
+            </Avatar>
+        </NavButton>
     )
 }
 
@@ -78,10 +80,6 @@ function Write(props) {
     const [ text, setText ] = useState('');
     const [ sending, setSending ] = useState(false);
     const theme = useTheme();
-
-
-    const buttonWidth = '70px'
-
 
     const messagesEndRef = createRef()
 
@@ -111,7 +109,6 @@ function Write(props) {
 
     const handleSend = () => {
         if (text) {
-            console.log('sending')
             setSending(true)
             sendChatMessage({
                 orgName: props.org,
@@ -121,23 +118,25 @@ function Write(props) {
             }).then(() => {
                 setText('')
                 setSending(false)
-                console.log('sent')
             }).catch((error) => {
-                console.log('error', error)
                 setSending(false)
             })
         }
     }
     
+    const selectChat = (c) => {
+        setChat(c)
+        setUnsub(getChatMessaging(db, c, setMessages))
+    }
 
     return (
             <Box>
-                <Paper elevation={12} sx={{ display: 'flex', borderRadius: '0px', height: '57.5px'}}>
+                <ChatNav>
                     <Box sx={{display: 'flex', flexGrow: 1}} >
-                        <Stack direction="row" spacing={1}>
+                        <Stack direction="row">
                             {subs ? Object.entries(subs).map(ent => {
                                 return (
-                                    <Contact people={ent[1]} key={ent[0]} path={ent[0]} email={auth.currentUser.email} chat={chat} setChat={setChat} />
+                                    <Contact people={ent[1]} key={ent[0]} path={ent[0]} email={auth.currentUser.email} chat={chat} setChat={setChat} handleClick={() => {selectChat(ent[0])}}/>
                                 )
                             }) : ''}
                         </Stack>
@@ -172,7 +171,7 @@ function Write(props) {
                             </Button>
                         </Tooltip>
                     </Box>
-                </Paper>
+                </ChatNav>
                 <Box height={'calc(100vh - 58px - 72px - 64px)'} overflow='auto'>
                     {messages ? 
                             messages.messages.map(message => {
@@ -215,6 +214,31 @@ function Write(props) {
 
 }
 
+function NavButton(props) {
+    return (
+        <Tooltip title={props.title}>
+            <Button 
+            disableElevation 
+            variant="contained" 
+            sx={{
+                borderRadius: '0px',
+                borderTopRightRadius: props.tab ? 6 : 0,
+                borderTopLeftRadius: props.tab ? 6 : 0,
+                height: '100%',
+                boxShadow: 'none', 
+                backgroundColor: props.bg,
+                '&:hover': {
+                    backgroundColor: props.hover,
+                },
+            }}
+            onClick={props.handleClick}
+            >
+                {props.children}
+            </Button>
+        </Tooltip>
+    )
+}
+
 /**
  * ### Displays the recipient selector widget in place of the default Write() element
  * 
@@ -223,16 +247,73 @@ function Write(props) {
  * - 
  */
 function NewChat(props) {
+    const [ selected, setSelected ] = useState({});
     const theme = useTheme();
+
+    const sendChatMessage = httpsCallable(props.firebase.functions, 'sendChatMessage');
+
+    function createChat() {
+        const emails = Object.entries(selected).map((ent) => (ent[1].email))
+        sendChatMessage({
+            orgName: props.org,
+            body: '-',
+            recipients: emails
+        })
+        props.setWidget('chat')
+    }
     return (
         <div>
-            <Box sx={{ display: 'flex', borderBottom: 'solid', height: '57.5px'}}>
-
+            <ChatNav>
+                    <Box sx={{flexGrow: 1}}>
+                        <NavButton title="Return to chat" handleClick={() => {props.setWidget('chat')}}>
+                            <ArrowBack sx={{mr: 1}} />
+                            Back 
+                        </NavButton>
+                    </Box>
+                    <Typography variant='h5' noWrap sx={{margin: 'auto', flexGrow: 1}}>
+                        Select Recipients
+                    </Typography>
+                    <Box sx={{flex: 0}}>
+                        <NavButton title="Send Welcome Message" handleClick={createChat}>
+                            <Send sx={{mr: 1}} />
+                            Create 
+                        </NavButton>
+                    </Box>
+            </ChatNav>
+            <Box 
+            sx={{ml: 2, mt: 1}}
+            >
+                <Typography
+                variant="subtitle1"
+                display={'inline'}
+                >
+                    To: 
+                </Typography>
+                {Object.keys(selected).map(key => {
+                    function handleDelete() {
+                        let clone = Object.assign({}, selected)
+                        delete clone[key]
+                        setSelected(clone)
+                    }
+                    return (
+                        <Chip key={key} label={key} color="primary" onDelete={handleDelete} sx={{margin: .5}} />
+                    )
+                })}
             </Box>
+            <UserSearch firebase={props.firebase} org={props.org} selected={selected} setSelected={setSelected} button={''} multiple={true}>
+
+            </UserSearch>
         </div>
     )
 }
 
+function ChatNav(props) {
+    return (
+        <Paper elevation={0} sx={{ display: 'flex', borderRadius: '0px', height: '57.5px'}}>
+            {props.children}
+        </Paper>
+    )
+}
 
 
 /**
@@ -255,7 +336,7 @@ export default function Chat(props) {
                         { widget === 'chat' ? 
                         <Write firebase={firebase} org={props.org} setWidget={setWidget}/> 
                         : 
-                        <NewChat />
+                        <NewChat firebase={firebase} org={props.org} setWidget={setWidget} />
                         }
                     </Box>
                     
