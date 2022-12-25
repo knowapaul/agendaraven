@@ -1,16 +1,7 @@
-import { ThemeProvider, useTheme } from "@emotion/react";
-import { Paper, Backdrop, Typography, Button, ClickAwayListener, Box, IconButton, Stack } from "@mui/material";
-
-import { useState } from "react";
-
-import { mTheme } from '../resources/Themes'
-import Form from "./Form";
-
-import { CancelOutlined, Close } from "@mui/icons-material";
-import { FbContext } from "../resources/Firebase";
-import { getUserData } from "../resources/HandleDb";
-import { useNavigate } from "react-router-dom";
-
+// MUI Resources
+import { CancelOutlined } from "@mui/icons-material";
+import { useTheme } from "@emotion/react";
+import { Paper, Backdrop, Typography, ClickAwayListener, Box, IconButton } from "@mui/material";
 
 
 export default function PopupForm(props) {

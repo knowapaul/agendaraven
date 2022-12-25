@@ -1,16 +1,20 @@
-import { Stack, Paper, Box, Typography, TextField, Avatar, Grid, Button, CircularProgress, Divider } from "@mui/material"
-import { useTheme } from "@emotion/react"
+// React Resources
 import { useState } from "react"
-import { ArrowBack, Visibility } from "@mui/icons-material";
-import { FbContext } from '../resources/Firebase'
-import { getPeople, getPeopleDoc, getRolesDoc } from "../resources/HandleDb";
-import PopupForm from "../components/PopupForm";
-import AddIcon from '@mui/icons-material/Add'
-import Form from "../components/Form";
-import { httpsCallable } from "firebase/functions";
 import { useDocument } from 'react-firebase-hooks/firestore';
+
+// MUI Resources
+import { Stack, Paper, Box, Typography, Avatar, Button } from "@mui/material"
+import { ArrowBack, Visibility } from "@mui/icons-material";
+
+// Project Resources
+import { FbContext } from '../resources/Firebase'
+import { getRolesDoc } from "../resources/HandleDb";
+import Form from "../components/Form";
 import UserSearch from "../components/UserSearch";
 import Cards from "../components/Cards";
+
+// Firebase Resources
+import { httpsCallable } from "firebase/functions";
 
 
 function User(props) {
@@ -22,8 +26,6 @@ function User(props) {
         last = nameText[1][0].toUpperCase() + nameText[1].slice(1);
         data = props.selected[full];
     }
-
-    const theme = useTheme();
 
     return (
         <div>
@@ -90,167 +92,11 @@ function getCode() {
     return out;
 }
 
-function Add(props) {
-    const [open, setOpen] = useState(false)
-    const [data, setData] = useState({});
-
-    const key = getCode();
-
-    // TODO: Extract this component
-
-    return (
-        <Box >
-            <Button  
-            variant="contained" 
-            aria-label="add" 
-            onClick={() => {setOpen(true)}}
-            >
-                <AddIcon sx={{mr: 1}} />
-                <Typography
-                noWrap
-                >
-
-                    Add Role
-                </Typography>
-            </Button>
-
-            <PopupForm open={open} setOpen={setOpen} title={"Add Role"} width={300}>
-                <Form 
-                inputs={[
-                    {title: 'Role Name',
-                    type: 'text',
-                    placeholder: '',
-                    required: true,
-                    validate: 'role'
-                    },
-                    {title: 'Role Description',
-                    type: 'text',
-                    placeholder: '',
-                    required: true,
-                    validate: 'none',
-                    multiline: true,
-                    }
-                ]}
-                data={data} 
-                setData={setData} 
-                buttonText={'Add'} 
-                handleSubmit={() => {
-                    props.addRole(
-                        {
-                        orgName: props.org,
-                        roleName: data.rolename, 
-                        roleKey: key, 
-                        roleDescription: data.roledescription
-                        }
-                    ).then(
-                        setOpen(false)
-                    )
-                }}
-                >
-                    <Typography>
-                        {`Key: ${key.slice(0, 3)} - ${key.slice(3)}`}
-                    </Typography>
-                </Form>
-            </PopupForm>
-        </Box>
-    )
-}
-
-
-// TODO: use the Cards component for this functionality
 function Roles(props) {
     const db = props.firebase.db;
     const functions = props.firebase.functions;
 
-    const [ rolesDoc, loading, error ]= useDocument(getRolesDoc(db, props.org));
-    const addRole = httpsCallable(functions, 'addRole');
-    const data = rolesDoc ? rolesDoc.data() : false;
-    
-    return (
-        <div>
-            <Box 
-            sx={{display: 'flex', padding: 1}}
-            >
-                <Box flex={1}>
-                    <Button 
-                    onClick={() => {props.setWidget('users')}}
-                    variant='contained'
-                    >
-                        <ArrowBack sx={{mr: 1}}/>
-                        <Typography
-                        noWrap
-                        >
-                            Back
-                        </Typography>
-                    </Button>
-                </Box>
-                <Box flex={0}>
-                    <Add addRole={addRole} org={props.org} />
-                </Box>
-            </Box>
-            {loading ? <CircularProgress />
-            :
-            <Grid container 
-            height={'calc(100vh - 64px - 52.5px)'} 
-            overflow='scroll' 
-            padding={1} 
-            spacing={2} 
-            sx={{mt: 0}}
-            >
-                {data ?
-                Object.keys(data).map((key) => (
-                    <Grid item 
-                    xs={12} sm={12} md={6} lg={4} xl={3} 
-                    width={'100%'} 
-                    sx={{aspectRatio: '16 / 9'}}
-                    key={key}
-                    >
-                        <Paper 
-                        variant="outlined"
-                        sx={{
-                            py: 1,
-                            px: 2,
-                            aspectRatio: '16 / 9',
-                        }}
-                        >
-                            <Typography
-                            variant='h6'
-                            fontWeight={'bold'}
-                            >
-                                {data[key].roleName}
-                            </Typography>
-                            <Divider />
-                            <Typography
-                            variant='body2'
-                            >
-                                {`Join Code: ${key.slice(0, 3)} - ${key.slice(3)}`}
-                            </Typography>
-                            <Typography
-                            variant='body1'
-                            mt={1}
-                            >
-                                {data[key].roleDescription}
-                            </Typography>
-                        </Paper>
-                    </Grid>
-                ))
-                :
-                <Typography padding={4} textAlign={'center'}>
-                    You currently have no roles in your organization. Click 'Add Role' to begin.
-                </Typography>
-            }
-                
-            </Grid>
-            }
-        </div>
-    )
-}
-
-function NewRoles(props) {
-    const db = props.firebase.db;
-    const functions = props.firebase.functions;
-
-    const [ rolesDoc, loading, error ]= useDocument(getRolesDoc(db, props.org));
+    const [ rolesDoc, loading ]= useDocument(getRolesDoc(db, props.org));
     const [ formData, setFormData ] = useState({});
     const [ formOpen, setFormOpen ] = useState(false);
     const addRole = httpsCallable(functions, 'addRole');
@@ -349,7 +195,7 @@ export default function People(props) {
         <FbContext.Consumer>
             {firebase => (
                 widget === 'roles' ? 
-                <NewRoles org={props.org} firebase={firebase} setWidget={setWidget} />
+                <Roles org={props.org} firebase={firebase} setWidget={setWidget} />
                 :
                 <Box>
                     <Stack direction={'row'} sx={{display: { xs: 'block', md: 'none', }}}>

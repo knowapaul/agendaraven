@@ -1,11 +1,16 @@
-import { ThemeProvider } from "@emotion/react";
-import { CircularProgress } from "@mui/material";
-import { Container } from "@mui/system";
-import { signOut } from "firebase/auth";
+// React Resources
 import { useNavigate } from "react-router-dom";
+
+// MUI Resources
+import { ThemeProvider } from "@emotion/react";
+
+// Project Resources
 import { FbContext } from "../resources/Firebase";
 import { mTheme } from "../resources/Themes";
 import Loading from "../components/Loading";
+
+// Firebase Resources
+import { signOut } from "firebase/auth";
 
 
 export default function Logout() {

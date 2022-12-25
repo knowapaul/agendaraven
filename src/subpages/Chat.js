@@ -75,13 +75,19 @@ const buttonWidth = '70px'
  */ 
 function Write(props) {
     const [ messages, setMessages ] = useState();
-    const [ _unsub, setUnsub ] = useState(() => {});
+    const [ unsub, setUnsub ] = useState(() => {});
     const [ subs, setSubs ] = useState({});
     const [ chat, setChat ] = useState();
     const [ text, setText ] = useState('');
     const [ sending, setSending ] = useState(false);
 
     const messagesEndRef = createRef()
+
+    const functions = props.firebase.functions;
+    const auth = props.firebase.auth;
+    const db = props.firebase.db;
+
+    const user = auth.currentUser;
 
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView()
@@ -96,14 +102,7 @@ function Write(props) {
                 setChat(defaultChat)
                 setUnsub(getChatMessaging(db, defaultChat, setMessages))
             })
-    }, [])
-
-    const functions = props.firebase.functions;
-    const auth = props.firebase.auth;
-    const db = props.firebase.db;
-
-    // const sendChatMessage = httpsCallable(functions, 'sendChatMessage');
-    const user = auth.currentUser;
+    }, [db, props.org, user.uid])
 
     const sendChatMessage = httpsCallable(functions, 'sendChatMessage');
 
@@ -128,6 +127,9 @@ function Write(props) {
         setChat(c)
         setUnsub(getChatMessaging(db, c, setMessages))
     }
+
+    // TODO: put unsub to use
+    console.log(unsub)
 
     return (
             <Box>

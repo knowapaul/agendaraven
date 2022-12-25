@@ -1,10 +1,11 @@
+// MUI Resources
 import { ArrowBack, Add } from "@mui/icons-material"
-import { Stack, Paper, Box, Typography, TextField, Avatar, Grid, Button, CircularProgress, Divider, useScrollTrigger } from "@mui/material"
-import { useState } from "react";
+import { Paper, Box, Typography, Grid, CircularProgress, Divider } from "@mui/material"
+
+// Project Resources
 import PopupForm from "./PopupForm";
-import Form from "./Form";
 import { NavButton, SubNav } from "./SubNav";
-import Nav from "./Nav";
+
 
 function AddButton(props) {
     return (
