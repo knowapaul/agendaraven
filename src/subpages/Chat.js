@@ -1,17 +1,21 @@
-import { useTheme } from "@emotion/react";
-import { Avatar, Box, Button, Chip, CircularProgress, Divider, IconButton, LinearProgress, Paper, Stack, TextField, Tooltip, Typography } from "@mui/material";
-import { ArrowBack, GroupAdd, Send, Visibility } from "@mui/icons-material";
-import Message from '../components/Message'
+// React Resources
 import { createRef, useEffect, useState } from "react";
-import { getMessaging } from 'firebase/messaging'
-import { DbContext } from "../resources/Db";
-import { getFunctions, httpsCallable } from "firebase/functions"
-import { AppContext } from "../App";
+
+// MUI Resources
+import { Avatar, Box, Button, Chip, LinearProgress, Paper, Stack, TextField, Typography } from "@mui/material";
+import { ArrowBack, GroupAdd, Send, Visibility } from "@mui/icons-material";
+import { useTheme } from "@emotion/react";
+
+// Project Resources
 import { getSubscriptions, getChatMessaging } from '../resources/HandleDb'
-import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { FbContext } from "../resources/Firebase";
-import Loading, { MiniLoad } from "../components/Loading";
+import { MiniLoad } from "../components/Loading";
 import UserSearch from "../components/UserSearch";
+import { NavButton, SubNav } from "../components/SubNav";
+import Message from '../components/Message'
+
+// Firebase Resources
+import { httpsCallable } from "firebase/functions";
 
 
 // This is one of the most complex widgets that is packaged in a single
@@ -19,8 +23,6 @@ import UserSearch from "../components/UserSearch";
 // can add chat capabilities. To handle the complexity, this file is 
 // extensively documented
 
-const widgetHeight = 400;
-const topHeight = 57.5;
 const buttonWidth = '70px'
 
 /**
@@ -72,14 +74,12 @@ const buttonWidth = '70px'
  * - props.setWidget: the widget change function
  */ 
 function Write(props) {
-    const [ end, setEnd ] = useState();
     const [ messages, setMessages ] = useState();
-    const [ unsub, setUnsub ] = useState(() => {});
+    const [ _unsub, setUnsub ] = useState(() => {});
     const [ subs, setSubs ] = useState({});
     const [ chat, setChat ] = useState();
     const [ text, setText ] = useState('');
     const [ sending, setSending ] = useState(false);
-    const theme = useTheme();
 
     const messagesEndRef = createRef()
 
@@ -131,47 +131,32 @@ function Write(props) {
 
     return (
             <Box>
-                <ChatNav>
-                    <Box sx={{display: 'flex', flexGrow: 1}} >
-                        <Stack direction="row">
-                            {subs ? Object.entries(subs).map(ent => {
-                                return (
-                                    <Contact people={ent[1]} key={ent[0]} path={ent[0]} email={auth.currentUser.email} chat={chat} setChat={setChat} handleClick={() => {selectChat(ent[0])}}/>
-                                )
-                            }) : ''}
-                        </Stack>
-                    </Box>
-                    <Box sx={{flexGrow: 0}}>
-                        <Tooltip title="View All Chats">
-                            <Button 
-                            disableElevation 
-                            variant="contained" 
-                            sx={{ width: buttonWidth,
-                                borderRadius: '0px',
-                                height: '100%',
-                                width: topHeight,
-                            }}
-                            onClick={() => {props.setWidget('view')}}
-                            >
-                                <Visibility fontSize="large" sx={{margin: '0px'}}/>
-                            </Button>
-                        </Tooltip>
-                        <Tooltip title="Create New Chat">
-                            <Button 
-                            disableElevation 
-                            variant="contained" 
-                            sx={{ width: buttonWidth,
-                                borderRadius: '0px',
-                                height: '100%',
-                                width: topHeight,
-                            }}
-                            onClick={() => {props.setWidget('new')}}
-                            >
-                                <GroupAdd fontSize="large"/>
-                            </Button>
-                        </Tooltip>
-                    </Box>
-                </ChatNav>
+                <SubNav
+                left={
+                    <Stack direction="row">
+                        {subs ? Object.entries(subs).map(ent => {
+                            return (
+                                <Contact people={ent[1]} key={ent[0]} path={ent[0]} email={auth.currentUser.email} chat={chat} setChat={setChat} handleClick={() => {selectChat(ent[0])}}/>
+                            )
+                        }) : ''}
+                    </Stack>
+                }
+                right={
+                    <Stack direction="row">
+                        <NavButton title="View All Chats">
+                            <Visibility fontSize="large" sx={{margin: '0px'}}/>
+                        </NavButton>
+                        <NavButton 
+                        title="Create New Chat"
+                        handleClick={() => {props.setWidget('new')}}
+                        >
+                            <GroupAdd fontSize="large"/>
+                        </NavButton>
+                    </Stack>
+                }
+                />
+
+                    
                 <Box height={'calc(100vh - 58px - 72px - 64px)'} overflow='auto'>
                     {messages ? 
                             messages.messages.map(message => {
@@ -214,31 +199,6 @@ function Write(props) {
 
 }
 
-function NavButton(props) {
-    return (
-        <Tooltip title={props.title}>
-            <Button 
-            disableElevation 
-            variant="contained" 
-            sx={{
-                borderRadius: '0px',
-                borderTopRightRadius: props.tab ? 6 : 0,
-                borderTopLeftRadius: props.tab ? 6 : 0,
-                height: '100%',
-                boxShadow: 'none', 
-                backgroundColor: props.bg,
-                '&:hover': {
-                    backgroundColor: props.hover,
-                },
-            }}
-            onClick={props.handleClick}
-            >
-                {props.children}
-            </Button>
-        </Tooltip>
-    )
-}
-
 /**
  * ### Displays the recipient selector widget in place of the default Write() element
  * 
@@ -248,7 +208,6 @@ function NavButton(props) {
  */
 function NewChat(props) {
     const [ selected, setSelected ] = useState({});
-    const theme = useTheme();
 
     const sendChatMessage = httpsCallable(props.firebase.functions, 'sendChatMessage');
 
@@ -263,23 +222,21 @@ function NewChat(props) {
     }
     return (
         <div>
-            <ChatNav>
-                    <Box sx={{flexGrow: 1}}>
-                        <NavButton title="Return to chat" handleClick={() => {props.setWidget('chat')}}>
-                            <ArrowBack sx={{mr: 1}} />
-                            Back 
-                        </NavButton>
-                    </Box>
-                    <Typography variant='h5' noWrap sx={{margin: 'auto', flexGrow: 1}}>
-                        Select Recipients
-                    </Typography>
-                    <Box sx={{flex: 0}}>
-                        <NavButton title="Send Welcome Message" handleClick={createChat}>
-                            <Send sx={{mr: 1}} />
-                            Create 
-                        </NavButton>
-                    </Box>
-            </ChatNav>
+            <SubNav
+            title="Recipients"
+            left={
+                <NavButton title="Return to chat" handleClick={() => {props.setWidget('chat')}}>
+                    <ArrowBack sx={{mr: 1}} />
+                    Back 
+                </NavButton>
+            }
+            right={
+                <NavButton title="Send Welcome Message" handleClick={createChat}>
+                    <Send sx={{mr: 1}} />
+                    Create 
+                </NavButton>
+            }
+            />
             <Box 
             sx={{ml: 2, mt: 1}}
             >
@@ -304,14 +261,6 @@ function NewChat(props) {
 
             </UserSearch>
         </div>
-    )
-}
-
-function ChatNav(props) {
-    return (
-        <Paper elevation={0} sx={{ display: 'flex', borderRadius: '0px', height: '57.5px'}}>
-            {props.children}
-        </Paper>
     )
 }
 

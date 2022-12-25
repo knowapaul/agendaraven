@@ -1,80 +1,13 @@
+// React Resources
+import { useState } from "react"
+
+// MUI Resources
 import { Box, Typography, TextField, Avatar, Grid, Button } from "@mui/material"
 import { useTheme } from "@emotion/react"
-import { useState } from "react"
-import { Visibility } from "@mui/icons-material";
+
+// Project Resources
 import { getPeople } from "../resources/HandleDb";
-
-
-function SortOptions(value, options) {
-    let scoreMap = {};
-    for (let i in options) {
-        let phraseScore = {};
-        const words = options[i].toLowerCase().split(' ');
-        const inputs = value.toLowerCase().split(' ');
-        for (let d = 0; d < words.length; d++) {
-            for (let e = 0; e < inputs.length; e++) {
-                let target = words[d];
-                let current = inputs[e];
-                let wordScore = 0;
-                let consc = 0;
-                for (let j = 0; j < current.length; j++) {
-                    let cdif = target.indexOf(current.toLowerCase()[j])
-                    if (cdif > 2) {cdif = -1}
-                    if (cdif === 0) {
-                        if (target === words[d]) {
-                            consc++;
-                        }
-                        consc++;
-                    } else {
-                        consc -= cdif;
-                        if (cdif === -1) {
-                            consc -= 3;
-                        }
-                    }
-                    if (!(cdif === -1)) {
-                        wordScore -= consc;
-                        target = target.slice(cdif + 1)
-                    }
-                }
-                if (current.length > 2) {
-                    wordScore += target.length
-                }
-                wordScore -= consc;
-                
-                // Change wordScore to a percentage
-                const n = words[d].length;
-                const maxScore = n**2 * (n+1)**2 / 4
-                wordScore = wordScore/n;
-
-                // Phrasescore = {List}
-                // = {keyword index: score}
-                phraseScore[`a${d},b${e}`] = wordScore;
-            }
-            
-        }
-        const rank = Object.keys(phraseScore).sort().sort((a, b) => phraseScore[a] - phraseScore[b])
-        let scores = phraseScore[rank[0]];
-        let avoid = [];
-        for (let i in rank) {
-            const k = rank[i].split(',')
-            let flag = false;
-            for (let j in k) {
-                if (avoid.includes(k[j])) {flag = true}
-            }
-            if (!flag) {
-                scores += phraseScore[rank[i]];
-                avoid = avoid.concat(k)
-            }
-        }
-        // console.log(options[i], phraseScore)
-        const total = scores;
-        if (total <= 0) {
-            scoreMap[options[i]] = total;
-        }
-    }
-    // console.log(scoreMap)
-    return Object.keys(scoreMap).sort().sort((a, b) => scoreMap[a] - scoreMap[b])
-}
+import { searchSort } from '../resources/SearchSort'
 
 
 /**
@@ -109,7 +42,7 @@ export default function UserSearch(props) {
             </Box>
             
             <Grid container spacing={1} padding={2} maxHeight={'calc(100vh - 64px - 88px)'} overflow="scroll">
-                {SortOptions(value, Object.keys(people)).map((key) => {
+                {searchSort(value, Object.keys(people)).map((key) => {
                     function handleSelect() {
                         const person = {[key]: people[key]}
                         const newSelected = Object.assign({}, person, props.selected)

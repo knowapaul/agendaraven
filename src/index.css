@@ -15,3 +15,17 @@
 .firebase-emulator-warning {
   display: none;
 }
+
+/* body {
+
+  width: 300px;
+  overflow: auto;
+} */
+
+.orgHeader {
+  height: 100%;
+  width: 100%;
+  max-width: 800px;
+  object-fit: cover;
+  border-radius: 5px;
+}

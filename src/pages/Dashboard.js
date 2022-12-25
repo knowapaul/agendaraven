@@ -1,18 +1,22 @@
-import { AccountCircle, CalendarToday, DashboardCustomize, EventAvailable, Insights, Mail, Payments, Logout } from '@mui/icons-material'
+// React Resources
 import * as React from 'react';
+import { Link } from 'react-router-dom';
+
+// MUI Resources
+import { AccountCircle, CalendarToday, DashboardCustomize, EventAvailable, Insights, Mail, Payments, Logout } from '@mui/icons-material'
 import CssBaseline from '@mui/material/CssBaseline';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack'
 import { ThemeProvider } from '@emotion/react';
+
+// Project Resources
 import { bTheme } from '../resources/Themes';
-import { Link } from 'react-router-dom';
 import Organizations from '../windows/Organizations';
 import AuthCheck from '../components/AuthCheck';
 import { useLoaderData } from 'react-router-dom';
 import { FbContext } from '../resources/Firebase';
 import DashModel from '../components/DashModel';
 
-const drawerWidth = 250;
 
 export async function dashLoader({ params }) {
   const page = params.page ? params.page : 'organizations'
@@ -41,7 +45,7 @@ function Logo() {
       spacing={2} 
       margin={1}
       >
-        <img src='../favicon.ico' width='32' height='32' />
+        <img src='../favicon.ico' width='32' height='32' alt='logo'/>
         <Typography
         variant="h6"
         noWrap
@@ -78,8 +82,7 @@ export function Dashboard(props) {
                 <DashModel 
                 menuItems={menu} 
                 logo={<Logo />} 
-                menuColor="secondary" 
-                title={page ? page : 'Organizations'} 
+                page={page}
                 path={`/dashboard/`} 
                 >
                   {elementMap[page]}

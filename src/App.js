@@ -22,6 +22,7 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { initializeApp } from "firebase/app";
 import CreateAccount from './pages/CreateAccount.js'
 import Organizations from './windows/Organizations.js';
+import { Box } from '@mui/system';
 
 // import { getAnalytics } from "firebase/analytics";
 

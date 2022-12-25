@@ -1,39 +1,25 @@
-import { AccountCircle, CalendarToday, DashboardCustomize, EventAvailable, Insights, Mail, Payments, Logout } from '@mui/icons-material'
+// React Resources
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import * as React from 'react';
-import PropTypes from 'prop-types';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import CssBaseline from '@mui/material/CssBaseline';
-import Divider from '@mui/material/Divider';
-import Drawer from '@mui/material/Drawer';
-import IconButton from '@mui/material/IconButton';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import MailIcon from '@mui/icons-material/Mail';
+// MUI Resources
 import MenuIcon from '@mui/icons-material/Menu';
-import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import Stack from '@mui/material/Stack'
 import { ThemeProvider, useTheme } from '@emotion/react';
-import { bTheme, mTheme } from '../resources/Themes';
-import { Router, Routes, Route, useNavigate } from 'react-router-dom';
-import Organizations from '../windows/Organizations';
-import Availability from '../windows/Availability';
-import Schedules from '../windows/Schedules';
-import Inbox from '../windows/Inbox';
-import Account from '../windows/Account';
+import { AppBar, Box, Divider, Drawer, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, createTheme } from '@mui/material';
+
+// Project Resources
 import AuthCheck from '../components/AuthCheck';
 import CustomAvatar from '../components/CustomAvatar';
-import { createTheme } from '@mui/material';
+
+
+
 
 const drawerWidth = 250;
 
-
+function lowLast(text) {
+    return text.split(' ').slice(-1)[0].toLowerCase()
+}
 
 function MenuItem(props) {
     const navigate = useNavigate();
@@ -44,20 +30,27 @@ function MenuItem(props) {
             navigate('/logout')
         } else {
             // Just use the last word of the button's string
-            navigate(props.path + text.split(' ').slice(-1)[0].toLowerCase())
+            navigate(props.path + lowLast(text))
         }
     }
+
+    const isSelected = lowLast(props.page) === lowLast(props.text)
+
+    console.log('st', props.page, props.text)
 
     return (
         <ListItem 
         disablePadding
         onClick={() => {handleClick(props.text)}}
+        sx={{
+            backgroundColor: isSelected ? theme.palette.background.default : theme.palette.primary.main
+        }}
         >
             <ListItemButton>
-                <ListItemIcon color={props.menuColor}>
+                <ListItemIcon color="secondary">
                     {props.icon}
                 </ListItemIcon>
-            <ListItemText primary={props.text} />
+            <ListItemText primary={props.text} sx={{ color: isSelected ? theme.palette.primary.main : theme.palette.background.default}} />
             </ListItemButton>
         </ListItem>
     )
@@ -71,7 +64,7 @@ function Menu(props) {
                 const Icon = item[1];
                 return (
                     Icon ? 
-                    <MenuItem key={n} path={props.path} text={text} icon={Icon} menuColor={props.menuColor} />
+                    <MenuItem key={n} path={props.path} setSelected={props.setSelected} page={props.page} text={text} icon={Icon} menuColor={props.menuColor} />
                     :
                     <Divider key={n} sx={{margin: 1}} />
                 )
@@ -86,15 +79,15 @@ function Menu(props) {
  * @param  {Map} props
  * *React props:*
  * - props.menuItems: map of menu items in the format *name : icon*
- * - props.menuColor: the icon color of menu items (if different from default)
+ * - props.page: the path of the currently selected menu item
  * - props.logo: the upper-left hand corner logo
  * - props.path: the root path of the page
- * - props.title: the page's title
  */
 export default function DashModel(props) {
     const { win } = props;
-    const [ mobileOpen, setMobileOpen ] = React.useState(false);
+    const [ mobileOpen, setMobileOpen ] = useState(false);
     const theme = useTheme();
+    console.log('default', props.page)
   
     const handleDrawerToggle = () => {
       setMobileOpen(!mobileOpen);
@@ -144,34 +137,15 @@ export default function DashModel(props) {
               {props.logo}
           </Toolbar>
           <Divider sx={{borderColor: theme.palette.background.default}}/>
-          <Menu path={props.path} items={props.menuItems} menuColor={props.menuColor}/>
+          <Menu path={props.path} page={props.page} items={props.menuItems}/>
       </div>
     );
-
-    const [windowSize, setWindowSize] = React.useState({
-        width: undefined,
-        height: undefined,
-      });
-    React.useEffect(() => {
-    // Handler to call on window resize
-    function handleResize() {
-        // Set window width/height to state
-        setWindowSize({
-        width: window.innerWidth,
-        height: window.innerHeight,
-        });
-        // Add event listener
-        window.addEventListener("resize", handleResize);
-        // Call handler right away so state gets updated with initial window size
-        handleResize();
-    }})
-    
   
     const container = win !== undefined ? () => win().document.body : undefined;
   
     return (
       <AuthCheck>
-        <Box sx={{ display: 'flex'}}>
+        <Box sx={{ padding: 10, display: 'flex',  minWidth: '300px', overflow: 'auto'}}>
             
             <AppBar
             position="fixed"
@@ -200,7 +174,7 @@ export default function DashModel(props) {
                     textAlign='center'
                     color={contrastTheme.palette.text.secondary}
                     >
-                        {props.title[0].toUpperCase() + props.title.slice(1)}
+                        {props.page[0].toUpperCase() + props.page.slice(1)}
                     </Typography>
                 </Box>
                 <CustomAvatar />
