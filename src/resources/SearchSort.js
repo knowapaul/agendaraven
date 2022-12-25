@@ -65,12 +65,10 @@ export function searchSort(value, options) {
                 avoid = avoid.concat(k)
             }
         }
-        // console.log(options[i], phraseScore)
         const total = scores;
         if (total <= 0) {
             scoreMap[options[i]] = total;
         }
     }
-    // console.log(scoreMap)
     return Object.keys(scoreMap).sort().sort((a, b) => scoreMap[a] - scoreMap[b])
 }

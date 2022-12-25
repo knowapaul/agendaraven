@@ -13,7 +13,6 @@ import { FbContext } from "../resources/Firebase";
 
 function Header(props) {
     const theme = useTheme();
-    console.log('theme', theme.shape.borderRadius)
     return (
         <Box sx={{
             width: '100%',
@@ -72,7 +71,6 @@ function Left(props) {
 
 function FileItem(props) {
     const theme = useTheme();
-    console.log('props', props)
     return (
         <Button
         sx={{
@@ -111,7 +109,6 @@ function FileItem(props) {
 function Right(props) {
     const theme = useTheme();
     const [ files ] = useState({item1: ['description', 'link'], item2: ['description2', 'link2'], item3: ['description2', 'link2'], item4: ['description2', 'link2']})
-    console.log('files', files)
     return (
         <Stack width={'100%'}>
             <Paper 

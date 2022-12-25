@@ -17,7 +17,6 @@ export default function Logout() {
                 {firebase => {
                     const auth = firebase.auth;
                     signOut(auth).then(() => {
-                        console.log('success', auth)
                         navigate('/')
                     }).catch((error) => {
                         console.error(error)

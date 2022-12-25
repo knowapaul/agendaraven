@@ -15,7 +15,6 @@ import Cards from "../components/Cards";
 
 function User(props) {
     let full, nameText, first, last, data;
-    console.log('selected', props.selected)
     if (Object.keys(props.selected)[0]) {
         full = Object.keys(props.selected)[0]
         nameText = full.split(' ');
@@ -302,7 +301,6 @@ function NewRoles(props) {
     return (
         <Cards
         data={data ? Object.keys(data).map((key) => {
-            console.log('dk', data, key)
             return (
                 {
                     title: data[key].roleName,

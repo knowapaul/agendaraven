@@ -52,7 +52,6 @@ function AddButton(props) {
  * 
  */
 export default function Cards(props) {
-    console.log(props.data, props.data[0], 'data')
     return (
         <div>
             <SubNav 
@@ -105,7 +104,6 @@ export default function Cards(props) {
             >
                 {props.data[0] ?
                 props.data.map((card) => {
-                    console.log('td', card, card.title, card.description)
                     return (
                         <Grid item 
                         xs={12} sm={12} md={6} lg={4} xl={3}  

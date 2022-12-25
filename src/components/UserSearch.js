@@ -53,13 +53,11 @@ export default function UserSearch(props) {
                                 props.setSelected(clone)
                             }
                         } else {
-                            console.log('else')
                             props.setSelected(props.multiple ? newSelected : person)
                         }
             
                     }
                     ;
-                    // console.log('person', item)
                     return (
                     <Grid item xs={6} sm={6} md={4} lg={3} height='110px' key={key}>
                         <Button 

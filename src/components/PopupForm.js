@@ -16,8 +16,6 @@ import { useNavigate } from "react-router-dom";
 export default function PopupForm(props) {
     const theme = useTheme();
 
-    console.log('drawer', theme.zIndex.drawer)
-
     return (
         <Backdrop
         sx={{ color: '#fff', position: "absolute", zIndex: "appBar", top: 0, left: 0 }}

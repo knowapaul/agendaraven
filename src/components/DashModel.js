@@ -36,8 +36,6 @@ function MenuItem(props) {
 
     const isSelected = lowLast(props.page) === lowLast(props.text)
 
-    console.log('st', props.page, props.text)
-
     return (
         <ListItem 
         disablePadding
@@ -87,7 +85,6 @@ export default function DashModel(props) {
     const { win } = props;
     const [ mobileOpen, setMobileOpen ] = useState(false);
     const theme = useTheme();
-    console.log('default', props.page)
   
     const handleDrawerToggle = () => {
       setMobileOpen(!mobileOpen);
@@ -126,8 +123,6 @@ export default function DashModel(props) {
           },
     })
   
-    console.log('ct', contrastTheme)
-
     const drawer = (
       <div>
           <Toolbar 

@@ -9,7 +9,6 @@ import Nav from './Nav';
 
 
 function SignIn(auth, fields, setError) {
-    console.log("attempting signin", auth, fields)
     signInWithEmailAndPassword(auth, fields.email, fields.password).then(
         out => {
         }
