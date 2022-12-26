@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 
 // MUI Resources
-import { AccountCircle, CalendarToday, DashboardCustomize, EventAvailable, Insights, Mail, Payments, Logout } from '@mui/icons-material'
+import { AccountCircle, CalendarToday, DashboardCustomize, EventAvailable, Insights as InsightsIcon, Mail, Payments as PaymentsIcon, Logout } from '@mui/icons-material'
 import CssBaseline from '@mui/material/CssBaseline';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack'
@@ -11,7 +11,13 @@ import { ThemeProvider } from '@emotion/react';
 
 // Project Resources
 import { bTheme } from '../resources/Themes';
-import Organizations from '../windows/Organizations';
+import Organizations from '../user-subpages/Organizations';
+import Inbox from '../user-subpages/Inbox.js';
+import Schedules from '../user-subpages/Schedules.js';
+import Availability from '../user-subpages/Availability.js';
+import Insights from '../user-subpages/Insights.js';
+import Payments from '../user-subpages/Payments.js';
+import Account from '../user-subpages/Account.js';
 import AuthCheck from '../components/AuthCheck';
 import { useLoaderData } from 'react-router-dom';
 import { FbContext } from '../resources/Firebase';
@@ -29,9 +35,9 @@ const menu = [
   ["Posted Schedules", <CalendarToday color="secondary" />],
   ["My Availability", <EventAvailable color="secondary" />],
   ["", ""],
-  ["Insights", <Insights color="secondary" />],
+  ["Insights", <InsightsIcon color="secondary" />],
   ["", ""],
-  ["Payments", <Payments color="secondary" />],
+  ["Payments", <PaymentsIcon color="secondary" />],
   ["", ""],
   ["Account", <AccountCircle color="secondary" />],
   ["Log Out", <Logout color="secondary" />]
@@ -67,7 +73,13 @@ export function Dashboard(props) {
   const page = useLoaderData();
 
   const elementMap = {
-    organizations: <Organizations />
+    organizations: <Organizations />,
+    inbox: <Inbox />,
+    schedules: <Schedules />,
+    availability: <Availability />,
+    insights: <Insights />,
+    payments: <Payments />,
+    account: <Account />
   };
 
   return (

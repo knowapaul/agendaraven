@@ -2,12 +2,6 @@
 import Home from './pages/Home.js';
 import {Dashboard, dashLoader} from './pages/Dashboard.js';
 import Logout from './pages/Logout.js';
-import Inbox from './windows/Inbox.js';
-import Schedules from './windows/Schedules.js';
-import Availability from './windows/Availability.js';
-import Insights from './windows/Insights.js';
-import Payments from './windows/Payments.js';
-import Account from './windows/Account.js';
 import { OrgDash, orgLoader } from './pages/OrgDash'
 
 
@@ -21,8 +15,6 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
 import { initializeApp } from "firebase/app";
 import CreateAccount from './pages/CreateAccount.js'
-import Organizations from './windows/Organizations.js';
-import { Box } from '@mui/system';
 
 // import { getAnalytics } from "firebase/analytics";
 

@@ -8,15 +8,15 @@ import { CalendarToday, Insights, Logout, Settings, Home, Message, DonutLarge, G
 
 // Project Resources
 import { wTheme } from '../resources/Themes'
-import Chat from '../subpages/Chat'
+import Chat from '../org-subpages/Chat'
 import { FbContext } from "../resources/Firebase";
 import AuthCheck from "../components/AuthCheck";
 import DashModel from '../components/DashModel'
-import People from "../subpages/People";
-import Schedules from "../subpages/Schedules";
-import OrgHome from "../subpages/OrgHome";
-import OrgSettings from "../subpages/OrgSettings";
-import OrgInsights from "../subpages/OrgInsights";
+import People from "../org-subpages/People";
+import Schedules from "../org-subpages/Schedules";
+import OrgHome from "../org-subpages/OrgHome";
+import OrgSettings from "../org-subpages/OrgSettings";
+import OrgInsights from "../org-subpages/OrgInsights";
 
 
 
