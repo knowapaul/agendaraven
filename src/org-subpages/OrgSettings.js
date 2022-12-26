@@ -42,11 +42,16 @@ export default function OrgSettings(props) {
             <CustomAccordion title={"Permissions"}>
                 Contents
             </CustomAccordion>
-            <CustomAccordion title={"Permissions"}>
+            <CustomAccordion title={"Roles"}>
                 Contents
             </CustomAccordion>
-            <CustomAccordion title={"Permissions"}>
+            <CustomAccordion title={"Customization"}>
                 Contents
+            </CustomAccordion>
+            <CustomAccordion title={"Payments"}>
+                AgendaRaven is currently free, but in order to keep 
+                operating costs down, it is necessary to restrict the
+                use of certain services. These are shown below.
             </CustomAccordion>
         </Box>
     )
