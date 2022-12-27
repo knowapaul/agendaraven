@@ -24,11 +24,6 @@ import { FbContext } from '../resources/Firebase';
 import DashModel from '../components/DashModel';
 
 
-export async function dashLoader({ params }) {
-  const page = params.page ? params.page : 'organizations'
-  return page;
-}
-
 const menu = [
   ["My Organizations", <DashboardCustomize color="secondary" />],
   ["Inbox", <Mail color="secondary" />],
@@ -67,6 +62,11 @@ function Logo() {
       </Stack>
     </Link>
   )
+}
+
+export async function dashLoader({ params }) {
+  const page = params.page ? params.page : 'organizations'
+  return page;
 }
 
 export function Dashboard(props) {  

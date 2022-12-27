@@ -1,3 +1,4 @@
+// Firebase Resources
 import { collection, doc, getDoc, setDoc, onSnapshot } from "firebase/firestore"; 
 
 // TODO: Add an isolated document for user subscription data?

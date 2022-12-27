@@ -13,8 +13,6 @@ import AuthCheck from '../components/AuthCheck';
 import CustomAvatar from '../components/CustomAvatar';
 
 
-
-
 const drawerWidth = 250;
 
 function lowLast(text) {

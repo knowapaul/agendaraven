@@ -1,29 +1,14 @@
-import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
-import { ThemeProvider } from '@emotion/react';
-import { mTheme } from '../resources/Themes.js'
-
-import { signOut } from 'firebase/auth';
-
-import { AuthContext, UserContext } from '../resources/Auth'
-
-import AuthCheck from './AuthCheck.js';
-
+// React Resources
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { Navigate } from 'react-router-dom';
+// MUI Resources
+import { ThemeProvider } from '@emotion/react';
+import { AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Button, MenuItem } from '@mui/material';
+import { Menu as MenuIcon } from '@mui/icons-material';
+
+// Project Resources
+import { mTheme } from '../resources/Themes.js'
 import CustomAvatar from './CustomAvatar.js';
 
 
@@ -31,8 +16,8 @@ function nameToURL(name) {
     return name.toLowerCase().split(' ').join('')
 }
 
-function Nav() {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
+export default function Nav() {
+  const [anchorElNav, setAnchorElNav] = useState(null);
   const navigate = useNavigate();
 
   const handleOpenNavMenu = (event) => {
@@ -151,4 +136,3 @@ function Nav() {
     
   );
 };
-export default Nav;

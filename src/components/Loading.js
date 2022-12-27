@@ -1,17 +1,10 @@
+// MUI Resources
 import { ThemeProvider } from "@emotion/react";
-import { CircularProgress, CssBaseline, Typography, Stack } from "@mui/material";
-import { Box } from "@mui/system";
+import { CircularProgress, Box, CssBaseline, Typography, Stack } from "@mui/material";
+
+// Project Resources
 import { mTheme } from "../resources/Themes";
 
-
-export default function Loading() {
-    return (
-        <ThemeProvider theme={mTheme}>
-            <CssBaseline />
-            <MiniLoad />
-        </ThemeProvider>
-    )
-}
 
 export function MiniLoad() {
     return (
@@ -40,4 +33,13 @@ export function MiniLoad() {
             </Stack>
         </Box>
 )
+}
+
+export default function Loading() {
+    return (
+        <ThemeProvider theme={mTheme}>
+            <CssBaseline />
+            <MiniLoad />
+        </ThemeProvider>
+    )
 }

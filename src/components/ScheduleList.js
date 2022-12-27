@@ -1,7 +1,9 @@
+// MUI Resources
 import { Box, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
 import { Check } from '@mui/icons-material'
 import { useTheme } from "@emotion/react";
+
 
 function ScheduleItem(props) {
 
@@ -11,11 +13,9 @@ function ScheduleItem(props) {
             <Typography variant="body">
                 {props.title}
             </Typography>
-
         </div>
     )
 }
-
 
 export default function ScheduleList(props) {
     const theme = useTheme();

@@ -1,3 +1,4 @@
+// MUI Resources
 import { useTheme } from "@emotion/react";
 import { ExpandMore } from "@mui/icons-material";
 import { Accordion, AccordionDetails, AccordionSummary, Paper, Typography } from "@mui/material";
@@ -32,7 +33,6 @@ function CustomAccordion(props) {
         </Accordion>
     )
 }
-
 
 export default function OrgSettings(props) {
     return (

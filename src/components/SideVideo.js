@@ -1,5 +1,5 @@
+// MUI Resources
 import { Paper, Grid } from "@mui/material";
-import { margin } from "@mui/system";
 
 
 export default function SideVideo(props) {
@@ -17,7 +17,7 @@ export default function SideVideo(props) {
                 <Grid item sm={12} md={4} display='flex' justifyContent="center">
                     <iframe 
                     width="95%"
-                    className="video"
+                    style={{aspectRatio: '16 / 9'}}
                     src={props.videoURL} 
                     title="YouTube video player" 
                     frameBorder="0" 

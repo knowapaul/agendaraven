@@ -266,7 +266,6 @@ function NewChat(props) {
     )
 }
 
-
 /**
  * ### Display a chat widget on the screen
  * 

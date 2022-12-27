@@ -1,11 +1,18 @@
-import { Button, Typography } from "@mui/material"
-import { signInWithEmailAndPassword } from "firebase/auth"
-import { useNavigate } from "react-router-dom"
-import Form from "./Form"
+// React Resources
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
+
+// MUI Resources
+import { Button, Typography } from "@mui/material"
+
+// Project Resources
 import { FbContext } from '../resources/Firebase'
+import Form from "./Form"
 import CenterForm from "./CenterForm"
 import Nav from './Nav';
+
+// Firebase Resources
+import { signInWithEmailAndPassword } from "firebase/auth"
 
 
 function SignIn(auth, fields, setError) {

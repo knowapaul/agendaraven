@@ -1,23 +1,21 @@
-import { ThemeProvider, useTheme } from "@emotion/react";
-import { Paper, Backdrop, Typography, Button, ClickAwayListener, Box, IconButton, Divider } from "@mui/material";
-
+// React Resources
 import { useState } from "react";
-
-import { mTheme } from '../resources/Themes'
-import CenterForm from "./CenterForm";
-import Form from "./Form";
-
-import { CancelOutlined, Close } from "@mui/icons-material";
-import { FbContext } from "../resources/Firebase";
-import { connectFunctionsEmulator, getFunctions, httpsCallable } from "firebase/functions";
-import { connectFirestoreEmulator, getFirestore } from "firebase/firestore";
-import { getUserData } from "../resources/HandleDb";
-import { connectAuthEmulator, getAuth } from "firebase/auth";
-import { create } from "@mui/material/styles/createTransitions";
 import { useNavigate } from "react-router-dom";
-import PopupForm from "./PopupForm";
 
-// TODO: Extract to PopupForm.js
+// MUI Resources
+import { ThemeProvider, useTheme } from "@emotion/react";
+import { Paper, Typography, Divider } from "@mui/material";
+
+// Project Resources
+import Form from "./Form";
+import PopupForm from "./PopupForm";
+import { mTheme } from '../resources/Themes'
+import { FbContext } from "../resources/Firebase";
+import { getUserData } from "../resources/HandleDb";
+
+// Firebase Resources
+import { httpsCallable } from "firebase/functions";
+
 
 export default function CreateOrJoin(props) {
     const [ cFields, setCFields ] = useState({});

@@ -1,6 +1,5 @@
 import { Tooltip, IconButton, Avatar, Menu, MenuItem, Typography, Box } from '@mui/material'
 import { useState } from 'react';
-import { AuthContext, UserContext } from '../resources/Auth'
 import { useNavigate } from 'react-router-dom';
 import { ThemeProvider } from '@mui/system';
 import { mTheme } from '../resources/Themes'
@@ -10,23 +9,6 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 
 function nameToURL(name) {
     return name.toLowerCase().split(' ').join('')
-}
-
-export default function CustomAvatar(props) {
-    
-
-
-    return (
-        <ThemeProvider theme={mTheme}>
-            <Box sx={{ flexGrow: 0 }}>
-                <FbContext.Consumer>
-                    {firebase => (
-                        <InternalAvatar firebase={firebase}/>
-                    )}
-                </FbContext.Consumer>
-            </Box>
-        </ThemeProvider>
-    )
 }
 
 function InternalAvatar(props) {
@@ -87,5 +69,22 @@ function InternalAvatar(props) {
             ))}
             </Menu>
         </div>
+    )
+}
+
+export default function CustomAvatar(props) {
+    
+
+
+    return (
+        <ThemeProvider theme={mTheme}>
+            <Box sx={{ flexGrow: 0 }}>
+                <FbContext.Consumer>
+                    {firebase => (
+                        <InternalAvatar firebase={firebase}/>
+                    )}
+                </FbContext.Consumer>
+            </Box>
+        </ThemeProvider>
     )
 }

@@ -1,11 +1,19 @@
-import { Button, TextField, Stack, Box } from "@mui/material";
+// React Resources
 import React, { useState } from "react";
-import validate from "../resources/Validate";
+
+// MUI Resources
 import { Alert, AlertTitle } from "@mui/material";
+import { Button, TextField, Stack, Box } from "@mui/material";
+
+// Project Resources
+import validate from "../resources/Validate";
+
 
 function cleanName(name) {
     return name.toLowerCase().split(' ').join('')
 }
+
+// TODO: make this into a function instead of a class
 class Input extends React.Component {
     constructor(props) {
         super(props);
@@ -78,8 +86,8 @@ class Input extends React.Component {
             onBlur={(event) => {this.handleBlur(event); this.handleChange(event)}}
             />
         )
-      }
     }
+}
 
 /**
  * Create a form component with automatic data updates and validation.
@@ -99,7 +107,7 @@ class Input extends React.Component {
  * 
  * @param {string} formError
  */
-function Form(props) {
+export default function Form(props) {
     const [errors, setErrors] = useState({});
     const [check, setCheck] = useState(false);
     const [password, setPassword] = useState(false);
@@ -149,5 +157,3 @@ function Form(props) {
         </Box>
     );
 }
-
-export default Form;

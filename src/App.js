@@ -1,22 +1,22 @@
-// Import pages for router
-import Home from './pages/Home.js';
-import {Dashboard, dashLoader} from './pages/Dashboard.js';
-import Logout from './pages/Logout.js';
-import { OrgDash, orgLoader } from './pages/OrgDash'
-
-
-import Loading from './components/Loading.js';
-
-import Error from './components/Error'
-
-import { Firebase } from './resources/Firebase.js';
-
+// React Resources
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
-import { initializeApp } from "firebase/app";
+// Project Resources
+import Home from './pages/Home.js';
+import { Dashboard, dashLoader } from './pages/Dashboard.js';
+import Logout from './pages/Logout.js';
+import { OrgDash, orgLoader } from './pages/OrgDash'
+import Loading from './components/Loading.js';
+import Error from './components/Error'
 import CreateAccount from './pages/CreateAccount.js'
 
+// Firebase Resources
+import { initializeApp } from "firebase/app";
+import { Firebase } from './resources/Firebase.js';
+
 // import { getAnalytics } from "firebase/analytics";
+
+// TODO: Analyze bundle size and possibly convert imports to more efficient formats
 
 const firebaseConfig = {
   apiKey: "AIzaSyBL_6B31bsdunqc6cmtcK_5TQe4yCrwgzQ",

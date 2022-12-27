@@ -1,16 +1,20 @@
+// React Resources
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+
+// MUI Resources
+import { Typography, Box } from "@mui/material";
+import { ArrowBack } from "@mui/icons-material";
+
+// Project Resources
 import Form from "../components/Form";
 import Nav from '../components/Nav'
-import { Typography } from "@mui/material";
 import CenterForm from "../components/CenterForm";
-import { AuthContext } from "../resources/Auth";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { addUserAccount } from "../resources/HandleDb";
-import { DbContext } from "../resources/Db";
-import { Link, useNavigate } from "react-router-dom";
 import { FbContext } from "../resources/Firebase";
-import { ArrowBack } from "@mui/icons-material";
-import { Box } from "@mui/system";
+
+// Firebase Resources
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 
 
 function createNewAccount(auth, db, inData, navigate, setError) {

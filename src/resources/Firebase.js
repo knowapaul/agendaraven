@@ -1,16 +1,28 @@
-// Bundles all firebase services into one context provider
-
+// React Resources
 import { createContext }  from 'react';
 
+// Project Resources
+import { initDatabase } from './HandleDb';
+
+// Firebase Resources
 import { getAuth, connectAuthEmulator } from "firebase/auth";
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
 import { getStorage, connectStorageEmulator } from "firebase/storage";
-import { initDatabase } from './HandleDb';
 
+
+/**
+ * Bundles all Firebase resources into a single context provider
+ */
 export const FbContext = createContext({});
 
-
+/**
+ * Bundles all Firebase resources into a single context provider
+ * 
+ * @param  {Map} props
+ *  
+ * props.app -> the Firebase app instance
+ */
 export function Firebase(props) {
     const auth = getAuth(props.app);
     connectAuthEmulator(auth, "http://localhost:9099")

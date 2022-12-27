@@ -1,10 +1,12 @@
+// React Resources
 import { useState } from "react"
-import Cards from "../components/Cards";
+
+// MUI Resources
 import { Edit, EventAvailable, Visibility } from '@mui/icons-material'
-import { Icon, IconButton, Tooltip } from "@mui/material";
-import { Form } from '../components/Form'
+import { IconButton, Tooltip } from "@mui/material";
 
-
+// Project Resources
+import Cards from "../components/Cards";
 
 
 // Options for the View component

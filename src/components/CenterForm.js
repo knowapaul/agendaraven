@@ -1,7 +1,11 @@
-import { ThemeContext, ThemeProvider } from "@emotion/react";
+// MUI Resources
+import { ThemeProvider } from "@emotion/react";
 import { Paper } from "@mui/material";
-import { mTheme } from "../resources/Themes";
 import {CssBaseline} from "@mui/material";
+
+// Project Resources
+import { mTheme } from "../resources/Themes";
+
 
 export default function CenterForm(props) {
     return (

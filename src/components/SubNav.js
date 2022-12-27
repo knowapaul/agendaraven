@@ -1,5 +1,6 @@
-import { Button, Paper, Tooltip, Typography } from "@mui/material";
-import { Box } from "@mui/system";
+// MUI Resources
+import { Box, Button, Paper, Tooltip, Typography } from "@mui/material";
+
 
 /**
  * @param  {Map} props

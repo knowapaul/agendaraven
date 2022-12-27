@@ -1,11 +1,13 @@
+// MUI Resources
+import { CssBaseline, Box } from '@mui/material';
 import { ThemeProvider } from '@emotion/react';
-import React from 'react';
+
+// Project Resources
 import Nav from '../components/Nav.js'
-import { mTheme, bTheme, oTheme, wTheme } from '../resources/Themes.js';
+import { oTheme } from '../resources/Themes.js';
 import SideVideo from '../components/SideVideo.js';
-import { CssBaseline } from '@mui/material';
 import Footer from '../components/Footer.js';
-import {Box} from '@mui/material'
+
 
 export default function Home() {
     return (

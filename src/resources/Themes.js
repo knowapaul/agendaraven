@@ -1,5 +1,22 @@
+// MUI Resources
 import { createTheme } from '@mui/material';
 
+
+// TODO: Optimize themeing here to minimize its use throughout the rest of the application
+
+/**
+ * Dark Theme
+ * 
+ * Background
+ * - Default: Navy
+ * - Paper: Neptune
+ * 
+ * Primary: Neptune
+ * 
+ * Secondary: Orange
+ * 
+ * Text: Transparent white?
+ */
 export const mTheme = createTheme({
   palette: {
     type: 'dark',
@@ -19,6 +36,25 @@ export const mTheme = createTheme({
   },
 });
 
+/**
+ * Light Theme
+ * 
+ * Primary: White
+ * 
+ * Secondary: Orange
+ * 
+ * Background
+ * - Default: Navy
+ * - Paper: Neptune
+ * 
+ * Text
+ * - Primary: Neptune
+ * - Secondary: Navy
+ * 
+ * Warning: Gold
+ * 
+ * Divider: Neptune
+ */
 export const wTheme = createTheme({
   palette: {
     type: 'light',
@@ -43,6 +79,24 @@ export const wTheme = createTheme({
   },
 });
 
+/**
+ * Light Theme
+ * 
+ * Primary: Navy
+ * 
+ * Secondary: Navy
+ * 
+ * Background
+ * - Default: Orange
+ * - Paper: Neptune
+ * 
+ * Text
+ * - Primary: White
+ * - Secondary: White
+ * 
+ * Warning: Gold
+ * 
+ */
 export const oTheme = createTheme({
   palette: {
     type: 'light',
@@ -66,6 +120,24 @@ export const oTheme = createTheme({
   },
 });
 
+/**
+ * Dark Theme
+ * 
+ * Primary: Navy
+ * 
+ * Secondary: Orange
+ * 
+ * Background
+ * - Default: Neptune
+ * - Paper: Navy
+ * 
+ * Text
+ * - Primary: White
+ * 
+ * Warning: Gold
+ * 
+ * Divider: White
+ */
 export const bTheme = createTheme({
   palette: {
     type: 'dark',
@@ -89,6 +161,23 @@ export const bTheme = createTheme({
   },
 });
 
+/**
+ * Light Theme
+ * 
+ * Primary: Neptune
+ * 
+ * Secondary: Navy
+ * 
+ * Background
+ * - Default: White
+ * - Paper: Neptune
+ * 
+ * Text
+ * - Primary: Navy
+ * - Secondary: White
+ * 
+ * Divider: White
+ */
 export const cTheme = createTheme({
   palette: {
     type: 'light',

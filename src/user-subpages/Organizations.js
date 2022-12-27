@@ -1,20 +1,25 @@
-import { Card, CardContent, Grid, Box, Typography } from "@mui/material";
+// React Resources
 import { useEffect, useState } from "react";
-import { accessImage } from "../resources/HandleStorage";
-import { StorageContext } from "../resources/Storage";
-import { CircularProgress } from "@mui/material"
 import { Link } from "react-router-dom";
-import { Fab } from '@mui/material'
+
+// MUI Resources
+import { CircularProgress, Fab, Card, CardContent, Grid, Box, Typography } from "@mui/material"
 import AddIcon from '@mui/icons-material/Add'
-import { Container } from "@mui/system";
+
+// Project Resources
+import { accessImage } from "../resources/HandleStorage";
 import CreateOrJoin from '../components/CreateOrJoin'
 import { FbContext } from "../resources/Firebase";
 import { getUserData } from "../resources/HandleDb";
 import { MiniLoad } from "../components/Loading";
+import { useTheme } from "@emotion/react";
  
+
 function OrgCard(props) {
     const [source, setSource] = useState('');
     const [fail, setFail] = useState(false);
+
+    const theme = useTheme();
 
     accessImage(props.storage, 'image.jpg', setSource);
 
@@ -39,9 +44,13 @@ function OrgCard(props) {
                         >
                             {props.text}
                         </Typography>
-                        {(source && source !== 'ERROR') ? <img alt={props.text + ' background'} src={source} className="orgImg" /> : 
+                        {(source && source !== 'ERROR') ? <img alt={props.text + ' background'} src={source} style={{width: '100%', aspectRatio: '16 / 9', borderRadius: theme.shape.borderRadius, objectFit: 'cover' }} /> : 
                         <Box 
-                        className="orgImg"
+                        sx={{
+                            width: '100%',
+                            aspectRatio: '16 / 9',
+                            borderRadius: theme.shape.borderRadius
+                          }}
                         backgroundColor="primary"
                         display="flex" 
                         alignItems="center"
@@ -65,13 +74,18 @@ function OrgCard(props) {
 }
 
 function Add() {
-    const [ open, setOpen ] = useState(false)
+    const [ open, setOpen ] = useState(false);
+    const theme = useTheme();
 
     return (
         <Grid item xs={12} sm={12} md={6} lg={4} xl={3} >
             <Box 
             width='100%'
-            className="orgImg"
+            sx={{
+                width: '100%',
+                aspectRatio: '16 / 9',
+                borderRadius: theme.shape.borderRadius
+              }}
             display="flex" 
             alignItems="center"
             justifyContent="center"
@@ -138,4 +152,3 @@ export default function Organizations() {
         </FbContext.Consumer>
     )
 }
-
