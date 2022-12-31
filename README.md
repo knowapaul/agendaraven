@@ -20,7 +20,15 @@ before beginning the tier that is two or more levels below it.
 # The Hireracy of TODOness: 
 
 (*"s" => started / "x" => complete*)
-
+0. **First Trial** 
+    - () Scheduler
+    - () Schedules
+    - (x) Login
+    - (x) Homepage
+    - (x) Permissions [still need firebase rules]
+    - () How-tos
+    - () Availability
+    - () Push to online
 1. **Basic Operation**
     - (x) Add organization users
     - () Availability turnin

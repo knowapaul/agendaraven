@@ -179,6 +179,16 @@ export const bTheme = createTheme({
  * Divider: White
  */
 export const cTheme = createTheme({
+  components: {
+    MuiPaper: {
+      styleOverrides: {
+        outlined: {
+          backgroundColor: '#ffffff',
+          borderColor: '#045174',
+        },
+      },
+    },
+  },
   palette: {
     type: 'light',
     primary: {

@@ -1,11 +1,19 @@
 // MUI Resources
-import { BottomNavigation, Typography, Link, Stack, Divider, AppBar } from "@mui/material";
+import { BottomNavigation, Typography, Link, Stack, Divider, AppBar, Box, Paper } from "@mui/material";
 
 
 export default function Footer() {
     return (
-        <BottomNavigation
-            sx={{mt: 3, padding: "1%"}}>
+        <Paper
+            square
+            sx={{
+                mt: 3, 
+                padding: "1%", 
+                width: '100%', 
+                display: 'flex', 
+                alignContent: 'center', 
+                justifyContent: 'center'
+                }}>
             <Stack direction="row" 
             spacing={2}
             divider={<Divider orientation="vertical" />}
@@ -21,6 +29,6 @@ export default function Footer() {
                     Contact Us
                 </Link>
             </Stack>
-        </BottomNavigation>
+        </Paper>
     )
 }

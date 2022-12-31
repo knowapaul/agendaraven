@@ -1,5 +1,5 @@
 // React Resources
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // MUI Resources
 import { CircularProgress, Box, Typography } from "@mui/material";
@@ -14,16 +14,19 @@ import { accessImage } from "../resources/HandleStorage";
  * Displays loading and errors for an image loaded from firebase storage
  * 
  * Passes all props to the image component to be loaded.
- * - props.source (image location in database) is required
- * - props.storage (firebase storage instance) is required
- * - props.alt is required
- * - props.height & props.width are preferred to set good dimensions
+ * - source (image location in database) 
+ * - storage (firebase storage instance)
+ * - alt 
+ * - height & width are preferred to set good dimensions
+ * - *deps* = {List} Refresh when one of these changes
  */
 export default function FriendlyLoad(props) {
     const [ source, setSource ] = useState();
     const [ fail, setFail ] = useState();
 
-    accessImage(props.storage, props.source, setSource);
+    useEffect(() => {
+        accessImage(props.storage, props.source, setSource);
+    }, props.deps)
 
     setTimeout(() => {
         setFail(true);

@@ -1,33 +1,15 @@
 // MUI Resources
 import { ArrowBack, Add } from "@mui/icons-material"
 import { Paper, Box, Typography, Grid, CircularProgress, Divider } from "@mui/material"
+import { useNavigate } from "react-router-dom";
+import AdminCheck from "./AdminCheck";
 
 // Project Resources
 import PopupForm from "./PopupForm";
 import { NavButton, SubNav } from "./SubNav";
+import AddButton from './AddButton'
 
 
-function AddButton(props) {
-    return (
-        <Box >
-            <NavButton  
-            title={props.tooltip}
-            handleClick={() => {props.setOpen(true)}}
-            >
-                <Add sx={{mr: 1}} />
-                <Typography
-                noWrap
-                >
-                    {props.text}
-                </Typography>
-            </NavButton>
-
-            <PopupForm open={props.open} setOpen={props.setOpen} title={props.formTitle} width={300}>
-                {props.form}
-            </PopupForm>
-        </Box>
-    )
-}
 
 /**
  * @param  {Map} props
@@ -48,7 +30,7 @@ function AddButton(props) {
  * - props.open -> form open state
  * - props.setOpen -> form setOpen function
  * - props.back -> {handleBack, tooltip} (leave empty for no button)
- * - props.add -> {tooltip, text} (leave empty for no button)
+ * - props.add -> {tooltip, text, restricted (organization), url? (instead of form)} (leave empty for no button)
  * 
  */
 export default function Cards(props) {
@@ -74,20 +56,7 @@ export default function Cards(props) {
                 </div>
             }
             right={
-                <div>
-                    {props.add ? 
-                    <AddButton 
-                    org={props.org} 
-                    form={props.form} 
-                    formTitle={props.formTitle} 
-                    open={props.open}
-                    setOpen={props.setOpen}
-                    tooltip={props.add.tooltip}
-                    text={props.add.text}
-                    /> 
-                    : ''
-                    }
-                </div>
+                props.add
             }
             >
             </SubNav>

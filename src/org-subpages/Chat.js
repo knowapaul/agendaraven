@@ -129,7 +129,7 @@ function Write(props) {
     }
 
     // TODO: put unsub to use
-    console.log(unsub)
+    // console.log(unsub)
 
     return (
             <Box>

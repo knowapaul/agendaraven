@@ -54,6 +54,16 @@ exports.createOrganization = functions.https.onCall(async (data, context) => {
 
     await join(orgName, 'owner', uid, email, name.displayName, data.phonenumber, data.schedulename)
 
+
+    // Create the org memo
+    const dataRef = db.collection(orgIndex).doc('organizations');
+    await dataRef.set({
+        title: 'Welcome!', 
+        person: 'AgendaRaven', 
+        contents: 'You can use this widget to make announcements to your organization.'
+    })
+
+
     // Send a welcome message to the owner
     await sendChatMessage(
             orgName, 

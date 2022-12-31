@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
 import Typography from '@mui/material/Typography';
 import { ThemeProvider, useTheme } from '@emotion/react';
-import { AppBar, Box, Divider, Drawer, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, createTheme } from '@mui/material';
+import { AppBar, Box, Divider, Drawer, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, createTheme, Paper } from '@mui/material';
 
 // Project Resources
 import AuthCheck from '../components/AuthCheck';
@@ -196,16 +196,20 @@ export default function DashModel(props) {
             >
             {drawer}
             </Drawer>
-            <Drawer
-            variant="permanent"
+            <Paper
+            square
             sx={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                width: drawerWidth,
                 display: { xs: 'none', sm: 'block' },
-                '& .MuiDrawer-paper': { boxSizing: 'border-box', borderColor: theme.palette.background.default, width: drawerWidth },
+                borderRight: `1px solid ${theme.palette.background.default}`,
+                height: '100vh'
             }}
-            open
             >
             {drawer}
-            </Drawer>
+            </Paper>
         </Box>
         <ThemeProvider theme={contrastTheme}>
             <Box
@@ -222,4 +226,4 @@ export default function DashModel(props) {
         </Box>
       </AuthCheck>
     );
-  }
+}

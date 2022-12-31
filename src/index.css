@@ -1,3 +1,6 @@
 .firebase-emulator-warning {
   display: none;
 }
+body {
+  margin: 0px;
+}

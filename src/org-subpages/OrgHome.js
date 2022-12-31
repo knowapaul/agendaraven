@@ -1,18 +1,69 @@
 // React Resources
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 // MUI Resources
 import { useTheme } from "@emotion/react";
-import { Button, Box, Divider, Paper, Stack, Typography } from "@mui/material";
-import { Circle } from "@mui/icons-material";
+import { Button, Box, Divider, Paper, Stack, Typography, IconButton, TextField, Snackbar, Fab, Alert, Input } from "@mui/material";
+import { Circle, Clear, Close, Edit, Image, PictureAsPdf, Save, Upload } from "@mui/icons-material";
 
 // Project Resources
 import FriendlyLoad from "../components/FriendlyLoad";
 import { FbContext } from "../resources/Firebase";
+import { getMemo, setMemo } from "../resources/HandleDb";
+import { setPersistence } from "firebase/auth";
+import AdminCheck from "../components/AdminCheck";
+import { getOrgFiles, uploadFile } from "../resources/HandleStorage";
+import { getDownloadURL } from "firebase/storage";
 
+
+function FileUpload(props) {
+    const inputRef = useRef();
+    const [ open, setOpen ] = useState(false);
+    console.log('props', props)
+
+    const handleUpload = () => {
+        uploadFile(props.storage, inputRef.current.files.item(0), props.root, props.unique)
+            .then(() => {
+                setOpen(true)
+                if (props.setRefresh) {
+                    props.setRefresh(!props.refresh)
+                }
+            })
+            .catch(() => {
+                // TODO: Make this more friendly
+                console.error('An error occurred while uploading the file')
+            })
+    }
+    return (
+        <Box width={'100%'}>
+            <input 
+            ref={inputRef}
+            type="file" 
+            accept={props.accept}
+            onChange={handleUpload}
+            style={{display: 'none'}}
+            />
+            {props.button === 'fill' 
+            ?
+            <Button sx={{width: '100%'}} onClick={() => {inputRef.current.click()}}>Upload File</Button>
+            :
+            <Fab sx={{mt: -11, ml: 1}} size='small' onClick={() => {inputRef.current.click()}}>
+                <Edit />
+            </Fab>
+            }
+            <CustomSnackbar
+            text={'File saved'}
+            open={open}
+            setOpen={setOpen}
+            />
+        </Box>
+    )
+}
 
 function Header(props) {
     const theme = useTheme();
+    const imagePath = props.org + '/index/image.jpg';
+    const [ refresh, setRefresh ] = useState();
     return (
         <Box sx={{
             width: '100%',
@@ -20,59 +71,202 @@ function Header(props) {
             alignItems: 'center', 
             justifyContent: 'center',
             padding: 1,
+            flexDirection: 'row'
         }}>
+            <Box height={'162px'}>
+
             <FriendlyLoad 
             storage={props.storage}
-            source={'image.jpg'} 
+            source={imagePath} 
             width={'288px'}
             height={'162px'}
             style={{ objectFit: 'cover', borderRadius: theme.shape.borderRadius}}
+            deps={[refresh]}
             />
+                <AdminCheck org={props.org}>
+                    <FileUpload 
+                    root={imagePath}
+                    storage={props.storage} 
+                    accept={'.jpg'}
+                    unique={true} 
+                    button='hover'
+                    refresh={refresh}
+                    setRefresh={setRefresh}
+                    />
+                </AdminCheck>
+            </Box>
         </Box>
     )
 }
 
-function Left(props) {
+/**
+ * @param  {Map} props React Props
+ * 
+ * text = {String} The alert's text
+ * open = {Boolean} The open state of the snackbar
+ * setOpen = {Function} The function to set the open value
+ */
+function CustomSnackbar(props) {
+    const close = () => {props.setOpen(false)}
     return (
-        <div>
-            <Header storage={props.storage}/>
-            <Paper sx={{mx: 2, padding: 2}}>
-                <Typography
-                variant="h5"
-                fontWeight={'bold'}
-                >
-                    Title here
-                </Typography>
-                <Divider sx={{borderColor: 'white'}}/>
+        <Snackbar
+        sx={{zIndex: '1201'}}
+        open={props.open}
+        onClose={close}
+        autoHideDuration={6000}
+        >
 
-                <Typography
-                variant="body2"
-                >
-                    Written by:
-                </Typography>
-                <Typography sx={{mt: 1}}>
-                    lorem ipsum dolor sin amet
-                    ipsum dolor sin amet
-                    lorem dolor sin amet
-                    lorem ipsum sin amet
-                    lorem ipsum dolor amet
-                    lorem ipsum dolor sin
-                    lorem ipsum dolor sin amet
-                    ipsum dolor sin amet
-                    lorem dolor sin amet
-                    lorem ipsum sin amet
-                    lorem ipsum dolor amet
-                    lorem ipsum dolor sin
-                </Typography>
-            </Paper>
-        </div>
+            <Alert severity="success" sx={{'& .MuiAlert-icon': {margin:'auto', mr: 2} }}>
+                    {props.text}
+                    <IconButton
+                    size="small"
+                    aria-label="close"
+                    color="inherit"
+                    onClick={close}
+                    sx={{ml: 2}}
+
+                    >
+                        <Close />
+                </IconButton>
+            </Alert>
+            
+        </Snackbar>
     )
 }
 
+function Left(props) {
+    const [ edit, setEdit ] = useState();
+    const [ title, setTitle ] = useState('');
+    const [ contents, setContents ] = useState('');
+    const [ person, setPerson ] = useState('');
+    const [ updated, setUpdated ] = useState(false);
+    const [ open, setOpen ] = useState(false);
+
+    console.log('left', props.org)
+
+    return (
+        <FbContext.Consumer>
+            {firebase => {
+                if (!updated) {
+                    getMemo(firebase.db, props.org, setTitle, setPerson, setContents)
+                        .then(() => {
+                            setUpdated(true)
+                        })
+                }
+                return (
+                    <div>
+                        <Header storage={props.storage} org={props.org} />
+                        <Paper sx={{mx: 2, padding: 2}}>
+                            {edit ? 
+                            <div>
+                                <TextField 
+                                placeholder="Memo Title" 
+                                variant="standard"
+                                sx={{my: 1}} 
+                                value={title}
+                                onChange={e => {setTitle(e.target.value)}}
+                                inputProps={{
+                                    style: {
+                                        fontSize: '25px'
+                                    },
+                                    }}/>
+                                <TextField 
+                                multiline 
+                                sx={{width: '100%', my: 1}} 
+                                placeholder={'Memo contents'} 
+                                value={contents}
+                                onChange={e => {setContents(e.target.value)}}
+                                />
+                            </div>
+                            : 
+                            <div>
+                                <Typography
+                                variant="h5"
+                                fontWeight={'bold'}
+                                >
+                                    {title}
+                                </Typography>
+                                <Typography
+                                variant="body2"
+                                >
+                                    Written by {person}
+                                </Typography>
+                                <Divider sx={{borderColor: 'white'}}/>
+                                <Typography sx={{mt: 1}}>
+                                    {contents}
+                                </Typography>
+                            </div>
+                            }
+                            <Box width={'100%'} display={'flex'} >
+                                <Box flex={1} />
+                                <Box flex={0} >
+                                    {edit 
+                                    ?
+                                    <Box display={'flex'} flexDirection={'row'}>
+                                        <IconButton onClick={
+                                            () => {
+                                                setMemo(
+                                                    firebase.db, 
+                                                    props.org,
+                                                    title, 
+                                                    contents, 
+                                                    firebase.auth.currentUser
+                                                ).then(() => {
+                                                    setOpen(true)
+                                                })
+                                            }
+                                            }>
+                                            <Save color="secondary" />
+                                        </IconButton>
+                                        <IconButton onClick={() => {setEdit(false); setUpdated(false)}}>
+                                            <Clear color="secondary" />
+                                        </IconButton>
+                                    </Box>
+                                    :
+                                        <AdminCheck org={props.org}>
+                                            <IconButton onClick={() => {setEdit(true)}}>
+                                                <Edit color="secondary" />
+                                            </IconButton>
+                                        </AdminCheck>
+                                    }
+                                </Box>
+                            </Box>
+                        </Paper>
+                        <CustomSnackbar
+                        text='Memo Saved'
+                        open={open}
+                        setOpen={setOpen}
+                        />
+                    </div>
+                )
+            }}
+        </FbContext.Consumer>
+    )
+}
+
+
 function FileItem(props) {
     const theme = useTheme();
+    const [ url, setUrl ] = useState();
+    console.log(props.item)
+    getDownloadURL(props.item).then((url) => {
+        setUrl(url)
+    })
+    console.log('url', url)
+
+    const icons = {
+        pdf: <PictureAsPdf sx={{mr: 2}} />,
+        jpg: <Image sx={{mr: 2}} />,
+        png: <Image sx={{mr: 2}} />
+    }
+    console.log('icon', props.item.name.slice(props.item.name.indexOf('.') + 1))
+
     return (
         <Button
+        href={url}
+        LinkComponent='a'
+        target='_blank'
+        rel='noreferrer noopener'
         sx={{
             padding: 1, 
             display: 'flex', 
@@ -88,13 +282,13 @@ function FileItem(props) {
         }}
         >   
             <Box height={'100%'} padding={'auto'}>
-                <Circle sx={{mr: 2}}/>
+                {icons[props.item.name.slice(props.item.name.indexOf('.') + 1)]}
             </Box>
             <Box>
                 <Typography
                 variant={'h6'}
                 >
-                    {props.title}
+                    {props.item.name.slice(0, props.item.name.indexOf('.'))}
                 </Typography>
                 <Typography
                 variant={'subtitle1'}
@@ -108,7 +302,13 @@ function FileItem(props) {
 
 function Right(props) {
     const theme = useTheme();
-    const [ files ] = useState({item1: ['description', 'link'], item2: ['description2', 'link2'], item3: ['description2', 'link2'], item4: ['description2', 'link2']})
+    const [ files, setFiles ] = useState();
+    const [ refresh, setRefresh ] = useState();
+
+    useEffect(() => {
+        getOrgFiles(props.storage, props.org + '/', setFiles)
+    }, [refresh])
+
     return (
         <Stack width={'100%'}>
             <Paper 
@@ -126,10 +326,29 @@ function Right(props) {
                     Resources
                 </Typography>
             </Paper>
-            {Object.keys(files).map(key => (
-                <FileItem title={key} description={files[key][0]} />
-            )
-            )}
+            {files ?
+            Object.keys(files).map(index => (
+                    <FileItem 
+                    key={files[index].name}
+                    item={files[index]}
+                    />
+            ))
+            :
+            ''
+            }
+
+            <AdminCheck
+            org={props.org}
+            >
+                <FileUpload 
+                root={props.org + '/'}
+                storage={props.storage}
+                button={"fill"}
+                accept={'.jpg,.png,.pdf'}
+                refresh={refresh}
+                setRefresh={setRefresh}
+                />
+            </AdminCheck>
         </Stack>
     )
 }
@@ -137,6 +356,8 @@ function Right(props) {
 export default function OrgHome(props) {
     const theme = useTheme();
     const [ selected ] = useState('left')
+
+    console.log('oh', props.org)
 
     return (
         <FbContext.Consumer>
@@ -146,7 +367,7 @@ export default function OrgHome(props) {
                     width={{ xs: '100%', md: '50%'}}
                     display={{ xs: selected === 'left' ? 'block' : 'none', md: 'block' }}
                     >
-                        <Left storage={firebase.storage} />
+                        <Left storage={firebase.storage} org={props.org} />
                     </Box>
                     <Box 
                     width={{ xs: '100%', md: '50%'}} 
@@ -160,7 +381,7 @@ export default function OrgHome(props) {
                         display={{xs: `none`, md: 'block'}}
                         sx={{backgroundColor: theme.palette.primary.main}}
                         />
-                        <Right />
+                        <Right storage={firebase.storage} org={props.org} />
                     </Box>
                 </Box>
             )}

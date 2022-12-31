@@ -13,6 +13,7 @@ import CreateAccount from './pages/CreateAccount.js'
 // Firebase Resources
 import { initializeApp } from "firebase/app";
 import { Firebase } from './resources/Firebase.js';
+import Soar from './pages/Soar.js';
 
 // import { getAnalytics } from "firebase/analytics";
 
@@ -47,7 +48,9 @@ const router = createBrowserRouter([
   { errorElement: <Error />, path: "logout", element: <Logout />},
   { errorElement: <Error />, path: "createaccount", element: <CreateAccount /> },
   
-  { errorElement: <Error />, path: "loading", element: <Loading />}
+  { errorElement: <Error />, path: "loading", element: <Loading />},
+
+  { errorElement: <Error />, path: "/soar", element: <Soar />}
 ]);
    
 function App() {

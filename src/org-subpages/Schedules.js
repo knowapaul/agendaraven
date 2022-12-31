@@ -2,17 +2,19 @@
 import { useState } from "react"
 
 // MUI Resources
-import { Edit, EventAvailable, Visibility } from '@mui/icons-material'
-import { IconButton, Tooltip } from "@mui/material";
+import { AddBusiness, Edit, EventAvailable, Visibility } from '@mui/icons-material'
+import { Box, IconButton, Tooltip } from "@mui/material";
 
 // Project Resources
 import Cards from "../components/Cards";
+import AddButton from "../components/AddButton";
+import AdminCheck from "../components/AdminCheck";
 
 
 // Options for the View component
 function Icons(props) {
     return (
-        <div>
+        <Box display={'flex'} flexDirection={'row'}>
             <Tooltip title={"View Schedule"}>
                 <IconButton color="secondary">
                     <Visibility />
@@ -23,12 +25,14 @@ function Icons(props) {
                     <EventAvailable />
                 </IconButton>
             </Tooltip>
-            <Tooltip title={"Edit Schedule"}>
-                <IconButton color="secondary">
-                    <Edit />
-                </IconButton>
-            </Tooltip>
-        </div>
+            <AdminCheck org={props.org}>
+                <Tooltip title={"Edit Schedule"}>
+                    <IconButton color="secondary">
+                        <Edit />
+                    </IconButton>
+                </Tooltip>
+            </AdminCheck>
+        </Box>
     )
 }
 
@@ -36,17 +40,20 @@ function Icons(props) {
 function View(props) {
     const [ data, setData ] = useState([{title: 'Test', subtitle: 'Try 0', description: 'Description here'}]);
 
-
     return (
         <Cards 
         data={data} 
         helperMessage={'This means there is no data'} 
-        icons={<Icons />} 
-        form={'string'}
-        add={{
-            text: 'New Schedule',
-            tooltip: 'Create a New Schedule',
-        }}
+        icons={<Icons org={props.org} />} 
+        add={
+            <AdminCheck org={props.org} >
+                <AddButton 
+                text='New Schedule'
+                tooltip='Open the Schedule Creator'
+                url='/soar'
+                />
+            </AdminCheck>
+        }
         />
     )
 }
@@ -55,7 +62,7 @@ function View(props) {
 export default function Schedules(props) {
     return (
         <div>
-            <View />
+            <View org={props.org} />
         </div>
     )
 }

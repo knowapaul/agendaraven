@@ -29,8 +29,8 @@ Use the following layout for *Component* comments
 > 
 > Function description
 > 
-> @param {Map} props
-> - prop1 = {Type} Description1
+> @param {Map} props React Props
+> - *prop1* = {Type} Description1 (Not Required)
 > - prop2 = {Type} Description2
 > - prop3 = {Type} Long description example.
 > feel free to wrap it by not including the ul item
@@ -96,3 +96,12 @@ As much as possible, theme once, and use everywhere. Include doc comments for al
 Avoid using useTheme() to adjust component colors.
 
 It is completely fine to use useTheme() for the borderRadius property.
+
+
+# Terminating Ports
+sudo lsof -i :<Port>
+
+Try in order until one works:
+kill -3 <PID>
+kill -15 <PID>
+kill -9 <PID>

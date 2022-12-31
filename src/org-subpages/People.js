@@ -15,6 +15,8 @@ import Cards from "../components/Cards";
 
 // Firebase Resources
 import { httpsCallable } from "firebase/functions";
+import AddButton from "../components/AddButton";
+import AdminCheck from "../components/AdminCheck";
 
 
 function User(props) {
@@ -158,19 +160,23 @@ function Roles(props) {
             {}
         }
         helperMessage={"You currently have no roles in your organization. Click 'Add Role' to begin."}
-        form={<NewForm />}
-        formTitle={"Add Role"}
         loading={loading}
-        open={formOpen}
-        setOpen={setFormOpen}
         back={{
             handleBack: () => {props.setWidget('users')},
             tooltip: 'Back to People',
         }}
-        add={{
-            text: 'Add Role',
-            tooltip: 'Add a New Role',
-        }}
+        add={
+            <AdminCheck org={props.org}  >
+                <AddButton 
+                form={<NewForm />}
+                formTitle={"Add Role"}
+                open={formOpen}
+                setOpen={setFormOpen}
+                tooltip={"Create a Role"}
+                text={"New Role"}
+                />
+            </AdminCheck>
+        }
         title={"Roles"}
         />
     )

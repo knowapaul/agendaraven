@@ -84,3 +84,34 @@ export async function getPeople(db, org, setPeople) {
 
     setPeople(adaptedPeople)
 }
+
+export async function checkAdmin(db, org, uid, setIsAdmin) {
+    console.log('db, org, uid, ad', db, org, uid, setIsAdmin)
+    const orgUsers = collection(db, org + 'users')
+    const docSnap = await getDoc(doc(orgUsers, 'roles'));
+    const data = docSnap.data();
+    console.log('dta', data)
+    setIsAdmin(data[uid].includes('owner'))
+}
+
+export async function getMemo(db, org, setTitle, setPerson, setContents) {
+    const orgData = collection(db, org + 'data')
+    const docSnap = await getDoc(doc(orgData, 'memo'));
+    const data = docSnap.data();
+    setTitle(data.title)
+    setPerson(data.person)
+    setContents(data.contents)
+}
+
+export function setMemo(db, org, title, contents, user) {
+    const orgData = collection(db, org + 'data')
+
+    return setDoc(
+        doc(orgData, 'memo'),
+        {
+            title: title,
+            contents: contents,
+            person: user.displayName
+        }
+    )
+}
