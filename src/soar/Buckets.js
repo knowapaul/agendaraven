@@ -38,7 +38,6 @@ export function DeleteBucket(props) {
  */
 export function PersonBucket(props) {
     function handleDrop (item, monitor) {
-        console.log('item', item.id)
         let people = [...props.people];
         if (!props.people[props.index]) {
             people = people.concat({});

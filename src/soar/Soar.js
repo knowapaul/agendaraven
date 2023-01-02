@@ -52,7 +52,6 @@ export default function Soar() {
                     <FbContext.Consumer>
                         {firebase => {
                             if (load.sch) {
-                                console.log('text')
                                 getSchedule(firebase.db, org, load.sch, setTitle, setType, setFields, setItems)
                             }
                             return (

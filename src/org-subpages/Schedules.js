@@ -17,7 +17,6 @@ import { useTheme } from "@emotion/react";
 
 // Options for the View component
 function Icons(props) {
-    console.log('p', props)
     const navigate = useNavigate();
     return (
         <Box display={'flex'} flexDirection={'row'}>
@@ -69,7 +68,6 @@ function View(props) {
 
 function ViewOne(props) {
     const theme = useTheme();
-    console.log('schedule', props)
     return (
         <Box>
             <Box sx={{padding: 2}}>
@@ -127,10 +125,8 @@ function Internal(props) {
 
     useEffect(() => {
         getAllSchedules(props.firebase.db, props.org, setData, setSchedule)
-        console.log('done', data)
     }, [])
 
-    console.log('schedule', schedule)
     return (
         <div>
             {

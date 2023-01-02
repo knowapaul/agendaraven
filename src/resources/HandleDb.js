@@ -82,8 +82,6 @@ export async function getPeople(db, org, setPeople) {
         adaptedPeople[people[i].fullname] = Object.assign(people[i], {email: i})
     }
 
-    // console.log('adap', adaptedPeople)
-
     setPeople(adaptedPeople)
 }
 
@@ -91,8 +89,6 @@ export async function checkAdmin(db, org, uid, setIsAdmin) {
     const orgUsers = collection(db, org + 'users')
     const docSnap = await getDoc(doc(orgUsers, 'roles'));
     const data = docSnap.data();
-
-    console.log('data', data)
 
     try {
         setIsAdmin(data[uid].includes('owner'))

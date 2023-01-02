@@ -17,7 +17,6 @@ export function Schedule(props) {
         let adapted = [...props.people];
         delete adapted[index][field];
         props.setPeople(adapted)
-        console.log(props.people)
     }
     return (
         <Box flex={1} >
