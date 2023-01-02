@@ -10,11 +10,11 @@ import { Paper, Typography, Divider } from "@mui/material";
 import Form from "./Form";
 import PopupForm from "./PopupForm";
 import { mTheme } from '../resources/Themes'
-import { FbContext } from "../resources/Firebase";
-import { getUserData } from "../resources/HandleDb";
+import { getFirebase, getUserData } from "../resources/Firebase";
 
 // Firebase Resources
 import { httpsCallable } from "firebase/functions";
+
 
 
 export default function CreateOrJoin(props) {
@@ -27,7 +27,7 @@ export default function CreateOrJoin(props) {
 
     const newOrg = async (db, auth, cFunc) => {
         // TODO: Perform checks here
-        const data = await getUserData(db, auth.currentUser.uid)
+        const data = await getUserData(auth.currentUser.uid)
         const orgName = cFields.nameyourorganization;
 
         const e = await cFunc({ 
@@ -61,88 +61,80 @@ export default function CreateOrJoin(props) {
         
     }
 
+    const firebase = getFirebase();
+    const functions = firebase.functions
+    const db = firebase.db;
+    const auth = firebase.auth;
+
+    const createOrganization = httpsCallable(functions, 'createOrganization');
+    const joinOrganization = httpsCallable(functions, 'joinOrganization');
+
     return (
         <ThemeProvider theme={mTheme}>
-            <FbContext.Consumer>
-                {firebase => {
-                    const functions = firebase.functions
-                    const db = firebase.db;
-                    const auth = firebase.auth;
-
-                    const createOrganization = httpsCallable(functions, 'createOrganization');
-                    const joinOrganization = httpsCallable(functions, 'joinOrganization');
-
-                    return (
-                        <PopupForm open={props.open} setOpen={props.setOpen} title="Create or Join">
-                            <Paper sx={{padding: 2, backgroundColor: theme.palette.primary}}>
-                                <Typography
-                                variant='h6'
-                                textAlign='center'
-                                sx={{mb: 2}}
-                                >
-                                    Join an Organization
-                                </Typography>
-                                <Form 
-                                inputs={[
-                                    {
-                                    title: "Organization Name",
-                                    type: "text",
-                                    placeholder: "",
-                                    validate: "none",
-                                    required: true
-                                    },
-                                    {
-                                    title: "Join Code",
-                                    type: "text",
-                                    placeholder: "AAA####",
-                                    validate: "none",
-                                    required: true
-                                    },
-                                ]}
-                                buttonText="Continue to Organiztion"
-                                handleSubmit={(event) => {
-                                    joinOrg(db, auth, joinOrganization)
-                                }}
-                                data={jFields}
-                                setData={setJFields}
-                                formError={jError}
-                                />
-                            </Paper>
-                            <Divider sx={{margin: 2}}/>
-                            <Paper sx={{padding: 2, backgroundColor: theme.palette.primary}}>
-                                <Typography
-                                variant='h6'
-                                textAlign='center'
-                                sx={{mb: 2}}
-                                >
-                                    Create an Organization
-                                </Typography>
-                                <Form 
-                                inputs={[
-                                    {
-                                    title: "Name Your Organization",
-                                    type: "text",
-                                    placeholder: "Letters and numbers only",
-                                    validate: "title",
-                                    required: true
-                                    },
-                                ]}
-                                buttonText="Create!"
-                                handleSubmit={(event) => {
-                                    newOrg(db, auth, createOrganization)
-                                }}
-                                data={cFields}
-                                setData={setCFields}
-                                formError={cError}
-                                />
-                            </Paper>
-                        </PopupForm>
-                                    
-
-                    )
-                }}
-            </FbContext.Consumer>
-
+            <PopupForm open={props.open} setOpen={props.setOpen} title="Create or Join">
+                <Paper sx={{padding: 2, backgroundColor: theme.palette.primary}}>
+                    <Typography
+                    variant='h6'
+                    textAlign='center'
+                    sx={{mb: 2}}
+                    >
+                        Join an Organization
+                    </Typography>
+                    <Form 
+                    inputs={[
+                        {
+                        title: "Organization Name",
+                        type: "text",
+                        placeholder: "",
+                        validate: "none",
+                        required: true
+                        },
+                        {
+                        title: "Join Code",
+                        type: "text",
+                        placeholder: "AAA####",
+                        validate: "none",
+                        required: true
+                        },
+                    ]}
+                    buttonText="Continue to Organiztion"
+                    handleSubmit={(event) => {
+                        joinOrg(db, auth, joinOrganization)
+                    }}
+                    data={jFields}
+                    setData={setJFields}
+                    formError={jError}
+                    />
+                </Paper>
+                <Divider sx={{margin: 2}}/>
+                <Paper sx={{padding: 2, backgroundColor: theme.palette.primary}}>
+                    <Typography
+                    variant='h6'
+                    textAlign='center'
+                    sx={{mb: 2}}
+                    >
+                        Create an Organization
+                    </Typography>
+                    <Form 
+                    inputs={[
+                        {
+                        title: "Name Your Organization",
+                        type: "text",
+                        placeholder: "Letters and numbers only",
+                        validate: "title",
+                        required: true
+                        },
+                    ]}
+                    buttonText="Create!"
+                    handleSubmit={(event) => {
+                        newOrg(db, auth, createOrganization)
+                    }}
+                    data={cFields}
+                    setData={setCFields}
+                    formError={cError}
+                    />
+                </Paper>
+            </PopupForm>
         </ThemeProvider>
     )
 }

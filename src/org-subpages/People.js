@@ -1,5 +1,5 @@
 // React Resources
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useDocument } from 'react-firebase-hooks/firestore';
 
 // MUI Resources
@@ -7,8 +7,7 @@ import { Stack, Paper, Box, Typography, Avatar, Button } from "@mui/material"
 import { ArrowBack, Visibility } from "@mui/icons-material";
 
 // Project Resources
-import { FbContext } from '../resources/Firebase'
-import { getRolesDoc } from "../resources/HandleDb";
+import { getFirebase, getRolesDoc } from "../resources/Firebase";
 import Form from "../components/Form";
 import UserSearch from "../components/UserSearch";
 import Cards from "../components/Cards";
@@ -67,7 +66,7 @@ function User(props) {
                         <Typography m={1}>
                             {data.email ? "Email: " + data.email : ''}
                         </Typography>
-                        <Button variant="contained" color="secondary">
+                        <Button variant="contained" color="secondary" sx={{display: 'none'}}>
                             {data.schedulename ? `Send a chat message to ${data.schedulename}` : ''}
                         </Button>
                     </div>
@@ -95,14 +94,11 @@ function getCode() {
 }
 
 function Roles(props) {
-    const db = props.firebase.db;
-    const functions = props.firebase.functions;
-
-    const [ rolesDoc, loading ]= useDocument(getRolesDoc(db, props.org));
+    const [ loading, setLoading ] = useState(true)
+    const [ roles, setRoles ] = useState();
     const [ formData, setFormData ] = useState({});
     const [ formOpen, setFormOpen ] = useState(false);
-    const addRole = httpsCallable(functions, 'addRole');
-    const data = rolesDoc ? rolesDoc.data() : false;
+    const addRole = httpsCallable(getFirebase().functions, 'addRole');
 
     const NewForm = () => {
         const key = getCode()
@@ -134,9 +130,10 @@ function Roles(props) {
                     roleKey: key, 
                     roleDescription: formData.roledescription
                     }
-                ).then(
+                ).then(() => {
+                    getRolesDoc(props.org, setRoles, setLoading, true)
                     setFormOpen(false)
-                )
+                })
             }}
             >
                 <Typography>
@@ -145,17 +142,20 @@ function Roles(props) {
             </Form>
         )
     }
+    
+    useEffect(() => {
+        getRolesDoc(props.org, setRoles, setLoading)
+    }, [])
 
     return (
         <Cards
-        data={data ? Object.keys(data).map((key) => {
-            return (
+        data={roles ? Object.keys(roles).map((key) => (
                 {
-                    title: data[key].roleName,
+                    title: roles[key].roleName,
                     subtitle: `Key: ${key.slice(0, 3)} - ${key.slice(3)}`,
-                    description: data[key].roleDescription
+                    description: roles[key].roleDescription
                 }
-            )})
+            ))
             :
             {}
         }
@@ -198,10 +198,10 @@ export default function People(props) {
     )
     
     return (
-        <FbContext.Consumer>
-            {firebase => (
+        <div>
+            {
                 widget === 'roles' ? 
-                <Roles org={props.org} firebase={firebase} setWidget={setWidget} />
+                <Roles org={props.org} setWidget={setWidget} />
                 :
                 <Box>
                     <Stack direction={'row'} sx={{display: { xs: 'block', md: 'none', }}}>
@@ -211,21 +211,20 @@ export default function People(props) {
                             <User selected={selected} setSelected={setSelected} />
                         </Box>:
                         <Box sx={{width: '100%'}}>
-                            <UserSearch button={<RoleButton />} widget={widget} setWidget={setWidget} selected={selected} setSelected={setSelected} org={props.org} firebase={firebase}/>
+                            <UserSearch button={<RoleButton />} widget={widget} setWidget={setWidget} selected={selected} setSelected={setSelected} org={props.org} />
                         </Box>
                         }
                     </Stack>
                     <Box sx={{display: { xs: 'none', md: 'flex', flexDirection: 'row' }}}>
                         <Box flex={2}>
-                            <UserSearch button={<RoleButton />} widget={widget} setWidget={setWidget} selected={selected} setSelected={setSelected} org={props.org} firebase={firebase}/>
+                            <UserSearch button={<RoleButton />} widget={widget} setWidget={setWidget} selected={selected} setSelected={setSelected} org={props.org} />
                         </Box>
                         <Box flex={1} width={10}>
                             <User selected={selected}/>
                         </Box>
                     </Box>
                 </Box>
-                
-            )}
-        </FbContext.Consumer>
+            }   
+        </div>
     )
 }

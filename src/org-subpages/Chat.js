@@ -7,8 +7,7 @@ import { ArrowBack, GroupAdd, Send, Visibility } from "@mui/icons-material";
 import { useTheme } from "@emotion/react";
 
 // Project Resources
-import { getSubscriptions, getChatMessaging } from '../resources/HandleDb'
-import { FbContext } from "../resources/Firebase";
+import { getSubscriptions, getChatMessaging, getFirebase } from '../resources/Firebase'
 import { MiniLoad } from "../components/Loading";
 import UserSearch from "../components/UserSearch";
 import { NavButton, SubNav } from "../components/SubNav";
@@ -83,9 +82,10 @@ function Write(props) {
 
     const messagesEndRef = createRef()
 
-    const functions = props.firebase.functions;
-    const auth = props.firebase.auth;
-    const db = props.firebase.db;
+    const firebase = getFirebase();
+    const functions = firebase.functions;
+    const auth = firebase.auth;
+    const db = firebase.db;
 
     const user = auth.currentUser;
 
@@ -100,7 +100,7 @@ function Write(props) {
                 const defaultChat = Object.entries(subscription)[0][0]
                 setSubs(subscription)
                 setChat(defaultChat)
-                setUnsub(getChatMessaging(db, defaultChat, setMessages))
+                setUnsub(getChatMessaging(defaultChat, setMessages))
             })
     }, [db, props.org, user.uid])
 
@@ -259,7 +259,7 @@ function NewChat(props) {
                     )
                 })}
             </Box>
-            <UserSearch firebase={props.firebase} org={props.org} selected={selected} setSelected={setSelected} button={''} multiple={true}>
+            <UserSearch org={props.org} selected={selected} setSelected={setSelected} button={''} multiple={true}>
 
             </UserSearch>
         </div>
@@ -279,19 +279,12 @@ function NewChat(props) {
 export default function Chat(props) {
     const [ widget, setWidget ] = useState('chat');
     return (
-        <FbContext.Consumer>
-            {firebase => {
-                return (
-                    <Box>
-                        { widget === 'chat' ? 
-                        <Write firebase={firebase} org={props.org} setWidget={setWidget}/> 
-                        : 
-                        <NewChat firebase={firebase} org={props.org} setWidget={setWidget} />
-                        }
-                    </Box>
-                    
-                )
-            }}
-        </FbContext.Consumer>
+        <Box>
+            { widget === 'chat' ? 
+            <Write org={props.org} setWidget={setWidget}/> 
+            : 
+            <NewChat org={props.org} setWidget={setWidget} />
+            }
+        </Box>   
     )
 }

@@ -8,11 +8,10 @@ import { Circle, Clear, Close, Edit, Image, PictureAsPdf, Save, Upload } from "@
 
 // Project Resources
 import FriendlyLoad from "../components/FriendlyLoad";
-import { FbContext } from "../resources/Firebase";
-import { getMemo, setMemo } from "../resources/HandleDb";
+import { getMemo, setMemo } from "../resources/Firebase";
 import { setPersistence } from "firebase/auth";
 import AdminCheck from "../components/AdminCheck";
-import { getOrgFiles, uploadFile } from "../resources/HandleStorage";
+import { getOrgFiles, uploadFile } from "../resources/Firebase";
 import { getDownloadURL } from "firebase/storage";
 import { CustomSnackbar } from "../components/CustomSnackbar";
 
@@ -22,7 +21,7 @@ function FileUpload(props) {
     const [ open, setOpen ] = useState(false);
 
     const handleUpload = () => {
-        uploadFile(props.storage, inputRef.current.files.item(0), props.root, props.unique)
+        uploadFile(inputRef.current.files.item(0), props.root, props.unique)
             .then(() => {
                 setOpen(true)
                 if (props.setRefresh) {
@@ -76,7 +75,6 @@ function Header(props) {
             <Box height={'162px'}>
 
             <FriendlyLoad 
-            storage={props.storage}
             source={imagePath} 
             width={'288px'}
             height={'162px'}
@@ -86,7 +84,6 @@ function Header(props) {
                 <AdminCheck org={props.org}>
                     <FileUpload 
                     root={imagePath}
-                    storage={props.storage} 
                     accept={'.jpg'}
                     unique={true} 
                     button='hover'
@@ -100,7 +97,6 @@ function Header(props) {
 }
 
 
-
 function Left(props) {
     const [ edit, setEdit ] = useState();
     const [ title, setTitle ] = useState('');
@@ -109,103 +105,99 @@ function Left(props) {
     const [ updated, setUpdated ] = useState(false);
     const [ open, setOpen ] = useState(false);
 
+    useEffect(() => {
+        getMemo(props.org, setTitle, setPerson, setContents)
+    }, [])
+
     return (
-        <FbContext.Consumer>
-            {firebase => {
-                if (!updated) {
-                    getMemo(firebase.db, props.org, setTitle, setPerson, setContents)
-                        .then(() => {
-                            setUpdated(true)
-                        })
+        <div>
+            <Header org={props.org} />
+            <Paper sx={{mx: 2, padding: 2}}>
+                {edit ? 
+                <div>
+                    <TextField 
+                    placeholder="Memo Title" 
+                    variant="standard"
+                    sx={{my: 1}} 
+                    value={title}
+                    onChange={e => {setTitle(e.target.value)}}
+                    inputProps={{
+                        style: {
+                            fontSize: '25px'
+                        },
+                        }}/>
+                    <TextField 
+                    multiline 
+                    sx={{width: '100%', my: 1}} 
+                    placeholder={'Memo contents'} 
+                    value={contents}
+                    onChange={e => {setContents(e.target.value)}}
+                    />
+                </div>
+                : 
+                <div>
+                    <Typography
+                    variant="h5"
+                    fontWeight={'bold'}
+                    >
+                        {title}
+                    </Typography>
+                    <Typography
+                    variant="body2"
+                    >
+                        Written by {person}
+                    </Typography>
+                    <Divider sx={{borderColor: 'white'}}/>
+                    {contents ? 
+                    contents.split('\n').map((paragraph, index) => (
+                        <Typography key={index} sx={{mt: 1}} minHeight={'1em'}>
+                            {paragraph}
+                        </Typography>
+                    ))
+                    :
+                    ''
+                    }
+                </div>
                 }
-                return (
-                    <div>
-                        <Header storage={props.storage} org={props.org} />
-                        <Paper sx={{mx: 2, padding: 2}}>
-                            {edit ? 
-                            <div>
-                                <TextField 
-                                placeholder="Memo Title" 
-                                variant="standard"
-                                sx={{my: 1}} 
-                                value={title}
-                                onChange={e => {setTitle(e.target.value)}}
-                                inputProps={{
-                                    style: {
-                                        fontSize: '25px'
-                                    },
-                                    }}/>
-                                <TextField 
-                                multiline 
-                                sx={{width: '100%', my: 1}} 
-                                placeholder={'Memo contents'} 
-                                value={contents}
-                                onChange={e => {setContents(e.target.value)}}
-                                />
-                            </div>
-                            : 
-                            <div>
-                                <Typography
-                                variant="h5"
-                                fontWeight={'bold'}
-                                >
-                                    {title}
-                                </Typography>
-                                <Typography
-                                variant="body2"
-                                >
-                                    Written by {person}
-                                </Typography>
-                                <Divider sx={{borderColor: 'white'}}/>
-                                <Typography sx={{mt: 1}}>
-                                    {contents}
-                                </Typography>
-                            </div>
-                            }
-                            <Box width={'100%'} display={'flex'} >
-                                <Box flex={1} />
-                                <Box flex={0} >
-                                    {edit 
-                                    ?
-                                    <Box display={'flex'} flexDirection={'row'}>
-                                        <IconButton onClick={
-                                            () => {
-                                                setMemo(
-                                                    firebase.db, 
-                                                    props.org,
-                                                    title, 
-                                                    contents, 
-                                                    firebase.auth.currentUser
-                                                ).then(() => {
-                                                    setOpen(true)
-                                                })
-                                            }
-                                            }>
-                                            <Save color="secondary" />
-                                        </IconButton>
-                                        <IconButton onClick={() => {setEdit(false); setUpdated(false)}}>
-                                            <Clear color="secondary" />
-                                        </IconButton>
-                                    </Box>
-                                    :
-                                        <AdminCheck org={props.org}>
-                                            <IconButton onClick={() => {setEdit(true)}}>
-                                                <Edit color="secondary" />
-                                            </IconButton>
-                                        </AdminCheck>
-                                    }
-                                </Box>
-                            </Box>
-                        </Paper>
-                        <CustomSnackbar
-                        text='Memo Saved'
-                        open={open}
-                        setOpen={setOpen}
-                        />
-                    </div>
-                )
-            }}
-        </FbContext.Consumer>
+                <Box width={'100%'} display={'flex'} >
+                    <Box flex={1} />
+                    <Box flex={0} >
+                        {edit 
+                        ?
+                        <Box display={'flex'} flexDirection={'row'}>
+                            <IconButton onClick={
+                                () => {
+                                    setMemo(
+                                        props.org,
+                                        title, 
+                                        contents, 
+                                    ).then(() => {
+                                        setOpen(true)
+                                    })
+                                }
+                                }>
+                                <Save color="secondary" />
+                            </IconButton>
+                            <IconButton onClick={() => {setEdit(false); setUpdated(false)}}>
+                                <Clear color="secondary" />
+                            </IconButton>
+                        </Box>
+                        :
+                            <AdminCheck org={props.org}>
+                                <IconButton onClick={() => {setEdit(true)}}>
+                                    <Edit color="secondary" />
+                                </IconButton>
+                            </AdminCheck>
+                        }
+                    </Box>
+                </Box>
+            </Paper>
+            <CustomSnackbar
+            text='Memo Saved'
+            open={open}
+            setOpen={setOpen}
+            />
+        </div>
     )
 }
 
@@ -268,7 +260,7 @@ function Right(props) {
     const [ refresh, setRefresh ] = useState();
 
     useEffect(() => {
-        getOrgFiles(props.storage, props.org + '/', setFiles)
+        getOrgFiles(props.org + '/', setFiles)
     }, [refresh])
 
     return (
@@ -304,7 +296,6 @@ function Right(props) {
             >
                 <FileUpload 
                 root={props.org + '/'}
-                storage={props.storage}
                 button={"fill"}
                 accept={'.jpg,.png,.pdf'}
                 refresh={refresh}
@@ -320,31 +311,27 @@ export default function OrgHome(props) {
     const [ selected ] = useState('left')
 
     return (
-        <FbContext.Consumer>
-            {firebase => (
-                <Box display={'flex'} flexDirection={{ xs: 'column', md: 'row' }} height={'100%'} overflow={'auto'}>
-                    <Box 
-                    width={{ xs: '100%', md: '50%'}}
-                    display={{ xs: selected === 'left' ? 'block' : 'none', md: 'block' }}
-                    >
-                        <Left storage={firebase.storage} org={props.org} />
-                    </Box>
-                    <Box 
-                    width={{ xs: '100%', md: '50%'}} 
-                    height={'100%'}
-                    display={'flex'}
-                    flexDirection={'row'}
-                    padding={{ xs: 2, md: 0}}
-                    >
-                        <Box
-                        width={'1px'}
-                        display={{xs: `none`, md: 'block'}}
-                        sx={{backgroundColor: theme.palette.primary.main}}
-                        />
-                        <Right storage={firebase.storage} org={props.org} />
-                    </Box>
-                </Box>
-            )}
-        </FbContext.Consumer>
+        <Box display={'flex'} flexDirection={{ xs: 'column', md: 'row' }} height={'100%'} overflow={'auto'}>
+            <Box 
+            width={{ xs: '100%', md: '50%'}}
+            display={{ xs: selected === 'left' ? 'block' : 'none', md: 'block' }}
+            >
+                <Left org={props.org} />
+            </Box>
+            <Box 
+            width={{ xs: '100%', md: '50%'}} 
+            height={'100%'}
+            display={'flex'}
+            flexDirection={'row'}
+            padding={{ xs: 2, md: 0}}
+            >
+                <Box
+                width={'1px'}
+                display={{xs: `none`, md: 'block'}}
+                sx={{backgroundColor: theme.palette.primary.main}}
+                />
+                <Right org={props.org} />
+            </Box>
+        </Box>
     )
 }

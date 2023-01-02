@@ -12,9 +12,9 @@ import CreateAccount from './pages/CreateAccount.js'
 
 // Firebase Resources
 import { initializeApp } from "firebase/app";
-import { Firebase } from './resources/Firebase.js';
 import Soar, { schLoader, newLoader } from './soar/Soar.js';
 import ViewSubpages from './org-subpages/ViewSubpages.js';
+import { setApp } from './resources/Firebase.js';
 
 // import { getAnalytics } from "firebase/analytics";
 
@@ -33,6 +33,8 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+
+setApp(app)
 
 // const analytics = getAnalytics(app);
 
@@ -57,9 +59,7 @@ const router = createBrowserRouter([
    
 function App() {
   return (
-    <Firebase app={app}>
-        <RouterProvider router={router} />
-    </Firebase>
+    <RouterProvider router={router} />
   );
 }
 

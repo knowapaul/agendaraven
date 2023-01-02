@@ -14,13 +14,13 @@ import { Bottom } from "./Headers";
 
 
 // Other Resources
-import { getPeople } from "../resources/HandleDb";
+import { getPeople } from "../resources/Firebase";
 
 function PeoplePalette(props) {
     const theme = useTheme();
     const [ people, setPeople] = useState({});
 
-    getPeople(props.firebase.db, props.org, setPeople)
+    getPeople(props.org, setPeople)
 
     return (
         <Grid container padding={2} width={'270px'} sx={{margin: 0, padding: 0}}>

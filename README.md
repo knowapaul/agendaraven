@@ -26,9 +26,9 @@ before beginning the tier that is two or more levels below it.
     - (x) Login
     - (x) Homepage
     - (x) Permissions [still need firebase rules]
-    - () How-tos
+    - (x) How-tos
     - () Availability
-    - () Push to online
+    - (x) Push to online
 1. **Basic Operation**
     - (x) Add organization users
     - () Availability turnin

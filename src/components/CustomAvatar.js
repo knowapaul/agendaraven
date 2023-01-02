@@ -3,17 +3,16 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ThemeProvider } from '@mui/system';
 import { mTheme } from '../resources/Themes'
-import { FbContext } from '../resources/Firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import { getFirebase } from '../resources/Firebase';
 
 
 function nameToURL(name) {
     return name.toLowerCase().split(' ').join('')
 }
 
-function InternalAvatar(props) {
-    const auth = props.firebase.auth;
-    const [user, loading] = useAuthState(auth)
+export default function CustomAvatar(props) {
+    const [user, loading] = useAuthState(getFirebase().auth)
 
     const [anchorElUser, setAnchorElUser] = useState(null);
     const navigate = useNavigate();
@@ -36,55 +35,41 @@ function InternalAvatar(props) {
       };
 
     return (
-        <div>
-            <Tooltip title={user ? "Open settings" : "Login"}>
-                <IconButton onClick={(event) => handleOpenUserMenu(event, user)} sx={{ p: 0 }}>
-                {
-                user ? 
-                    <Avatar>{user.email[0].toUpperCase()}</Avatar>
-                    : <Avatar />
-                    }
-                </IconButton>
-            </Tooltip>
-            <Menu
-            sx={{ mt: '45px' }}
-            id="menu-appbar"
-            anchorEl={anchorElUser}
-            anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-            }}
-            keepMounted
-            transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-            }}
-            open={Boolean(anchorElUser)}
-            onClose={handleCloseUserMenu}
-            >
-            {settings.map((item) => (
-                <MenuItem key={item} onClick={() => {navigate('/' + nameToURL(item))}}>
-                <Typography textAlign="center">{item}</Typography>
-                </MenuItem>
-            ))}
-            </Menu>
-        </div>
-    )
-}
-
-export default function CustomAvatar(props) {
-    
-
-
-    return (
         <ThemeProvider theme={mTheme}>
             <Box sx={{ flexGrow: 0 }}>
-                <FbContext.Consumer>
-                    {firebase => (
-                        <InternalAvatar firebase={firebase}/>
-                    )}
-                </FbContext.Consumer>
+                <Tooltip title={user ? "Open settings" : "Login"}>
+                    <IconButton onClick={(event) => handleOpenUserMenu(event, user)} sx={{ p: 0 }}>
+                    {
+                    user ? 
+                        <Avatar>{user.email[0].toUpperCase()}</Avatar>
+                        : <Avatar />
+                        }
+                    </IconButton>
+                </Tooltip>
+                <Menu
+                sx={{ mt: '45px' }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+                >
+                {settings.map((item) => (
+                    <MenuItem key={item} onClick={() => {navigate('/' + nameToURL(item))}}>
+                    <Typography textAlign="center">{item}</Typography>
+                    </MenuItem>
+                ))}
+                </Menu>
             </Box>
         </ThemeProvider>
+        
     )
 }

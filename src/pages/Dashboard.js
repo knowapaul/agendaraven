@@ -20,7 +20,6 @@ import Payments from '../user-subpages/Payments.js';
 import Account from '../user-subpages/Account.js';
 import AuthCheck from '../components/AuthCheck';
 import { useLoaderData } from 'react-router-dom';
-import { FbContext } from '../resources/Firebase';
 import DashModel from '../components/DashModel';
 
 
@@ -86,22 +85,14 @@ export function Dashboard(props) {
     <AuthCheck >
       <ThemeProvider theme={bTheme}>
         <CssBaseline />
-        <FbContext.Consumer >
-            {firebase => {
-              // const storage = firebase.storage;
-              // accessImage(storage, 'image.jpg', setSource)
-              return (
-                <DashModel 
-                menuItems={menu} 
-                logo={<Logo />} 
-                page={page}
-                path={`/dashboard/`} 
-                >
-                  {elementMap[page]}
-                </DashModel>
-              )
-            }}
-        </FbContext.Consumer>
+          <DashModel 
+          menuItems={menu} 
+          logo={<Logo />} 
+          page={page}
+          path={`/dashboard/`} 
+          >
+            {elementMap[page]}
+          </DashModel>
       </ThemeProvider>
     </AuthCheck>
   )

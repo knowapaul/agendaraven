@@ -7,12 +7,11 @@ import { CircularProgress, Fab, Card, CardContent, Grid, Box, Typography } from 
 import AddIcon from '@mui/icons-material/Add'
 
 // Project Resources
-import { accessImage } from "../resources/HandleStorage";
 import CreateOrJoin from '../components/CreateOrJoin'
-import { FbContext } from "../resources/Firebase";
-import { getUserData } from "../resources/HandleDb";
+import { getCurrentAuth, getFirebase, getUserData } from "../resources/Firebase";
 import { MiniLoad } from "../components/Loading";
 import { useTheme } from "@emotion/react";
+import FriendlyLoad from "../components/FriendlyLoad";
  
 
 function OrgCard(props) {
@@ -20,8 +19,6 @@ function OrgCard(props) {
     const [fail, setFail] = useState(false);
 
     const theme = useTheme();
-
-    accessImage(props.storage, 'image.jpg', setSource);
 
     setTimeout(() => {
         setFail(true);
@@ -44,22 +41,12 @@ function OrgCard(props) {
                         >
                             {props.text}
                         </Typography>
-                        {(source && source !== 'ERROR') ? <img alt={props.text + ' background'} src={source} style={{width: '100%', aspectRatio: '16 / 9', borderRadius: theme.shape.borderRadius, objectFit: 'cover' }} /> : 
-                        <Box 
-                        sx={{
-                            width: '100%',
-                            aspectRatio: '16 / 9',
-                            borderRadius: theme.shape.borderRadius
-                          }}
-                        backgroundColor="primary"
-                        display="flex" 
-                        alignItems="center"
-                        justifyContent="center"
-                        >
-                            {(fail || source === 'ERROR') ? <Typography>Error Loading Image</Typography> :
-                            <CircularProgress color="secondary"/>
-                            }
-                        </Box>
+                        {
+                            <FriendlyLoad 
+                            source={props.text + '/index/image.jpg'} 
+                            width={'100%'}
+                            style={{ objectFit: 'cover', borderRadius: theme.shape.borderRadius, aspectRatio: '16 / 9'}}
+                            />
                         }
                         <Typography
                         sx={{float: 'right'}}
@@ -111,15 +98,12 @@ function Add() {
     )
 }
 
-function OrgGrid(props) {
+export default function Organizations(props) {
     const [ orgs, setOrgs ] = useState({});
 
-    const storage = props.firebase.storage;
-    const db = props.firebase.db;
-    const auth = props.firebase.auth;
-
     useEffect(() => {
-        getUserData(db, auth.currentUser.uid)
+        console.log('orggrid')
+        getUserData()
             .then((data) => {
                 setOrgs(data.orgs);
             })
@@ -130,7 +114,7 @@ function OrgGrid(props) {
             {orgs !== {} ? 
                 <Grid container spacing={2}>
                     {Object.keys(orgs).map((text) => {
-                        return (<OrgCard key={text} text={text} storage={storage}/>)
+                        return (<OrgCard key={text} text={text} />)
                     })}
                     <Add />
                 </Grid> :
@@ -138,17 +122,5 @@ function OrgGrid(props) {
             }
         </Box>
         
-    )
-}
-
-export default function Organizations() {
-    return (
-        <FbContext.Consumer>
-            {firebase => {
-                return (
-                    <OrgGrid firebase={firebase}/>
-                )
-            }}
-        </FbContext.Consumer>
     )
 }

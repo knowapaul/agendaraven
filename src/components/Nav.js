@@ -28,6 +28,7 @@ export default function Nav() {
     setAnchorElNav(null);
   };
 
+
   const pages = ['Dashboard', 'About Us', 'Help'];
   const title = 'AgendaRaven';
 
@@ -37,7 +38,7 @@ export default function Nav() {
         <Container maxWidth="xl">
             <Toolbar disableGutters>
             <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }}>
-                <img src='favicon.ico' width='32' height='32' />
+                <img src='/favicon.ico' width='32' height='32' />
             </Box>
             <Typography
                 variant="h6"
@@ -94,7 +95,7 @@ export default function Nav() {
                 </Menu>
             </Box>
             <Box sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} >
-                <img src='favicon.ico' width='32' height='32' />
+                <img src='/favicon.ico' width='32' height='32' />
             </Box>
             <Typography
                 variant="h5"

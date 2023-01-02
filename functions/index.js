@@ -33,12 +33,12 @@ exports.createOrganization = functions.https.onCall(async (data, context) => {
 
     const chatRef = db.collection(orgChat).doc()
 
-    const doc = await db.collection('index').doc('organizations').get()
+    const docSnap = await db.collection('index').doc('organizations').get()
 
     // Double check to make sure the organization name is not forbidden 
     // TODO: also do this in the front end code
 
-    if (Object.keys(doc.data()).includes(data.orgName)) {
+    if (Object.keys(docSnap.data()).includes(data.orgName)) {
         // throw new functions.https.HttpsError('invalid-name', 'This organization name is not available.')
         return 'Sorry, that organization name is not available.'
     }
@@ -56,7 +56,7 @@ exports.createOrganization = functions.https.onCall(async (data, context) => {
 
 
     // Create the org memo
-    const dataRef = db.collection(orgIndex).doc('organizations');
+    const dataRef = db.doc(org + 'data/memo');
     await dataRef.set({
         title: 'Welcome!', 
         person: 'AgendaRaven', 

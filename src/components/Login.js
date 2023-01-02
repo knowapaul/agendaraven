@@ -6,13 +6,13 @@ import { useNavigate } from "react-router-dom"
 import { Button, Typography } from "@mui/material"
 
 // Project Resources
-import { FbContext } from '../resources/Firebase'
 import Form from "./Form"
 import CenterForm from "./CenterForm"
 import Nav from './Nav';
 
 // Firebase Resources
 import { signInWithEmailAndPassword } from "firebase/auth"
+import { getFirebase } from "../resources/Firebase"
 
 
 function SignIn(auth, fields, setError) {
@@ -51,38 +51,31 @@ export default function Login(props) {
                 >
                     Login
                 </Typography>
-                <FbContext.Consumer>
-                    {firebase => {
-                        const auth = firebase.auth;
-                        return (
-                            <Form 
-                            inputs={[
-                                {
-                                title: "Email",
-                                type: "email",
-                                placeholder: "example@gmail.com",
-                                validate: "none",
-                                required: true
-                                },
-                                {
-                                title: "Password",
-                                type: "password",
-                                placeholder: "",
-                                validate: "none",
-                                required: true
-                                },
-                            ]}
-                            buttonText="Continue to Dashboard"
-                            handleSubmit={(event) => {
-                                SignIn(auth, fields, setError)
-                            }}
-                            data={fields}
-                            setData={setFields}
-                            formError={error}
-                            />
-                        )
-                    }}
-                </FbContext.Consumer>
+                <Form 
+                inputs={[
+                    {
+                    title: "Email",
+                    type: "email",
+                    placeholder: "example@gmail.com",
+                    validate: "none",
+                    required: true
+                    },
+                    {
+                    title: "Password",
+                    type: "password",
+                    placeholder: "",
+                    validate: "none",
+                    required: true
+                    },
+                ]}
+                buttonText="Continue to Dashboard"
+                handleSubmit={(event) => {
+                    SignIn(getFirebase().auth, fields, setError)
+                }}
+                data={fields}
+                setData={setFields}
+                formError={error}
+                />
                 <Button 
                 variant="contained"
                 onClick={() => {navigate('/createaccount')}}

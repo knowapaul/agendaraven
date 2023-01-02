@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { CircularProgress, Box, Typography } from "@mui/material";
 
 // Project Resources
-import { accessImage } from "../resources/HandleStorage";
+import { accessImage } from "../resources/Firebase";
 
 
 /**
@@ -25,7 +25,7 @@ export default function FriendlyLoad(props) {
     const [ fail, setFail ] = useState();
 
     useEffect(() => {
-        accessImage(props.storage, props.source, setSource);
+        accessImage(props.source, setSource);
     }, props.deps)
 
     setTimeout(() => {
@@ -36,6 +36,7 @@ export default function FriendlyLoad(props) {
         <Box 
         height={props.height}
         width={props.width}
+        sx={{aspectRatio: props.style.aspectRatio}}
         >
             {
             (source && source !== 'ERROR') 

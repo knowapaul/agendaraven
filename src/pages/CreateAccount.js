@@ -10,8 +10,7 @@ import { ArrowBack } from "@mui/icons-material";
 import Form from "../components/Form";
 import Nav from '../components/Nav'
 import CenterForm from "../components/CenterForm";
-import { addUserAccount } from "../resources/HandleDb";
-import { FbContext } from "../resources/Firebase";
+import { addUserAccount, getFirebase } from "../resources/Firebase";
 
 // Firebase Resources
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
@@ -33,7 +32,7 @@ function createNewAccount(auth, db, inData, navigate, setError) {
                         phonenumber: data.phonenumber
                     }
         
-                    return addUserAccount(db, acountInfo, auth.currentUser)
+                    return addUserAccount(acountInfo, auth.currentUser)
                 })
                 .then(() => {
                     navigate('/dashboard')
@@ -54,6 +53,8 @@ export default function CreateAccount() {
     const [data, setData] = useState({});
     const navigate = useNavigate();
     const [error, setError] = useState()
+
+    const firebase = getFirebase();
 
     return (
         <div>
@@ -83,73 +84,63 @@ export default function CreateAccount() {
                 >
                     Create Account
                 </Typography>
-                <FbContext.Consumer>
-                    {firebase => {
-                        const auth = firebase.auth;
-                        const db = firebase.db;
-                        return (
-                            <Form 
-                            inputs={[
-                                {
-                                    title: 'Email',
-                                    type: 'email',
-                                    placeholder: 'johndoe@example.com',
-                                    required: true,
-                                    validate: 'email'
-                                },
-                                {
-                                    title: 'Phone Number',
-                                    type: 'phone',
-                                    placeholder: '(000) 000-0000',
-                                    required: true,
-                                    validate: 'phone'
-                                },
-                                {
-                                    title: 'First Name',
-                                    type: 'text',
-                                    placeholder: 'Johnathan',
-                                    required: true,
-                                    validate: 'title'
-                                },
-                                {
-                                    title: 'Last Name',
-                                    type: 'text',
-                                    placeholder: 'Doe',
-                                    required: true,
-                                    validate: 'title'
-                                },
-                                {
-                                    title: 'Schedule Name',
-                                    type: 'text',
-                                    placeholder: 'John',
-                                    validate: 'schedule'
-                                },
-                                {
-                                    title: 'Password',
-                                    type: 'password',
-                                    placeholder: 'Longer than 8 characters',
-                                    required: true,
-                                    validate: 'password'
-                                },
-                                {
-                                    title: 'Confirm Password',
-                                    type: 'password',
-                                    placeholder: 'Retype password',
-                                    required: true,
-                                    validate: 'confirm'
-                                },
-                            ]}
-                            buttonText="Continue to Dashboard"
-                            data={data}
-                            setData={setData}
-                            handleSubmit={() => {createNewAccount(auth, db, data, navigate, setError)}}
-                            formError={error}
-                            />
-                        )
-
-                    }}
-                </FbContext.Consumer>
-
+                <Form 
+                inputs={[
+                    {
+                        title: 'Email',
+                        type: 'email',
+                        placeholder: 'johndoe@example.com',
+                        required: true,
+                        validate: 'email'
+                    },
+                    {
+                        title: 'Phone Number',
+                        type: 'phone',
+                        placeholder: '(000) 000-0000',
+                        required: true,
+                        validate: 'phone'
+                    },
+                    {
+                        title: 'First Name',
+                        type: 'text',
+                        placeholder: 'Johnathan',
+                        required: true,
+                        validate: 'title'
+                    },
+                    {
+                        title: 'Last Name',
+                        type: 'text',
+                        placeholder: 'Doe',
+                        required: true,
+                        validate: 'title'
+                    },
+                    {
+                        title: 'Schedule Name',
+                        type: 'text',
+                        placeholder: 'John',
+                        validate: 'schedule'
+                    },
+                    {
+                        title: 'Password',
+                        type: 'password',
+                        placeholder: 'Longer than 8 characters',
+                        required: true,
+                        validate: 'password'
+                    },
+                    {
+                        title: 'Confirm Password',
+                        type: 'password',
+                        placeholder: 'Retype password',
+                        required: true,
+                        validate: 'confirm'
+                    },
+                ]}
+                buttonText="Continue to Dashboard"
+                data={data}
+                setData={setData}
+                handleSubmit={() => {createNewAccount(firebase.auth, firebase.db, data, navigate, setError)}}
+                formError={error}
+                />
             </CenterForm>
         </div>
     )

@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import AdminCheck from "./AdminCheck";
 
 // Project Resources
-import PopupForm from "./PopupForm";
 import { NavButton, SubNav } from "./SubNav";
 import AddButton from './AddButton'
 
@@ -111,7 +110,12 @@ export default function Cards(props) {
                                 </Typography>
                                 <Box sx={{flex: 0}} >
                                     <Box sx={{float: 'right'}}>
+                                        {props.icons ? 
                                         <props.icons {...card}/>
+                                        :
+                                        ''
+                                        }
+                                        
                                     </Box>
                                 </Box>
                             </Paper>

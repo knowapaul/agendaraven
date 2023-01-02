@@ -9,8 +9,7 @@ import { Box, Grid, IconButton, Tooltip, Typography } from "@mui/material";
 import Cards from "../components/Cards";
 import AddButton from "../components/AddButton";
 import AdminCheck from "../components/AdminCheck";
-import { getAllSchedules } from "../resources/HandleDb";
-import { FbContext } from "../resources/Firebase";
+import { getAllSchedules } from "../resources/Firebase";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "@emotion/react";
 
@@ -50,12 +49,14 @@ function View(props) {
     return (
         <Cards 
         data={props.data} 
-        open={false}
+        open={true}
+        setOpen={() => {}}
         helperMessage={'There are currently no schedules to display. If that doesn\'t seem right, try refreshing the page.'} 
         icons={Icons} 
         add={
             <AdminCheck org={props.org} >
                 <AddButton 
+                open={false}
                 text='New Schedule'
                 tooltip='Open the Schedule Creator'
                 url={'/soar/' + props.org}
@@ -118,13 +119,13 @@ function ViewOne(props) {
     )
 }
 
-
-function Internal(props) {
+// Main export
+export default function Schedules(props) {
     const [ data, setData ] = useState([]);
     const [ schedule, setSchedule ] = useState();
 
     useEffect(() => {
-        getAllSchedules(props.firebase.db, props.org, setData, setSchedule)
+        getAllSchedules(props.org, setData, setSchedule)
     }, [])
 
     return (
@@ -136,17 +137,5 @@ function Internal(props) {
                 <View org={props.org} firebase={props.firebase} data={data} setSchedule={setSchedule} />
             }
         </div>
-    )
-
-}
-
-// Main export
-export default function Schedules(props) {
-    return (
-        <FbContext.Consumer>
-            {firebase => (
-                <Internal firebase={firebase} org={props.org} />
-            )}
-        </FbContext.Consumer>
     )
 }

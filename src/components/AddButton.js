@@ -14,7 +14,7 @@ import { NavButton, SubNav } from "./SubNav";
  * 
  * - form = {JSX} The form to add a card 
  * - formTitle = {String} The form's title
- * - open = {Boolean} Form open state
+ * - open = {Boolean} Form open state (REQUIRED)
  * - setOpen = {Function} Form setOpen function
  * - tooltip = {String} Tooltip of button
  * - text = {String} The button's text

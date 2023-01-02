@@ -9,7 +9,7 @@ import { Box, Chip, Paper, TextField, Typography } from "@mui/material";
 
 // Project Resources
 import { MenuIcon } from './MenuIcon'
-import { saveSchedule } from "../resources/HandleDb";
+import { saveSchedule } from "../resources/Firebase";
 import { CustomSnackbar } from "../components/CustomSnackbar";
 
 // Other Resources
@@ -133,7 +133,7 @@ export function Top(props) {
                     </MenuIcon>
                     <MenuIcon title="Save"
                     handleClick={() => {
-                        saveSchedule(props.db, props.org, props.title, props.type, props.fields, props.contents)
+                        saveSchedule(props.org, props.title, props.type, props.fields, props.contents)
                             .then(() =>{
                                 setOpen(true)
                             })
