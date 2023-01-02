@@ -18,18 +18,7 @@ function Paragraph(props) {
     )
 }
 
-export default function Error(props) {
-    return (
-        <div>
-            <Nav />
-            <ThemeProvider theme={mTheme}>
-                <CssBaseline />
-                <Paper sx={{padding: 3, mt: 10}}>
-                    <Typography variant="h6">
-                        Sorry, an error has occured
-                    </Typography>
-                    
-                    <Paragraph>
+{/* <Paragraph>
                         Your experience on this site matters deeply to us,
                         and we would like to do everything we can to get you
                         back on the site as soon as possible. 
@@ -50,7 +39,28 @@ export default function Error(props) {
                      
                     <Button variant="contained">
                         Release analytics data
-                    </Button>
+                    </Button> */}
+
+export default function Error(props) {
+    return (
+        <div>
+            <Nav />
+            <ThemeProvider theme={mTheme}>
+                <CssBaseline />
+                <Paper sx={{padding: 3, mt: 10}}>
+                    <Typography variant="h6" sx={{mb: 3}}>
+                        Sorry, an error has occured
+                    </Typography>
+
+                    <Typography sx={{mb: 2}}>
+                        Try refreshing the page and attempting 
+                            your last action again. 
+                    </Typography>
+                    <Typography>
+                        Since this website is very new, it is likely that
+                        you will see this message often. It is the best
+                        I can do so far. Your patience is greatly appreciated.
+                    </Typography>
                 </Paper>
             </ThemeProvider>
         </div>

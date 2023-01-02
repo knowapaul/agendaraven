@@ -1,22 +1,30 @@
 // React Resources
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 // MUI Resources
 import { AddBusiness, Edit, EventAvailable, Visibility } from '@mui/icons-material'
-import { Box, IconButton, Tooltip } from "@mui/material";
+import { Box, Grid, IconButton, Tooltip, Typography } from "@mui/material";
 
 // Project Resources
 import Cards from "../components/Cards";
 import AddButton from "../components/AddButton";
 import AdminCheck from "../components/AdminCheck";
+import { getAllSchedules } from "../resources/HandleDb";
+import { FbContext } from "../resources/Firebase";
+import { useNavigate } from "react-router-dom";
+import { useTheme } from "@emotion/react";
 
 
 // Options for the View component
 function Icons(props) {
+    console.log('p', props)
+    const navigate = useNavigate();
     return (
         <Box display={'flex'} flexDirection={'row'}>
             <Tooltip title={"View Schedule"}>
-                <IconButton color="secondary">
+                <IconButton color="secondary"
+                    onClick={() => {props.setSchedule(props)}}>
+                
                     <Visibility />
                 </IconButton>
             </Tooltip>
@@ -27,7 +35,9 @@ function Icons(props) {
             </Tooltip>
             <AdminCheck org={props.org}>
                 <Tooltip title={"Edit Schedule"}>
-                    <IconButton color="secondary">
+                    <IconButton color="secondary" onClick={() => {
+                        navigate(`/soar/${props.org}/${props.title}`)
+                    }}>
                         <Edit />
                     </IconButton>
                 </Tooltip>
@@ -38,19 +48,18 @@ function Icons(props) {
 
 // View posted schedules
 function View(props) {
-    const [ data, setData ] = useState([{title: 'Test', subtitle: 'Try 0', description: 'Description here'}]);
-
     return (
         <Cards 
-        data={data} 
-        helperMessage={'This means there is no data'} 
-        icons={<Icons org={props.org} />} 
+        data={props.data} 
+        open={false}
+        helperMessage={'There are currently no schedules to display. If that doesn\'t seem right, try refreshing the page.'} 
+        icons={Icons} 
         add={
             <AdminCheck org={props.org} >
                 <AddButton 
                 text='New Schedule'
                 tooltip='Open the Schedule Creator'
-                url='/soar'
+                url={'/soar/' + props.org}
                 />
             </AdminCheck>
         }
@@ -58,11 +67,90 @@ function View(props) {
     )
 }
 
+function ViewOne(props) {
+    const theme = useTheme();
+    console.log('schedule', props)
+    return (
+        <Box>
+            <Box sx={{padding: 2}}>
+                <Typography
+                variant="h4"
+                >
+                    {props.schedule.title}
+                </Typography>
+                <Typography>
+                    {props.schedule.description}
+                </Typography>
+                <Typography>
+                    {props.schedule.subtitle}
+                </Typography>
+            </Box>
+
+
+            <Box display={'flex'} flexDirection={'row'} ml='20px'>
+                {props.schedule.fields.map((field, oIndex) => (
+                    <Box>
+                        <Typography>
+                            {field}
+                        </Typography>
+                        {
+                            props.schedule.contents[0]
+                            ?
+                            props.schedule.contents.map((person, iIndex) => ((
+
+                                <Box xs={6} display='flex' flexDirection={'row'} key={oIndex + ',' + iIndex} sx={{border: `1px solid ${theme.palette.primary.main}`}}>
+                                    <Typography sx={{margin: 'auto', padding: 2, textAlign: 'center'}}>
+                                        {person[field]
+                                        ? 
+                                        person[field]
+                                        :
+                                        '---'
+                                        }
+                                    </Typography>
+                                </Box>
+                            )))
+                            :
+                            ''
+                        }
+                    </Box>
+                ))
+                }
+            </Box>
+        </Box>
+    )
+}
+
+
+function Internal(props) {
+    const [ data, setData ] = useState([]);
+    const [ schedule, setSchedule ] = useState();
+
+    useEffect(() => {
+        getAllSchedules(props.firebase.db, props.org, setData, setSchedule)
+        console.log('done', data)
+    }, [])
+
+    console.log('schedule', schedule)
+    return (
+        <div>
+            {
+                schedule ?
+                <ViewOne schedule={schedule} />
+                :
+                <View org={props.org} firebase={props.firebase} data={data} setSchedule={setSchedule} />
+            }
+        </div>
+    )
+
+}
+
 // Main export
 export default function Schedules(props) {
     return (
-        <div>
-            <View org={props.org} />
-        </div>
+        <FbContext.Consumer>
+            {firebase => (
+                <Internal firebase={firebase} org={props.org} />
+            )}
+        </FbContext.Consumer>
     )
 }

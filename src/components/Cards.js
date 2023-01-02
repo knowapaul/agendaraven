@@ -111,7 +111,7 @@ export default function Cards(props) {
                                 </Typography>
                                 <Box sx={{flex: 0}} >
                                     <Box sx={{float: 'right'}}>
-                                        {props.icons}
+                                        <props.icons {...card}/>
                                     </Box>
                                 </Box>
                             </Paper>

@@ -14,12 +14,12 @@ import { setPersistence } from "firebase/auth";
 import AdminCheck from "../components/AdminCheck";
 import { getOrgFiles, uploadFile } from "../resources/HandleStorage";
 import { getDownloadURL } from "firebase/storage";
+import { CustomSnackbar } from "../components/CustomSnackbar";
 
 
 function FileUpload(props) {
     const inputRef = useRef();
     const [ open, setOpen ] = useState(false);
-    console.log('props', props)
 
     const handleUpload = () => {
         uploadFile(props.storage, inputRef.current.files.item(0), props.root, props.unique)
@@ -99,40 +99,7 @@ function Header(props) {
     )
 }
 
-/**
- * @param  {Map} props React Props
- * 
- * text = {String} The alert's text
- * open = {Boolean} The open state of the snackbar
- * setOpen = {Function} The function to set the open value
- */
-function CustomSnackbar(props) {
-    const close = () => {props.setOpen(false)}
-    return (
-        <Snackbar
-        sx={{zIndex: '1201'}}
-        open={props.open}
-        onClose={close}
-        autoHideDuration={6000}
-        >
 
-            <Alert severity="success" sx={{'& .MuiAlert-icon': {margin:'auto', mr: 2} }}>
-                    {props.text}
-                    <IconButton
-                    size="small"
-                    aria-label="close"
-                    color="inherit"
-                    onClick={close}
-                    sx={{ml: 2}}
-
-                    >
-                        <Close />
-                </IconButton>
-            </Alert>
-            
-        </Snackbar>
-    )
-}
 
 function Left(props) {
     const [ edit, setEdit ] = useState();
@@ -141,8 +108,6 @@ function Left(props) {
     const [ person, setPerson ] = useState('');
     const [ updated, setUpdated ] = useState(false);
     const [ open, setOpen ] = useState(false);
-
-    console.log('left', props.org)
 
     return (
         <FbContext.Consumer>
@@ -248,18 +213,15 @@ function Left(props) {
 function FileItem(props) {
     const theme = useTheme();
     const [ url, setUrl ] = useState();
-    console.log(props.item)
     getDownloadURL(props.item).then((url) => {
         setUrl(url)
     })
-    console.log('url', url)
 
     const icons = {
         pdf: <PictureAsPdf sx={{mr: 2}} />,
         jpg: <Image sx={{mr: 2}} />,
         png: <Image sx={{mr: 2}} />
     }
-    console.log('icon', props.item.name.slice(props.item.name.indexOf('.') + 1))
 
     return (
         <Button
@@ -356,8 +318,6 @@ function Right(props) {
 export default function OrgHome(props) {
     const theme = useTheme();
     const [ selected ] = useState('left')
-
-    console.log('oh', props.org)
 
     return (
         <FbContext.Consumer>

@@ -21,8 +21,8 @@ before beginning the tier that is two or more levels below it.
 
 (*"s" => started / "x" => complete*)
 0. **First Trial** 
-    - () Scheduler
-    - () Schedules
+    - (x) Scheduler
+    - (x) Schedules
     - (x) Login
     - (x) Homepage
     - (x) Permissions [still need firebase rules]

@@ -19,6 +19,8 @@ import OrgSettings from "../org-subpages/OrgSettings";
 import OrgInsights from "../org-subpages/OrgInsights";
 
 
+
+
 //  ["Availability", <EventAvailable color={'secondary'} />],
 
 const menu = [
@@ -59,7 +61,7 @@ function Logo(props) {
 }
 
 export async function orgLoader({ params }) {
-  return [params.org, params.page];
+    return [params.org, params.page];
 }
 
 export function OrgDash(props) {

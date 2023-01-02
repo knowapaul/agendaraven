@@ -13,7 +13,8 @@ import CreateAccount from './pages/CreateAccount.js'
 // Firebase Resources
 import { initializeApp } from "firebase/app";
 import { Firebase } from './resources/Firebase.js';
-import Soar from './pages/Soar.js';
+import Soar, { schLoader, newLoader } from './soar/Soar.js';
+import ViewSubpages from './org-subpages/ViewSubpages.js';
 
 // import { getAnalytics } from "firebase/analytics";
 
@@ -41,16 +42,17 @@ const router = createBrowserRouter([
   { errorElement: <Error />, path: "/dashboard/:page", element: <Dashboard />, loader: dashLoader},
   { errorElement: <Error />, path: "/dashboard", element: <Dashboard />, loader: dashLoader},
 
-
-
   { errorElement: <Error />, path: "/:org/:page", element: <OrgDash page="home" />, loader: orgLoader},
+
+  { errorElement: <Error />, path: "/:org/schedules/:sch", element: <ViewSubpages />, loader: schLoader},
 
   { errorElement: <Error />, path: "logout", element: <Logout />},
   { errorElement: <Error />, path: "createaccount", element: <CreateAccount /> },
   
   { errorElement: <Error />, path: "loading", element: <Loading />},
 
-  { errorElement: <Error />, path: "/soar", element: <Soar />}
+  { errorElement: <Error />, path: "/soar/:org", element: <Soar />, loader: newLoader},
+  { errorElement: <Error />, path: "/soar/:org/:sch", element: <Soar />, loader: schLoader}
 ]);
    
 function App() {
