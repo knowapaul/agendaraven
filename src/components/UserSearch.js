@@ -43,7 +43,7 @@ export default function UserSearch(props) {
                 {props.button}
             </Box>
             
-            <Grid container spacing={1} padding={2} maxHeight={'calc(100vh - 64px - 88px)'} overflow="scroll">
+            <Grid container spacing={1} padding={2} maxHeight={'calc(100vh - 64px - 88px)'} overflow="auto">
                 {searchSort(value, Object.keys(people)).map((key) => {
                     function handleSelect() {
                         const person = {[key]: people[key]}

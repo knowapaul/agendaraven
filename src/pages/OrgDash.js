@@ -39,7 +39,8 @@ function Logo(props) {
     <Stack
       direction="row"
       spacing={2} 
-      margin={1}
+      padding={1}
+      height={'100%'}
       >
         <DonutLarge fontSize="large"/>
         <Typography

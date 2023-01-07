@@ -48,11 +48,6 @@ function OrgCard(props) {
                             style={{ objectFit: 'cover', borderRadius: theme.shape.borderRadius, aspectRatio: '16 / 9'}}
                             />
                         }
-                        <Typography
-                        sx={{float: 'right'}}
-                        >
-                            Roles: user, admin
-                        </Typography>
                     </CardContent>
                 </Card>
             </Link>

@@ -92,7 +92,7 @@ export default function CreateOrJoin(props) {
                         {
                         title: "Join Code",
                         type: "text",
-                        placeholder: "AAA####",
+                        placeholder: "#######",
                         validate: "none",
                         required: true
                         },
@@ -107,7 +107,7 @@ export default function CreateOrJoin(props) {
                     />
                 </Paper>
                 <Divider sx={{margin: 2}}/>
-                <Paper sx={{padding: 2, backgroundColor: theme.palette.primary}}>
+                <Paper sx={{padding: 2, backgroundColor: theme.palette.primary, display: 'none'}}>
                     <Typography
                     variant='h6'
                     textAlign='center'

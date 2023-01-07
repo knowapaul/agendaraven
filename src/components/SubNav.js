@@ -1,4 +1,3 @@
-// MUI Resources
 import { Box, Button, Paper, Tooltip, Typography } from "@mui/material";
 
 
@@ -43,7 +42,7 @@ export function NavButton(props) {
 export function SubNav(props) {
     return (
         <Paper elevation={0} sx={{ display: 'flex', borderRadius: '0px', height: '57.5px'}}>
-            <Box sx={{flex: 1}}>
+            <Box sx={{flexGrow: 1}}>
                 {props.left}
             </Box>
             <Typography variant='h5' noWrap sx={{margin: 'auto', flexGrow: 1}}>

@@ -63,16 +63,15 @@ export default function Cards(props) {
             props.loading ? <CircularProgress />
             :
             <Grid container 
-            maxHeight={'calc(100vh - 64px - 52.5px)'} 
-            overflow='scroll' 
+            maxHeight={'100%'} 
+            overflow='auto' 
             padding={1} 
             spacing={2} 
             rowSpacing={0}
             sx={{mt: 0}}
             >
                 {props.data[0] ?
-                props.data.map((card) => {
-                    return (
+                props.data.map((card) => (
                         <Grid item 
                         xs={12} sm={12} md={6} lg={4} xl={3}  
                         key={card.title}
@@ -102,6 +101,7 @@ export default function Cards(props) {
                                     </Typography>
                                 </Box>
                                 <Typography
+                                whiteSpace={'break-spaces'}
                                 variant='body1'
                                 mt={1}
                                 flex={1}
@@ -121,7 +121,7 @@ export default function Cards(props) {
                             </Paper>
                         </Grid>
                     )
-                })       
+                )       
                 :
                 <Typography padding={4} textAlign={'center'}>
                     {props.helperMessage}

@@ -2,17 +2,25 @@
 import { useEffect, useState } from "react"
 
 // MUI Resources
-import { AddBusiness, Edit, EventAvailable, Visibility } from '@mui/icons-material'
-import { Box, Grid, IconButton, Tooltip, Typography } from "@mui/material";
+import { AddBusiness, ArrowBack, Edit, EventAvailable, Visibility } from '@mui/icons-material'
+import { Box, Button, Grid, IconButton, Paper, Stack, TextField, Tooltip, Typography } from "@mui/material";
 
 // Project Resources
 import Cards from "../components/Cards";
 import AddButton from "../components/AddButton";
 import AdminCheck from "../components/AdminCheck";
-import { getAllSchedules } from "../resources/Firebase";
+import { getAllSchedules, saveAvailability } from "../resources/Firebase";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "@emotion/react";
+import { NavButton, SubNav } from "../components/SubNav";
+import { CustomSnackbar } from "../components/CustomSnackbar";
 
+
+{/* <Tooltip title={"My Availability"}>
+    <IconButton color="secondary">
+        <EventAvailable />
+    </IconButton>
+</Tooltip> */}
 
 // Options for the View component
 function Icons(props) {
@@ -26,11 +34,7 @@ function Icons(props) {
                     <Visibility />
                 </IconButton>
             </Tooltip>
-            <Tooltip title={"My Availability"}>
-                <IconButton color="secondary">
-                    <EventAvailable />
-                </IconButton>
-            </Tooltip>
+            
             <AdminCheck org={props.org}>
                 <Tooltip title={"Edit Schedule"}>
                     <IconButton color="secondary" onClick={() => {
@@ -69,55 +73,117 @@ function View(props) {
 
 function ViewOne(props) {
     const theme = useTheme();
+
+
     return (
         <Box>
-            <Box sx={{padding: 2}}>
+            <SubNav 
+            title={props.schedule.title}
+            left={
+            <NavButton handleClick={props.handleBack} variant={'contained'} sx={{m: 1}}>
+                <ArrowBack sx={{mr: 1}}/>
                 <Typography
-                variant="h4"
+                noWrap
                 >
-                    {props.schedule.title}
+                    Back
                 </Typography>
-                <Typography>
-                    {props.schedule.description}
-                </Typography>
-                <Typography>
+            </NavButton>
+            }
+            right={
+                <Typography nowrap variant={'h5'} sx={{lineHeight: '57.5px', mr: 2}} >
                     {props.schedule.subtitle}
                 </Typography>
-            </Box>
-
-
-            <Box display={'flex'} flexDirection={'row'} ml='20px'>
-                {props.schedule.fields.map((field, oIndex) => (
-                    <Box>
-                        <Typography>
-                            {field}
-                        </Typography>
-                        {
-                            props.schedule.contents[0]
-                            ?
-                            props.schedule.contents.map((person, iIndex) => ((
-
-                                <Box xs={6} display='flex' flexDirection={'row'} key={oIndex + ',' + iIndex} sx={{border: `1px solid ${theme.palette.primary.main}`}}>
-                                    <Typography sx={{margin: 'auto', padding: 2, textAlign: 'center'}}>
-                                        {person[field]
-                                        ? 
-                                        person[field]
-                                        :
-                                        '---'
-                                        }
+            }
+            />
+            <Box height='calc(100vh - 64px - 57.5px)' overflow='auto' >
+                <Box sx={{padding: 2, pt: 0}}>
+                    <Typography whiteSpace={'break-spaces'}>
+                        {props.schedule.description}
+                    </Typography>
+                    
+                </Box>
+                {(new Date() < new Date(props.schedule.avDate)) && !props.schedule.contents[0]
+                    ?
+                    <AvForm avFields={props.schedule.avFields} org={props.org} title={props.schedule.title} />
+                    :
+                    <Box display={'flex'} flexDirection={'row'} ml='20px' paddingBottom={3}>
+                        <Grid container>
+                            {props.schedule.fields.map((field, oIndex) => (
+                                <Grid item >
+                                    <Typography>
+                                        {field}
                                     </Typography>
-                                </Box>
-                            )))
-                            :
-                            ''
-                        }
+                                    {
+                                        props.schedule.contents[0]
+                                        ?
+                                        props.schedule.contents.map((person, iIndex) => ((
+
+                                            <Box xs={6} display='flex' flexDirection={'row'} key={oIndex + ',' + iIndex} sx={{border: `1px solid ${theme.palette.primary.main}`}}>
+                                                <Typography sx={{margin: 'auto', padding: 2, textAlign: 'center'}}>
+                                                    {person[field]
+                                                    ? 
+                                                    person[field]
+                                                    :
+                                                    '---'
+                                                    }
+                                                </Typography>
+                                            </Box>
+                                        )))
+                                        :
+                                        ''
+                                    }
+                                </Grid>
+                            ))
+                            }
+                        </Grid>
                     </Box>
-                ))
                 }
             </Box>
+
         </Box>
     )
 }
+
+function AvForm(props) {
+    const [ data, setData ] = useState({})
+    const [ open, setOpen ] = useState(false);
+    console.log('field')
+    return (
+        <Box>
+            <Button 
+            sx={{margin: 2, mb: 0}} 
+            variant={'contained'}
+            onClick={() => {saveAvailability(props.org, props.title, data).then(() => {setOpen(true)})}}
+            >
+                Save
+            </Button>
+            <Paper sx={{padding: 2, margin: 2}}>
+                
+                <Stack spacing={2}>
+                    {props.avFields.map((field) => (
+                        <Box>
+                            <Typography>
+                                {field.title}
+                            </Typography>
+                            <TextField 
+                            value={data[field.title]}
+                            onChange={(e) => {let temp = {...data}; temp[field.title] = e.target.value; console.log(temp, e.target.value, data); setData(temp)}}
+                            type={field.type}
+                            placeholder={field.type.toUpperCase()}
+                            />
+                        </Box>
+                    ))}
+                </Stack>
+            </Paper>
+            <CustomSnackbar 
+            text={'Availability Saved'}
+            open={open}
+            setOpen={setOpen}
+            />
+        </Box>
+    )
+}
+
 
 // Main export
 export default function Schedules(props) {
@@ -129,13 +195,13 @@ export default function Schedules(props) {
     }, [])
 
     return (
-        <div>
+        <Box overflow={'auto'}>
             {
                 schedule ?
-                <ViewOne schedule={schedule} />
+                <ViewOne org={props.org} schedule={schedule} handleBack={() => {setSchedule()}} />
                 :
                 <View org={props.org} firebase={props.firebase} data={data} setSchedule={setSchedule} />
             }
-        </div>
+        </Box>
     )
 }

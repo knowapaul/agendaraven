@@ -1,5 +1,5 @@
 // React Resources
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // MUI Resources
 import { useTheme } from "@emotion/react";
@@ -20,7 +20,10 @@ function PeoplePalette(props) {
     const theme = useTheme();
     const [ people, setPeople] = useState({});
 
-    getPeople(props.org, setPeople)
+    useEffect(() => {
+        getPeople(props.org, setPeople)
+    }, [])
+
 
     return (
         <Grid container padding={2} width={'270px'} sx={{margin: 0, padding: 0}}>
@@ -96,10 +99,7 @@ function FieldsPalette(props) {
 export function Palette(props) {
     const theme = useTheme();
     const [ value, setValue ] = useState('');
-    const [ peopleItems, setPeopleItems ] = useState();
-
-    getPeople(props.firebase.db, props.org, setPeopleItems)
-
+    
     const fieldItems = ['Time', 'Place', 'Day'];
 
     const palettes = {

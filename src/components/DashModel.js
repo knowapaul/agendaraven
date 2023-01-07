@@ -1,5 +1,5 @@
 // React Resources
-import { useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 // MUI Resources
@@ -83,6 +83,17 @@ export default function DashModel(props) {
     const { win } = props;
     const [ mobileOpen, setMobileOpen ] = useState(false);
     const theme = useTheme();
+
+    const navRef = useRef();
+    const [ navHeight, setNavHeight ] = useState();
+
+    useEffect(() => {
+        function setHeight() {
+            setNavHeight(navRef.current.offsetHeight);
+        }
+        setHeight();
+        window.addEventListener('resize', setHeight);
+    }, [])
   
     const handleDrawerToggle = () => {
       setMobileOpen(!mobileOpen);
@@ -122,10 +133,9 @@ export default function DashModel(props) {
     })
   
     const drawer = (
-      <div>
-          <Toolbar 
-          disableGutters
-          elevation={0}
+        <div>
+          <Toolbar
+            disableGutters        
           >
               {props.logo}
           </Toolbar>
@@ -138,17 +148,15 @@ export default function DashModel(props) {
   
     return (
       <AuthCheck>
-        <Box sx={{ padding: 10, display: 'flex',  minWidth: '300px', overflow: 'auto'}}>
-            
+        <Box sx={{ display: 'flex'}}>
             <AppBar
-            position="fixed"
+            square
             elevation={0}
             sx={{
-            width: { sm: `calc(100% - ${drawerWidth}px)` },
-            ml: { sm: `${drawerWidth}px` },
+                width: {sm: `calc(100% - ${drawerWidth}px)`},
             }}
             >
-                <Toolbar  sx={{height: '100%'}}>
+                <Toolbar  sx={{height: '100%'}} ref={navRef}>
                 <IconButton
                     color="inherit"
                     aria-label="open drawer"
@@ -174,56 +182,207 @@ export default function DashModel(props) {
                 </Toolbar>
                 <Divider sx={{borderColor: theme.palette.background.default}}/>
             </AppBar>
-        <Box
-            component="nav"
-            sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
-            aria-label="mailbox folders"
-        >
-            {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
-            <Drawer
-            container={container}
-            variant="temporary"
-            open={mobileOpen}
-            onClose={handleDrawerToggle}
-            ModalProps={{
-                keepMounted: true, // Better open performance on mobile.
-            }}
-            onClick={handleDrawerToggle}
-            sx={{
-                display: { xs: 'block', sm: 'none' },
-                '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-            }}
-            >
-            {drawer}
-            </Drawer>
-            <Paper
-            square
-            sx={{
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                width: drawerWidth,
-                display: { xs: 'none', sm: 'block' },
-                borderRight: `1px solid ${theme.palette.background.default}`,
-                height: '100vh'
-            }}
-            >
-            {drawer}
-            </Paper>
-        </Box>
-        <ThemeProvider theme={contrastTheme}>
             <Box
-                component="main"
-                sx={{ flexGrow: 1, position: 'fixed', top: '0px', right: '0px', width: {xs: '100%', sm: `calc(100% - ${drawerWidth}px)` } }}
-            >   
-                <Box component='main' sx={{height: 64, display: { xs: 'none', sm: 'flex' }}}  />
-                <Box component='main' sx={{height: 56, display: { xs: 'flex', sm: 'none' }}} />
-                <Box sx={{backgroundColor: theme.palette.background.paper, height: 'calc(100vh - 64px)'}}>
-                    {props.children}
-                </Box>
+                component="nav"
+                sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+                aria-label="mailbox folders"
+            >
+                {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
+                <Drawer
+                container={container}
+                variant="temporary"
+                open={mobileOpen}
+                onClose={handleDrawerToggle}
+                ModalProps={{
+                    keepMounted: true, // Better open performance on mobile.
+                }}
+                onClick={handleDrawerToggle}
+                sx={{
+                    display: { xs: 'block', sm: 'none' },
+                    '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+                }}
+                >
+                {drawer}
+                </Drawer>
+                <Paper
+                square
+                sx={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    width: drawerWidth,
+                    display: { xs: 'none', sm: 'block' },
+                    borderRight: `1px solid ${theme.palette.background.default}`,
+                    height: '100vh'
+                }}
+                >
+                {drawer}
+                </Paper>
             </Box>
-        </ThemeProvider>
+            <ThemeProvider theme={contrastTheme}>
+                <Box
+                    sx={{ flexGrow: 1, position: 'fixed', bottom: '0px', right: '0px', width: {xs: '100%', sm: `calc(100% - ${drawerWidth}px)` }, backgroundColor: theme.palette.background.paper, height: `calc(100vh - ${navHeight}px)`}}>
+                        {props.children}
+                </Box>
+            </ThemeProvider>
         </Box>
       </AuthCheck>
     );
 }
+
+
+// export default function DashModel(props) {
+//     const { win } = props;
+//     const [ mobileOpen, setMobileOpen ] = useState(false);
+//     const theme = useTheme();
+
+//     const navRef = useRef();
+//     const [ navHeight, setNavHeight ] = useState();
+
+//     useLayoutEffect(() => {
+//         setNavHeight(navRef.current.offsetHeight);
+//         console.log('nh', navHeight)
+//     })
+  
+//     const handleDrawerToggle = () => {
+//       setMobileOpen(!mobileOpen);
+//     };
+
+//     const contrastTheme = createTheme({
+//         components: {
+//             MuiPaper: {
+//               styleOverrides: {
+//                 outlined: {
+//                   backgroundColor: theme.palette.background.paper,
+//                   color: theme.palette.text.primary,
+//                 },
+//               },
+//             },
+//           },
+//         palette: {
+//             type: theme.palette.type,
+//             primary: {
+//               main: theme.palette.background.default,
+//             },
+//             secondary: {
+//               main: theme.palette.secondary.main,
+//             },
+//             background: {
+//               paper: theme.palette.background.default,
+//             },
+//             text: {
+//               primary: theme.palette.background.paper,
+//               secondary: theme.palette.background.default,
+//             },
+//             warning: {
+//               main: 'rgb(178, 149, 0)',
+//             },
+//             divider: theme.palette.background.default,
+//           },
+//     })
+  
+//     const drawer = (
+//       <div>
+//           <Toolbar 
+//           disableGutters
+//           elevation={0}
+//           >
+//               {props.logo}
+//           </Toolbar>
+//           <Divider sx={{borderColor: theme.palette.background.default}}/>
+//           <Menu path={props.path} page={props.page} items={props.menuItems}/>
+//       </div>
+//     );
+  
+//     const container = win !== undefined ? () => win().document.body : undefined;
+  
+//     return (
+//       <AuthCheck>
+//         <Box sx={{ padding: 10, display: 'flex',  minWidth: '300px', overflow: 'auto'}}>
+//             <AppBar
+//             ref={navRef}
+//             position="fixed"
+//             elevation={0}
+//             sx={{
+//             width: { sm: `calc(100% - ${drawerWidth}px)` },
+//             ml: { sm: `${drawerWidth}px` },
+//             }}
+//             >
+//                 <Toolbar  sx={{height: '100%'}}>
+//                 <IconButton
+//                     color="inherit"
+//                     aria-label="open drawer"
+//                     edge="start"
+//                     onClick={handleDrawerToggle}
+//                     sx={{ mr: 2, display: { sm: 'none' } }}
+//                 >
+//                     <MenuIcon />
+//                 </IconButton>
+//                 <Box sx={{ flexGrow: 1, display:'flex', justifyContent: 'center', 
+//     }}>
+//                     <Typography 
+//                     variant="h5" 
+//                     noWrap 
+//                     component="div"
+//                     textAlign='center'
+//                     color={contrastTheme.palette.text.secondary}
+//                     >
+//                         {props.page[0].toUpperCase() + props.page.slice(1)}
+//                     </Typography>
+//                 </Box>
+//                 <CustomAvatar />
+//                 </Toolbar>
+//                 <Divider sx={{borderColor: theme.palette.background.default}}/>
+//             </AppBar>
+//         <Box
+//             component="nav"
+//             sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+//             aria-label="mailbox folders"
+//         >
+//             {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
+//             <Drawer
+//             container={container}
+//             variant="temporary"
+//             open={mobileOpen}
+//             onClose={handleDrawerToggle}
+//             ModalProps={{
+//                 keepMounted: true, // Better open performance on mobile.
+//             }}
+//             onClick={handleDrawerToggle}
+//             sx={{
+//                 display: { xs: 'block', sm: 'none' },
+//                 '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+//             }}
+//             >
+//             {drawer}
+//             </Drawer>
+//             <Paper
+//             square
+//             sx={{
+//                 position: 'fixed',
+//                 top: 0,
+//                 left: 0,
+//                 width: drawerWidth,
+//                 display: { xs: 'none', sm: 'block' },
+//                 borderRight: `1px solid ${theme.palette.background.default}`,
+//                 height: '100vh'
+//             }}
+//             >
+//             {drawer}
+//             </Paper>
+//         </Box>
+//         <ThemeProvider theme={contrastTheme}>
+//             <Box
+//                 component="main"
+//                 sx={{ flexGrow: 1, position: 'fixed', top: '0px', right: '0px', width: {xs: '100%', sm: `calc(100% - ${drawerWidth}px)` } }}
+//             >   
+//                 <Box component='main' sx={{ height: navHeight }}  />
+//                 <Box sx={{backgroundColor: theme.palette.background.paper, height: 'calc(100vh - 64px)'}}>
+//                     {props.children}
+//                 </Box>
+//             </Box>
+//         </ThemeProvider>
+//         </Box>
+//       </AuthCheck>
+//     );
+// }

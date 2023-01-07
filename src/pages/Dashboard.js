@@ -23,17 +23,19 @@ import { useLoaderData } from 'react-router-dom';
 import DashModel from '../components/DashModel';
 
 
+// ["Inbox", <Mail color="secondary" />],
+// ["Posted Schedules", <CalendarToday color="secondary" />],
+// ["My Availability", <EventAvailable color="secondary" />],
+// ["", ""],
+// ["Insights", <InsightsIcon color="secondary" />],
+// ["", ""],
+// ["Payments", <PaymentsIcon color="secondary" />],
+
+// ["Account", <AccountCircle color="secondary" />],
+
 const menu = [
   ["My Organizations", <DashboardCustomize color="secondary" />],
-  ["Inbox", <Mail color="secondary" />],
-  ["Posted Schedules", <CalendarToday color="secondary" />],
-  ["My Availability", <EventAvailable color="secondary" />],
   ["", ""],
-  ["Insights", <InsightsIcon color="secondary" />],
-  ["", ""],
-  ["Payments", <PaymentsIcon color="secondary" />],
-  ["", ""],
-  ["Account", <AccountCircle color="secondary" />],
   ["Log Out", <Logout color="secondary" />]
 ]
 

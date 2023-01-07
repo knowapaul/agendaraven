@@ -1,6 +1,13 @@
 // MUI Resources
 import { createTheme } from '@mui/material';
 
+// xs, extra-small: 0px
+// sm, small: 600px
+// md, medium: 900px
+// lg, large: 1200px
+// xl, extra-large: 1536px
+
+
 
 // TODO: Optimize themeing here to minimize its use throughout the rest of the application
 

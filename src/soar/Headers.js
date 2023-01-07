@@ -47,11 +47,9 @@ export function Bottom(props) {
 /**
  * @param  {Map} props
  * 
- * props.db, props.org, props.fields, props.contents
+ * props.db
  */
 export function Top(props) {
-    const [ open, setOpen ] = useState(false);
-
     return (
         <Box>
             <Paper 
@@ -81,7 +79,7 @@ export function Top(props) {
                     </Typography>
                     </Box>
                     :   
-                    <Box>
+                    <Box display={'flex'} flexDirection={'row'}>
                         <TextField
                         name="Schedule Name"
                         placeholder="Schedule Name"
@@ -132,12 +130,7 @@ export function Top(props) {
                         <Redo />
                     </MenuIcon>
                     <MenuIcon title="Save"
-                    handleClick={() => {
-                        saveSchedule(props.org, props.title, props.type, props.fields, props.contents)
-                            .then(() =>{
-                                setOpen(true)
-                            })
-                    }}
+                    handleClick={props.save}
                     >
                         <Save />
                     </MenuIcon>
@@ -146,12 +139,6 @@ export function Top(props) {
                     </MenuIcon>
                 </Box>
             </Paper>
-            <CustomSnackbar 
-            text={'Saved'}
-            open={open}
-            setOpen={setOpen}
-            />
-
         </Box>
     )
 }

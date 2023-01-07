@@ -17,7 +17,7 @@ export function CustomSnackbar(props) {
         sx={{zIndex: '1201'}}
         open={props.open}
         onClose={close}
-        autoHideDuration={6000}
+        autoHideDuration={3000}
         >
 
             <Alert severity="success" sx={{'& .MuiAlert-icon': {margin:'auto', mr: 2} }}>

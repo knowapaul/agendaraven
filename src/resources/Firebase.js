@@ -7,6 +7,7 @@ import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
 import { getStorage, connectStorageEmulator } from "firebase/storage";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { Typography } from "@mui/material";
 
 
 let countCalls = 0;
@@ -127,12 +128,14 @@ export async function initDatabase() {
 }
 
 // TODO: look at this
-export function getRolesDoc(org, setDoc, setLoading, refresh) {
+export async function getRolesDoc(org, setDoc, setLoading, refresh) {
     console.log('getrolesdoc')
+    console.log('org, setDoc, setLoading,',org, setDoc, setLoading,)
 
     setLoading(true)
 
-    const data = getData(org + 'data', 'roles', refresh)
+    const data = await getData(org + 'data', 'roles', refresh)
+    console.log('data1', data)
     setDoc(data);
     setLoading(false)
 }
@@ -194,27 +197,28 @@ export function setMemo(org, title, contents) {
 }
 
 // TODO: Make this secure with rules
-export function saveSchedule(org, title, type, fields, contents) {
+export function saveSchedule(org, title, data) {
     console.log('saveschedule')
 
     const orgSch = collection(db, org + 'schedules')
 
-    let ol = []
-    for (let i in contents) {
-        if (contents[i] !== {}) {
-            ol = ol.concat(contents[i])
-        }
-    }
-
     return setDoc(
         doc(orgSch, title),
-        {
-            title: title,
-            type: type,
-            fields: fields,
-            contents: ol,
-            timestamp: new Date().toString()
-        }
+        data
+    )
+}
+
+export function saveAvailability(org, schedule, data) {
+    console.log('saveschedule')
+
+    console.log('dat', data)
+
+    const orgSch = collection(db, org + 'schedules')
+
+    return setDoc(
+        doc(orgSch, schedule + '--avs'),
+        {[auth.currentUser.uid]: data},
+        {merge: true}
     )
 }
 
@@ -234,14 +238,29 @@ export async function getAllSchedules(org, setContents, setSchedule) {
 
     const snaps = await getDocs(collection(db, org + "schedules"));
 
+    const description = (snap) => (
+        (snap.data().avDate
+        ?
+        `Availability Due: ${new Date(snap.data().avDate).toLocaleString('en-US', {timeStyle: 'short', dateStyle: 'medium'})}`
+        :
+        '')
+        + '\n' +
+        (snap.data().timestamp
+        ?
+        `Last Edited: ${new Date(snap.data().timestamp).toLocaleString('en-US', {timeStyle: 'short', dateStyle: 'medium'})}`
+        :
+        '')
+    )
 
     setContents(
         snaps.docs.map((snap) => ({
             title: snap.data().title,
-            description: snap.data().type,
-            subtitle: new Date(snap.data().timestamp).toLocaleString(),
+            description: description(snap),
+            subtitle: snap.data().type,
             fields: snap.data().fields,
             contents: snap.data().contents,
+            avDate: snap.data().avDate,
+            avFields: snap.data().avFields,
             org: org,
             setSchedule: setSchedule,
         }))

@@ -17,7 +17,7 @@ export default function CustomAvatar(props) {
     const [anchorElUser, setAnchorElUser] = useState(null);
     const navigate = useNavigate();
 
-    const settings = ['Account', 'Dashboard', 'Logout'];
+    const settings = ['Dashboard', 'Logout'];
 
 
     const handleOpenUserMenu = (event, user) => {
@@ -37,7 +37,7 @@ export default function CustomAvatar(props) {
     return (
         <ThemeProvider theme={mTheme}>
             <Box sx={{ flexGrow: 0 }}>
-                <Tooltip title={user ? "Open settings" : "Login"}>
+                <Tooltip title={user ? "Menu" : "Login"}>
                     <IconButton onClick={(event) => handleOpenUserMenu(event, user)} sx={{ p: 0 }}>
                     {
                     user ? 
