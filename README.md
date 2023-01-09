@@ -20,7 +20,7 @@ before beginning the tier that is two or more levels below it.
 # The Hireracy of TODOness: 
 
 (*"s" => started / "x" => complete*)
-0. **First Trial** 
+1. **First Trial** 
     - (x) Scheduler
     - (x) Schedules
     - (x) Login
@@ -29,7 +29,7 @@ before beginning the tier that is two or more levels below it.
     - (x) How-tos
     - (x) Availability
     - (x) Push to online
-1. **Basic Operation**
+2. **Basic Operation**
     - (x) Add organization users
     - (x) Availability turnin
     - () Bug testing
@@ -49,7 +49,7 @@ before beginning the tier that is two or more levels below it.
     - () Org image upload
     - () Schedule creation
     - () Setup non-production protection
-2. **Accessibility**
+3. **Accessibility**
     - () Avatar images
     - () Better schedule creation
     - () Dashboard calendar
@@ -57,10 +57,10 @@ before beginning the tier that is two or more levels below it.
     - () Flask capabilities
     - () Password changing
     - () Terms & Conditions
-3. **Workflow**
+4. **Workflow**
     - () Automatic notifications
     - () How-to shorts (3)
     - () Payments
-4. **Automation**
+5. **Automation**
     - () Schedule AI
     - (x) Purchase "AgendaRaven.com"?
