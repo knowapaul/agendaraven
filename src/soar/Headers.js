@@ -10,7 +10,6 @@ import { Box, Chip, Paper, TextField, Typography } from "@mui/material";
 // Project Resources
 import { MenuIcon } from './MenuIcon'
 import { saveSchedule } from "../resources/Firebase";
-import { CustomSnackbar } from "../components/CustomSnackbar";
 
 // Other Resources
 
@@ -50,6 +49,7 @@ export function Bottom(props) {
  * props.db
  */
 export function Top(props) {
+    console.log(props.type)
     return (
         <Box>
             <Paper 
@@ -69,53 +69,14 @@ export function Top(props) {
                 sx={{display: 'flex',
                     alignItems: 'center'}}
                 >
-                    {props.sch ?
-                    <Box>
-                    <Typography>
+                    <Box paddingLeft={2}>
+                    <Typography variant={'h5'}>
                         {props.title}
                     </Typography>
-                    <Typography>
+                    <Typography variant="subtitle2">
                         {props.type}
                     </Typography>
                     </Box>
-                    :   
-                    <Box display={'flex'} flexDirection={'row'}>
-                        <TextField
-                        name="Schedule Name"
-                        placeholder="Schedule Name"
-                        variant="standard"
-                        value={props.title}
-                        onClick={e => {
-                            e.target.focus();
-                            e.target.select();
-                            }}
-                        onChange={e => {props.setTitle(e.target.value)}}                      
-                        sx={{width: '300px', margin: 1, mb: 0 }}
-                        inputProps={{
-                            style: {
-                                fontSize: '25px'
-                            },
-                            }}
-                        />
-                        <TextField
-                        name="Type"
-                        placeholder="Schedule Type"
-                        variant="standard"
-                        sx={{width: '200px', margin: 1, mb: 0 }}
-                        inputProps={{
-                            style: {
-                                fontSize: '25px'
-                            },
-                            }}
-                        onClick={e => {
-                            e.target.focus();
-                            e.target.select();
-                            }}
-                        value={props.type}
-                        onChange={e => {props.setType(e.target.value)}}   
-                        />
-                    </Box>
-                    }
                 </Box>
                 <Box 
                 flex={0} 

@@ -16,6 +16,7 @@ import Cards from "../components/Cards";
 import { httpsCallable } from "firebase/functions";
 import AddButton from "../components/AddButton";
 import AdminCheck from "../components/AdminCheck";
+import { ErrorBoundary } from "../components/ErrorBoundary";
 
 
 function User(props) {
@@ -146,6 +147,8 @@ function Roles(props) {
     useEffect(() => {
         getRolesDoc(props.org, setRoles, setLoading)
     }, [])
+    throw 'error;'
+
 
     return (
         <Cards
@@ -197,11 +200,12 @@ export default function People(props) {
         </Button>
     )
     
+    
     return (
-        <div>
+        <ErrorBoundary>
             {
                 widget === 'roles' ? 
-                <Roles org={props.org} setWidget={setWidget} />
+                    <Roles org={props.org} setWidget={setWidget} />
                 :
                 <Box>
                     <Stack direction={'row'} sx={{display: { xs: 'block', md: 'none', }}}>
@@ -224,7 +228,7 @@ export default function People(props) {
                         </Box>
                     </Box>
                 </Box>
-            }   
-        </div>
+            }
+        </ErrorBoundary>
     )
 }

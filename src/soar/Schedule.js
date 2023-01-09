@@ -14,9 +14,9 @@ import { bTheme, oTheme, wTheme } from "../resources/Themes";
 
 function DisplaySchedule(props) {
     const handleDelete = (index, field) => {
-        let adapted = [...props.people];
+        let adapted = [...props.items];
         delete adapted[index][field];
-        props.setPeople(adapted)
+        props.setItems(adapted)
     }
     return (
         props.fields[0]
@@ -49,8 +49,8 @@ function DisplaySchedule(props) {
                                     :
                                     <PersonBucket 
                                     item={person[field]}
-                                    people={props.people} 
-                                    setPeople={props.setPeople} 
+                                    items={props.items} 
+                                    setItems={props.setItems} 
                                     index={iIndex}
                                     parent={field}
                                     />
@@ -63,12 +63,12 @@ function DisplaySchedule(props) {
                         }
                         <Box item key={'new' + oIndex} minHeight={'50px'} sx={{border: '1px dotted grey', margin: 1}}>
                             <PersonBucket
-                            key={props.people.length} 
-                            index={props.people.length}
+                            key={props.items.length} 
+                            index={props.items.length}
                             parent={field}
-                            item={props.items[props.people.length]}
-                            people={props.people} 
-                            setPeople={props.setPeople} 
+                            item={props.items[props.items.length]}
+                            items={props.items} 
+                            setItems={props.setItems} 
                             />
                         </Box>
                     </FieldBucket>
@@ -179,6 +179,8 @@ function Availability(props) {
 // {List} with no duplicates
 export function Schedule(props) {
     const [ av, setAv ] = useState(false);
+
+    console.log('sch', props)
 
     return (
         <Box flex={1} >

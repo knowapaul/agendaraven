@@ -29,21 +29,21 @@ export function DeleteBucket(props) {
 /**
  * @param  {Map} props React Props
  * 
- * - people = {Arrary} An array of objects
+ * - items = {Arrary} An array of objects
  * - index = {}
  * - parent = {String} The id of the parent
  * - item = {String} The item being 
- * - people = {Array} 
- * - setPeople = {Function}
+ * - items = {Array} 
+ * - setItems = {Function}
  */
 export function PersonBucket(props) {
     function handleDrop (item, monitor) {
-        let people = [...props.people];
-        if (!props.people[props.index]) {
-            people = people.concat({});
+        let items = [...props.items];
+        if (!props.items[props.index]) {
+            items = items.concat({});
         }
-        people[props.index][props.parent] = item.id;
-        props.setPeople(people);
+        items[props.index][props.parent] = item.id;
+        props.setItems(items);
     }
 
     return (
@@ -51,7 +51,7 @@ export function PersonBucket(props) {
             <Bucket
             accept={'person'}
             drop={handleDrop}
-            deps={[props.people]}
+            deps={[props.items]}
             ariaRole={'Person Bucket'}
             >
                 <Box sx={{minHeight: '50px'}}>

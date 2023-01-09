@@ -6,7 +6,7 @@ import { CircularProgress, Box, CssBaseline, Typography, Stack } from "@mui/mate
 import { mTheme } from "../resources/Themes";
 
 
-export function MiniLoad() {
+export function MiniLoad(props) {
     return (
         <Box
             display='flex'
@@ -20,7 +20,13 @@ export function MiniLoad() {
                 mt={5}
                 mb={3}
                 >
-                    Loading...
+                    {
+                    props.text 
+                    ? 
+                    props.text
+                    :
+                    'Loading...'
+                    }
                 </Typography>
                 <Box
                 display='flex'
@@ -35,11 +41,11 @@ export function MiniLoad() {
 )
 }
 
-export default function Loading() {
+export default function Loading(props) {
     return (
         <ThemeProvider theme={mTheme}>
             <CssBaseline />
-            <MiniLoad />
+            <MiniLoad text={props.text} />
         </ThemeProvider>
     )
 }

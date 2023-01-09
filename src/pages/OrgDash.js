@@ -14,8 +14,8 @@ import People from "../org-subpages/People";
 import Schedules from "../org-subpages/Schedules";
 import OrgHome from "../org-subpages/OrgHome";
 import OrgSettings from "../org-subpages/OrgSettings";
-
-
+import OrgCheck from "../components/OrgCheck";
+import { ErrorBoundary } from "../components/ErrorBoundary";
 
 
 //  ["Availability", <EventAvailable color={'secondary'} />],
@@ -76,19 +76,21 @@ export function OrgDash(props) {
   };
 
   return (
-    <AuthCheck >
-      <ThemeProvider theme={wTheme}>
-        <CssBaseline />
-          <DashModel 
-          menuItems={menu} 
-          page={page} 
-          title={page} 
-          logo={<Logo org={org}/>} 
-          path={`/${org}/`} 
-          >
-            {elementMap[page]}
-          </DashModel>
-      </ThemeProvider>
+    <AuthCheck>
+      <OrgCheck org={org}>
+        <ThemeProvider theme={wTheme}>
+          <CssBaseline />
+            <DashModel 
+            menuItems={menu} 
+            page={page} 
+            title={page} 
+            logo={<Logo org={org}/>} 
+            path={`/${org}/`} 
+            >
+                {elementMap[page]}
+            </DashModel>
+        </ThemeProvider>
+      </OrgCheck>
     </AuthCheck>
   )
 }

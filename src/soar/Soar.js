@@ -1,5 +1,5 @@
 // React Resources
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DndProvider } from 'react-dnd'
 
 // MUI Resources
@@ -21,9 +21,9 @@ import { getSchedule, saveSchedule } from "../resources/Firebase";
 import { CustomSnackbar } from "../components/CustomSnackbar";
 
 
-export async function newLoader({ params }) {
-    return { org: params.org }; 
-}
+// export async function newLoader({ params }) {
+//     return { org: params.org }; 
+// }
 
 export async function schLoader({ params }) {
     return { org: params.org, sch: params.sch }
@@ -49,9 +49,11 @@ export default function Soar() {
     const load = useLoaderData();
     const org = load.org;
 
-    if (load.sch) {
-        getSchedule(org, load.sch, setTitle, setType, setFields, setItems)
-    }
+    useEffect(() => {
+        if (load.sch) {
+            getSchedule(org, load.sch, setTitle, setType, setFields, setItems)
+        }
+    }, [])
 
     function save() {
         // Remove empty rows
@@ -63,8 +65,6 @@ export default function Soar() {
         }
 
         const data = {
-            title: title,
-            type: type,
             fields: fields,
             contents: ol,
             avFields: avFields,
@@ -75,9 +75,38 @@ export default function Soar() {
         console.log('data', data)
         
         saveSchedule(org, title, data)
-            .then(() =>{
+            .then(() => {
                 setOpen(true)
             })
+    }
+
+    const inProps = {
+        org: org,
+        sch: load.sch, 
+
+        title: title,
+        setTitle: setTitle,
+
+        type: type, 
+        setType: setType,
+        
+        palette: palette, 
+        setPalette: setPalette, 
+        
+        fields: fields,
+        setFields: setFields,
+        
+        items: items,
+        setItems: setItems,
+        
+        avFields: avFields,
+        setAvFields: setAvFields,
+        
+        palette: palette,
+        setPalette: setPalette,
+        
+        setAvDate: setAvDate,
+        save: save,
     }
 
     return (
@@ -86,31 +115,10 @@ export default function Soar() {
                 <AdminCheck org={org} helperText={"Sorry, this page is for authorized viewers only."}>
                     <DndProvider backend={HTML5Backend}>
                         <Box minWidth={915} width='100%' margin={0} height={'calc(100% - 64px)'} position={'fixed'} top='0px' left='0px'>
-                            <Top 
-                            org={org}
-                            sch={load.sch} 
-                            title={title}
-                            setTitle={setTitle}
-                            type={type} 
-                            setType={setType}
-                            save={save}
-                            />
+                            <Top {...inProps} />
                             <Box display={'flex'} flexDirection='row' height={'100%'}>
-                                <Schedule 
-                                palette={palette} 
-                                setPalette={setPalette} 
-                                fields={fields}
-                                setFields={setFields}
-                                people={items}
-                                setPeople={setItems}
-                                items={items}
-
-                                avFields={avFields}
-                                setAvFields={setAvFields}
-
-                                setAvDate={setAvDate}
-                                />
-                                <Palette palette={palette} setPalette={setPalette} org={org} fields={fields} />
+                                <Schedule {...inProps}/>
+                                <Palette {...inProps}/>
                             </Box>
                         </Box> 
                     </DndProvider>      

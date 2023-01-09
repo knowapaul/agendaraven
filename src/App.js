@@ -12,7 +12,7 @@ import CreateAccount from './pages/CreateAccount.js'
 
 // Firebase Resources
 import { initializeApp } from "firebase/app";
-import Soar, { schLoader, newLoader } from './soar/Soar.js';
+import Soar, { schLoader } from './soar/Soar.js';
 import ViewSubpages from './org-subpages/ViewSubpages.js';
 import { setApp } from './resources/Firebase.js';
 
@@ -53,7 +53,6 @@ const router = createBrowserRouter([
   
   { errorElement: <Error />, path: "loading", element: <Loading />},
 
-  { errorElement: <Error />, path: "/soar/:org", element: <Soar />, loader: newLoader},
   { errorElement: <Error />, path: "/soar/:org/:sch", element: <Soar />, loader: schLoader}
 ]);
    

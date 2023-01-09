@@ -16,7 +16,7 @@ import { Bottom } from "./Headers";
 // Other Resources
 import { getPeople } from "../resources/Firebase";
 
-function PeoplePalette(props) {
+function ItemsPalette(props) {
     const theme = useTheme();
     const [ people, setPeople] = useState({});
 
@@ -103,7 +103,7 @@ export function Palette(props) {
     const fieldItems = ['Time', 'Place', 'Day'];
 
     const palettes = {
-        people: <PeoplePalette org={props.org} firebase={props.firebase} value={value} />,
+        people: <ItemsPalette org={props.org} firebase={props.firebase} value={value} />,
         fields: <FieldsPalette value={value} dragItems={fieldItems} palette={props.palette} fields={props.fields}/>,
         other: <OtherPalette value={value} />
     }

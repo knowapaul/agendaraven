@@ -27,24 +27,24 @@ before beginning the tier that is two or more levels below it.
     - (x) Homepage
     - (x) Permissions [still need firebase rules]
     - (x) How-tos
-    - () Availability
+    - (x) Availability
     - (x) Push to online
 1. **Basic Operation**
     - (x) Add organization users
-    - () Availability turnin
+    - (x) Availability turnin
     - () Bug testing
-    - () Buletin board
+    - (x) Buletin board
     - () Contact page
-    - () Dashboard Home
-    - () Dashboard availability
+    - (x) Dashboard Home
+    - (x) Dashboard availability
     - () Dashboard inbox
-    - () Dashboard schedules
+    - (x) Dashboard schedules
     - (x) Database init function
     - () Error boundaries
     - () Firebase rules
     - (s) Finish Chat
     - () Help page
-    - () Home page
+    - (x) Home page
     - () No broken links
     - () Org image upload
     - () Schedule creation
@@ -63,4 +63,4 @@ before beginning the tier that is two or more levels below it.
     - () Payments
 4. **Automation**
     - () Schedule AI
-    - () Purchase "AgendaRaven.com"?
+    - (x) Purchase "AgendaRaven.com"?

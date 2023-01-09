@@ -204,7 +204,7 @@ export function saveSchedule(org, title, data) {
 
     return setDoc(
         doc(orgSch, title),
-        data
+        data, {merge: true}
     )
 }
 
@@ -213,7 +213,7 @@ export function saveAvailability(org, schedule, data) {
 
     console.log('dat', data)
 
-    const orgSch = collection(db, org + 'schedules')
+    const orgSch = collection(db, org + 'data')
 
     return setDoc(
         doc(orgSch, schedule + '--avs'),
@@ -241,10 +241,10 @@ export async function getAllSchedules(org, setContents, setSchedule) {
     const description = (snap) => (
         (snap.data().avDate
         ?
-        `Availability Due: ${new Date(snap.data().avDate).toLocaleString('en-US', {timeStyle: 'short', dateStyle: 'medium'})}`
+        `Availability Due: ${new Date(snap.data().avDate).toLocaleString('en-US', {timeStyle: 'short', dateStyle: 'medium'})}\n`
         :
         '')
-        + '\n' +
+        +
         (snap.data().timestamp
         ?
         `Last Edited: ${new Date(snap.data().timestamp).toLocaleString('en-US', {timeStyle: 'short', dateStyle: 'medium'})}`

@@ -14,6 +14,7 @@ import AdminCheck from "../components/AdminCheck";
 import { getOrgFiles, uploadFile } from "../resources/Firebase";
 import { getDownloadURL } from "firebase/storage";
 import { CustomSnackbar } from "../components/CustomSnackbar";
+import { ErrorBoundary } from "../components/ErrorBoundary";
 
 
 function FileUpload(props) {
@@ -108,6 +109,8 @@ function Left(props) {
     useEffect(() => {
         getMemo(props.org, setTitle, setPerson, setContents)
     }, [])
+
+    throw 'problem'
 
     return (
         <div>
@@ -316,7 +319,9 @@ export default function OrgHome(props) {
             width={{ xs: '100%', md: '50%'}}
             display={{ xs: selected === 'left' ? 'block' : 'none', md: 'block' }}
             >
-                <Left org={props.org} />
+                <ErrorBoundary>
+                    <Left org={props.org} />
+                </ErrorBoundary>
             </Box>
             <Box 
             width={{ xs: '100%', md: '50%'}} 
@@ -330,7 +335,9 @@ export default function OrgHome(props) {
                 display={{xs: `none`, md: 'block'}}
                 sx={{backgroundColor: theme.palette.primary.main}}
                 />
-                <Right org={props.org} />
+                <ErrorBoundary>
+                    <Right org={props.org} />
+                </ErrorBoundary>
             </Box>
         </Box>
     )

@@ -82,6 +82,16 @@ function role(input) {
     }
 }
 
+function exists(input) {
+    if (input.length > 0) {
+        return [false, '']
+    } else {
+        return [
+            true,
+            'This field is required'
+        ]
+    }
+}
 
 export default function vaildate(type, input, pass) {
     const func = {
@@ -91,6 +101,7 @@ export default function vaildate(type, input, pass) {
         password: password,
         confirm: confirm,
         role: role,
+        exists: exists,
         none: () => {return ([false, ''])},
         schedule: schedule,
     }
