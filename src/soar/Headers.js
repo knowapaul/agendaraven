@@ -49,7 +49,6 @@ export function Bottom(props) {
  * props.db
  */
 export function Top(props) {
-    console.log(props.type)
     return (
         <Box>
             <Paper 

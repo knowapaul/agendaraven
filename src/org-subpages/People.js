@@ -147,16 +147,14 @@ function Roles(props) {
     useEffect(() => {
         getRolesDoc(props.org, setRoles, setLoading)
     }, [])
-    throw 'error;'
-
 
     return (
         <Cards
-        data={roles ? Object.keys(roles).map((key) => (
+        data={roles ? Object.keys(roles).map((k) => (
                 {
-                    title: roles[key].roleName,
-                    subtitle: `Key: ${key.slice(0, 3)} - ${key.slice(3)}`,
-                    description: roles[key].roleDescription
+                    title: roles[k].roleName,
+                    subtitle: `Key: ${roles[k].roleKey.slice(0, 3)} - ${roles[k].roleKey.slice(3)}`,
+                    description: roles[k].roleDescription
                 }
             ))
             :

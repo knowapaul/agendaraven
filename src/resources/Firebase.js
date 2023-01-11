@@ -1,5 +1,5 @@
 // Firebase Resources
-import { collection, doc, getDoc, setDoc, onSnapshot, getDocs, Query, query, QuerySnapshot, namedQuery } from "firebase/firestore"; 
+import { collection, doc, getDoc, setDoc, onSnapshot, getDocs, Query, query, QuerySnapshot, namedQuery, writeBatch } from "firebase/firestore"; 
 import { ref, getDownloadURL, uploadBytes, listAll } from "firebase/storage"; 
 
 import { getAuth, connectAuthEmulator } from "firebase/auth";
@@ -15,7 +15,8 @@ let savedCalls = 0;
 
 let reuseDocs = {};
 let pendingDocs = {};
-let imageURLs = {}
+let imageURLs = {};
+let orgFiles = {};
 
 let auth;
 let db;
@@ -25,37 +26,41 @@ let storage;
 
 export function setApp(app) {
     auth = getAuth(app);
-    // connectAuthEmulator(auth, "http://localhost:9099")
+    connectAuthEmulator(auth, "http://localhost:9099")
     db = getFirestore(app);
-    // connectFirestoreEmulator(db, 'localhost', 8080);
+    connectFirestoreEmulator(db, 'localhost', 8080);
     functions = getFunctions(app);
-    // connectFunctionsEmulator(functions, 'localhost', 5001);
+    connectFunctionsEmulator(functions, 'localhost', 5001);
     storage = getStorage(app);
-    // connectStorageEmulator(storage, 'localhost', 9199);
+    connectStorageEmulator(storage, 'localhost', 9199);
 }
 
-
-async function getData(colPath, docPath, refresh) {
-    if (reuseDocs[colPath + '/' + docPath] && !refresh) {
-        savedCalls++;
-        return reuseDocs[colPath + '/' + docPath]
-    } else if (pendingDocs[colPath + '/' + docPath] && !refresh) {
-        savedCalls++;
-        const snap = await pendingDocs[colPath + '/' + docPath]
-        return snap.data();
-    } else {
-        countCalls++;
-        console.log('calls, saved, ', countCalls, ',', savedCalls)
-
-        const promise = getDoc(doc(db, colPath, docPath))
-        pendingDocs[colPath + '/' + docPath] = promise;
-
-        const snap = await promise;
-        const data = snap.data();
-        reuseDocs[colPath + '/' + docPath] = data;
-        delete pendingDocs[colPath + '/' + docPath];
-
-        return data;
+async function getData(path, refresh) {
+    try {
+        if (reuseDocs[path] && !refresh) {
+            savedCalls++;
+            return reuseDocs[path]
+        } else if (pendingDocs[path] && !refresh) {
+            savedCalls++;
+            const snap = await pendingDocs[path]
+            return snap.data();
+        } else {
+            countCalls++;
+            console.log('calls, saved, ', countCalls, ',', savedCalls)
+    
+            const promise = getDoc(doc(db, path))
+            pendingDocs[path] = promise;
+    
+            const snap = await promise;
+            const data = snap.data();
+            reuseDocs[path] = data;
+            delete pendingDocs[path];
+    
+            return data;
+        }
+    } catch (error) {
+        console.log(error)
+        console.error('Document read failed:', path)
     }
 }
 
@@ -75,11 +80,10 @@ export function addUserAccount(data, user) {
     )
 }
 
-// TODO: Make these secure with rules
-export async function getSubscriptions(org, uid) {
+export async function getSubscriptions(org, email) {
     console.log('getsubscriptions')
 
-    return await getData(`${org}chat`, uid);
+    return await getData(org + '/chat/docs/' + email);
 }
 
 export async function getChatMessaging(location, setMessages) {
@@ -93,49 +97,24 @@ export async function getChatMessaging(location, setMessages) {
 
 export async function getUserData() {
     console.log('getuserdata')
-    return await getData('users', auth.currentUser.uid);
-}
-
-export async function initDatabase() {
-    console.log('initdatabase')
-
-    const data = await getData('index', 'organizations')
-    if (data === undefined) {
-        // Set invalid organization names
-        setDoc(
-            doc(db, 'index', 'organizations'),
-            {
-                dashboard: true,
-                about: true,
-                logout: true,
-                createaccount: true,
-                loading: true,
-            }
-        )
-    }
-
-    // const users = doc(db, `users`, 'index')
-    // const usersSnap = await getDoc(orgs)
-    // if (!usersSnap.exists) {
-    //     // Guarantees the users collection exists
-    //     setDoc(
-    //         doc('users', 'index'),
-    //         {
-                
-    //         }
-    //     )
-    // }
+    return await getData('users/' + auth.currentUser.uid);
 }
 
 // TODO: look at this
 export async function getRolesDoc(org, setDoc, setLoading, refresh) {
     console.log('getrolesdoc')
-    console.log('org, setDoc, setLoading,',org, setDoc, setLoading,)
 
     setLoading(true)
 
-    const data = await getData(org + 'data', 'roles', refresh)
-    console.log('data1', data)
+    let data;
+    if (await internalCheckAdmin(org)) {
+        data = await getData(org + '/private/docs/roleKeys', refresh)
+        // data = Object.keys(data).map((roleName) => Object.assign(data[roleName], {roleName: roleName}))
+    } else {
+        data = await getData(org + '/public/docs/roles', refresh);
+        data = Object.keys(data).map((roleName) => Object.assign(data[roleName], {roleKey: '#######'}))
+    }
+
     setDoc(data);
     setLoading(false)
 }
@@ -143,7 +122,7 @@ export async function getRolesDoc(org, setDoc, setLoading, refresh) {
 export async function getPeople(org, setPeople) {
     console.log('getpeople')
 
-    const people = await getData(org + 'chat', 'index');
+    const people = await getData(org + '/chat');
 
     let adaptedPeople = {};
     for (let i in people) {
@@ -153,15 +132,18 @@ export async function getPeople(org, setPeople) {
     setPeople(adaptedPeople)
 }
 
+async function internalCheckAdmin(org) {
+    const email = auth.currentUser.email;
+    const data = await getData(org + '/public/users/' + email);
+    return data.admin;
+    
+}
+
 export async function checkAdmin(org, setIsAdmin) {
     console.log('checkadmin')
 
-    const uid = auth.currentUser.uid
-
-    const data = await getData(org + 'users', 'roles');
-
     try {
-        setIsAdmin(data[uid].includes('owner'))
+        setIsAdmin(await internalCheckAdmin(org))
     } catch (error) {
         console.log('Error:')
         console.error(error.message)
@@ -172,7 +154,7 @@ export async function checkAdmin(org, setIsAdmin) {
 export async function getMemo(org, setTitle, setPerson, setContents) {
     console.log('getmemo')
 
-    const data = await getData(org + 'data', 'memo');
+    const data = await getData(org + '/public');
 
     setTitle(data.title)
     setPerson(data.person)
@@ -182,12 +164,8 @@ export async function getMemo(org, setTitle, setPerson, setContents) {
 export function setMemo(org, title, contents) {
     console.log('setmemo')
 
-    const orgData = collection(db, org + 'data')
-
-    console.log('auth', auth)
-
     return setDoc(
-        doc(orgData, 'memo'),
+        doc(db, org + '/public'),
         {
             title: title,
             contents: contents,
@@ -200,69 +178,59 @@ export function setMemo(org, title, contents) {
 export function saveSchedule(org, title, data) {
     console.log('saveschedule')
 
-    const orgSch = collection(db, org + 'schedules')
-
-    return setDoc(
-        doc(orgSch, title),
-        data, {merge: true}
+    const description = (data) => (
+        (data.avDate
+        ?
+        `Availability Due: ${new Date(data.avDate).toLocaleString('en-US', {timeStyle: 'short', dateStyle: 'medium'})}\n`
+        :
+        '')
+        +
+        (data.timestamp
+        ?
+        `Last Edited: ${new Date(data.timestamp).toLocaleString('en-US', {timeStyle: 'short', dateStyle: 'medium'})}`
+        :
+        '')
     )
+
+    const batch = writeBatch(db);
+
+
+    batch.set(doc(db, org + '/agenda/schedules/' + title), data, {merge: true})
+    batch.set(doc(db, org + '/agenda'), {[title]: {title: title, description: description(data), subtitle: data.type }}, {merge: true})
+
+    return batch.commit();
 }
 
 export function saveAvailability(org, schedule, data) {
-    console.log('saveschedule')
+    console.log('saveavailability')
 
     console.log('dat', data)
 
-    const orgSch = collection(db, org + 'data')
-
     return setDoc(
-        doc(orgSch, schedule + '--avs'),
-        {[auth.currentUser.uid]: data},
+        doc(db, org + '/agenda/availability/' + auth.currentUser.email),
+        {[schedule]: data},
         {merge: true}
     )
 }
 
-export async function getSchedule(org, title, setTitle, setType, setFields, setContents) {
+export async function getSchedule(org, title) {
     console.log('getschedule')
 
-    const data = await getData(org + 'schedules', title);
+    const data = await getData(org + '/agenda/schedules/' + title);
 
-    setTitle(data.title)
-    setType(data.type)
-    setFields(data.fields)
-    setContents(data.contents)
+    return data;
 }
 
 export async function getAllSchedules(org, setContents, setSchedule) {
     console.log('getallschedules')
 
-    const snaps = await getDocs(collection(db, org + "schedules"));
-
-    const description = (snap) => (
-        (snap.data().avDate
-        ?
-        `Availability Due: ${new Date(snap.data().avDate).toLocaleString('en-US', {timeStyle: 'short', dateStyle: 'medium'})}\n`
-        :
-        '')
-        +
-        (snap.data().timestamp
-        ?
-        `Last Edited: ${new Date(snap.data().timestamp).toLocaleString('en-US', {timeStyle: 'short', dateStyle: 'medium'})}`
-        :
-        '')
-    )
+    const data = await getData(org + '/agenda');
 
     setContents(
-        snaps.docs.map((snap) => ({
-            title: snap.data().title,
-            description: description(snap),
-            subtitle: snap.data().type,
-            fields: snap.data().fields,
-            contents: snap.data().contents,
-            avDate: snap.data().avDate,
-            avFields: snap.data().avFields,
+        Object.keys(data).map((key) => ({
             org: org,
             setSchedule: setSchedule,
+            ...data[key]
         }))
     )
 }
@@ -277,15 +245,10 @@ export function getFirebase() {
 }
 
 
-
 //------------------------------------
 // Storage
-
-
-
-
-export function accessImage(location, setURL) {
-    if (imageURLs[location]) {
+export function accessImage(location, setURL, refresh) {
+    if (imageURLs[location] && !refresh) {
         setURL(imageURLs[location])
     } else {
         getDownloadURL(ref(storage, location))
@@ -309,9 +272,15 @@ export async function uploadFile(file, root, unique) {
 }
 
 export async function getOrgFiles(path, setFiles) {
-    const listRef = ref(storage, path);
-
-    // Find all the prefixes and items.
-    const res = await listAll(listRef);
-    setFiles(res.items)
+    console.log('path', orgFiles, path)
+    if (orgFiles[path]) {
+        setFiles(orgFiles[path])
+    } else {
+        const listRef = ref(storage, path);
+    
+        // Find all the prefixes and items.
+        const res = await listAll(listRef);
+        orgFiles[path] = res.items;
+        setFiles(res.items);
+    }
 }

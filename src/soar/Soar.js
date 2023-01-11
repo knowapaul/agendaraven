@@ -19,6 +19,7 @@ import { Palette } from "./Palettes";
 import { Top } from './Headers'
 import { getSchedule, saveSchedule } from "../resources/Firebase";
 import { CustomSnackbar } from "../components/CustomSnackbar";
+import { ErrorBoundary } from "../components/ErrorBoundary";
 
 
 // export async function newLoader({ params }) {
@@ -51,7 +52,12 @@ export default function Soar() {
 
     useEffect(() => {
         if (load.sch) {
-            getSchedule(org, load.sch, setTitle, setType, setFields, setItems)
+            getSchedule(org, load.sch).then((data) => {
+                setTitle(data.title)
+                setType(data.type)
+                setFields(data.fields)
+                setItems(data.contents)
+            })
         }
     }, [])
 
@@ -65,14 +71,13 @@ export default function Soar() {
         }
 
         const data = {
+            type: type,
             fields: fields,
             contents: ol,
             avFields: avFields,
             avDate: avDate,
             timestamp: new Date().toString()
         }
-
-        console.log('data', data)
         
         saveSchedule(org, title, data)
             .then(() => {
@@ -116,10 +121,12 @@ export default function Soar() {
                     <DndProvider backend={HTML5Backend}>
                         <Box minWidth={915} width='100%' margin={0} height={'calc(100% - 64px)'} position={'fixed'} top='0px' left='0px'>
                             <Top {...inProps} />
-                            <Box display={'flex'} flexDirection='row' height={'100%'}>
-                                <Schedule {...inProps}/>
-                                <Palette {...inProps}/>
-                            </Box>
+                            <ErrorBoundary>
+                                <Box display={'flex'} flexDirection='row' height={'100%'}>
+                                    <Schedule {...inProps}/>
+                                    <Palette {...inProps}/>
+                                </Box>
+                            </ErrorBoundary>
                         </Box> 
                     </DndProvider>      
                 </AdminCheck>

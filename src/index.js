@@ -10,8 +10,6 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 
-// console.log('Firebase emulator warning bar hidden')
-
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>

@@ -10,6 +10,7 @@ import { DeleteBucket, PersonBucket, FieldBucket } from './Buckets'
 import { Bottom } from './Headers'
 import { useState } from "react";
 import { bTheme, oTheme, wTheme } from "../resources/Themes";
+import { ErrorBoundary } from "../components/ErrorBoundary";
 
 
 function DisplaySchedule(props) {
@@ -180,41 +181,43 @@ function Availability(props) {
 export function Schedule(props) {
     const [ av, setAv ] = useState(false);
 
-    console.log('sch', props)
-
     return (
-        <Box flex={1} >
-            <Box height={'calc(100% - 54px)'} width={'100%'} >
-                {av 
-                ?
-                <Availability avFields={props.avFields} setAvFields={props.setAvFields} setAvDate={props.setAvDate} />
-                :
-                <DisplaySchedule {...props} />
+        <ErrorBoundary>
+            <Box flex={1} >
+                <ErrorBoundary>
+                    <Box height={'calc(100% - 54px)'} width={'100%'} >
+                        {av 
+                        ?
+                        <Availability avFields={props.avFields} setAvFields={props.setAvFields} setAvDate={props.setAvDate} />
+                        :
+                        <DisplaySchedule {...props} />
+                        }
+                    </Box>
+                </ErrorBoundary>
+                <Bottom 
+                right={
+                    <DeleteBucket fields={props.fields} setFields={props.setFields} />
                 }
+                >
+                    <Box display={'flex'} >
+                        <MenuIcon title="Availability" flex={1} handleClick={() => {setAv(!av)}} >
+                            <EventAvailable />
+                        </MenuIcon>
+                        <MenuIcon title="Data Import" flex={1}>
+                            <ImportantDevices />
+                        </MenuIcon>
+                        <MenuIcon title="Templates" flex={1}>
+                            <EventAvailable />
+                        </MenuIcon>
+                        <MenuIcon title="Notifications" flex={1}>
+                            <Notifications />
+                        </MenuIcon>
+                        <MenuIcon title="Access" flex={1}>
+                            <Accessibility />
+                        </MenuIcon>
+                    </Box>
+                </Bottom>
             </Box>
-            <Bottom 
-            right={
-                <DeleteBucket fields={props.fields} setFields={props.setFields} />
-            }
-            >
-                <Box display={'flex'} >
-                    <MenuIcon title="Availability" flex={1} handleClick={() => {setAv(!av)}} >
-                        <EventAvailable />
-                    </MenuIcon>
-                    <MenuIcon title="Data Import" flex={1}>
-                        <ImportantDevices />
-                    </MenuIcon>
-                    <MenuIcon title="Templates" flex={1}>
-                        <EventAvailable />
-                    </MenuIcon>
-                    <MenuIcon title="Notifications" flex={1}>
-                        <Notifications />
-                    </MenuIcon>
-                    <MenuIcon title="Access" flex={1}>
-                        <Accessibility />
-                    </MenuIcon>
-                </Box>
-            </Bottom>
-        </Box>
+        </ErrorBoundary>
     )
 }

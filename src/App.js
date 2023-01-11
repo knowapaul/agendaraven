@@ -15,6 +15,7 @@ import { initializeApp } from "firebase/app";
 import Soar, { schLoader } from './soar/Soar.js';
 import ViewSubpages from './org-subpages/ViewSubpages.js';
 import { setApp } from './resources/Firebase.js';
+import Help from './pages/Help.js';
 
 // import { getAnalytics } from "firebase/analytics";
 
@@ -53,7 +54,9 @@ const router = createBrowserRouter([
   
   { errorElement: <Error />, path: "loading", element: <Loading />},
 
-  { errorElement: <Error />, path: "/soar/:org/:sch", element: <Soar />, loader: schLoader}
+  { errorElement: <Error />, path: "/soar/:org/:sch", element: <Soar />, loader: schLoader},
+
+  { errorElement: <Error />, path: "/help", element: <Help /> }
 ]);
    
 function App() {

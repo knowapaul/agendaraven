@@ -29,7 +29,7 @@ export default function Nav() {
   };
 
 
-  const pages = ['Dashboard', 'About Us', 'Help'];
+  const pages = ['Dashboard', 'Help'];
   const title = 'AgendaRaven';
 
   return (

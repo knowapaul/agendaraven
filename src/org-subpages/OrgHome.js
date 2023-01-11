@@ -20,18 +20,20 @@ import { ErrorBoundary } from "../components/ErrorBoundary";
 function FileUpload(props) {
     const inputRef = useRef();
     const [ open, setOpen ] = useState(false);
+    const [ error, setError ] = useState(false);
 
     const handleUpload = () => {
         uploadFile(inputRef.current.files.item(0), props.root, props.unique)
             .then(() => {
-                setOpen(true)
+                setError(false);
+                setOpen(true);
                 if (props.setRefresh) {
-                    props.setRefresh(!props.refresh)
+                    props.setRefresh(true)
                 }
             })
             .catch(() => {
-                // TODO: Make this more friendly
-                console.error('An error occurred while uploading the file')
+                setError(true);
+                setOpen(true);
             })
     }
     return (
@@ -52,7 +54,8 @@ function FileUpload(props) {
             </Fab>
             }
             <CustomSnackbar
-            text={'File saved'}
+            text={error ? 'The file could not be saved' : 'File saved'}
+            error={error}
             open={open}
             setOpen={setOpen}
             />
@@ -80,7 +83,8 @@ function Header(props) {
             width={'288px'}
             height={'162px'}
             style={{ objectFit: 'cover', borderRadius: theme.shape.borderRadius}}
-            deps={[refresh]}
+            refresh={refresh}
+            setRefresh={setRefresh}
             />
                 <AdminCheck org={props.org}>
                     <FileUpload 
@@ -109,8 +113,6 @@ function Left(props) {
     useEffect(() => {
         getMemo(props.org, setTitle, setPerson, setContents)
     }, [])
-
-    throw 'problem'
 
     return (
         <div>

@@ -7,6 +7,7 @@ import AdminCheck from "./AdminCheck";
 // Project Resources
 import { NavButton, SubNav } from "./SubNav";
 import AddButton from './AddButton'
+import { MiniLoad } from "./Loading";
 
 
 
@@ -60,7 +61,7 @@ export default function Cards(props) {
             >
             </SubNav>
             {
-            props.loading ? <CircularProgress />
+            props.loading ? <MiniLoad />
             :
             <Grid container 
             maxHeight={'100%'} 

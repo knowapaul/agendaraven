@@ -20,7 +20,7 @@ export function CustomSnackbar(props) {
         autoHideDuration={3000}
         >
 
-            <Alert severity="success" sx={{'& .MuiAlert-icon': {margin:'auto', mr: 2} }}>
+            <Alert severity={props.error ? "error" : "success"} sx={{'& .MuiAlert-icon': {margin:'auto', mr: 2} }}>
                     {props.text}
                     <IconButton
                     size="small"

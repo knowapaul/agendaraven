@@ -9,7 +9,7 @@ import { Box, Button, Grid, IconButton, Paper, Stack, TextField, Tooltip, Typogr
 import Cards from "../components/Cards";
 import AddButton from "../components/AddButton";
 import AdminCheck from "../components/AdminCheck";
-import { getAllSchedules, saveAvailability, saveSchedule } from "../resources/Firebase";
+import { getAllSchedules, getSchedule, saveAvailability, saveSchedule } from "../resources/Firebase";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "@emotion/react";
 import { NavButton, SubNav } from "../components/SubNav";
@@ -78,7 +78,7 @@ function View(props) {
         data={props.data} 
         open={true}
         setOpen={() => {}}
-        helperMessage={'There are currently no schedules to display. If that doesn\'t seem right, try refreshing the page.'} 
+        helperMessage={"There are currently no schedules to display. If that doesn't seem right, try refreshing the page."} 
         icons={Icons} 
         add={
             <AdminCheck org={props.org} >
@@ -111,7 +111,11 @@ function View(props) {
 
 function ViewOne(props) {
     const theme = useTheme();
+    const [ data, setData ] = useState();
 
+    useEffect(() => {
+        getSchedule(props.org, props.schedule.title).then(data => { setData(data) })
+    })
 
     return (
         <Box>
@@ -140,20 +144,22 @@ function ViewOne(props) {
                     </Typography>
                     
                 </Box>
-                {(new Date() < new Date(props.schedule.avDate)) && !props.schedule.contents[0]
+                
+                {data ?
+                (new Date() < new Date(data.avDate)) && !data.contents[0]
                     ?
-                    <AvForm avFields={props.schedule.avFields} org={props.org} title={props.schedule.title} />
+                    <AvForm avFields={data.avFields} org={props.org} title={props.schedule.title} />
                     :
                     <Box display={'flex'} flexDirection={'row'} ml='20px' paddingBottom={3}>
-                            {props.schedule.fields.map((field, oIndex) => (
+                            {data.fields.map((field, oIndex) => (
                                 <Box key={'o' + oIndex}>
                                     <Typography>
                                         {field}
                                     </Typography>
                                     {
-                                        props.schedule.contents[0]
+                                        data.contents[0]
                                         ?
-                                        props.schedule.contents.map((person, iIndex) => ((
+                                        data.contents.map((person, iIndex) => ((
 
                                             <Box xs={6} display='flex' flexDirection={'row'} key={oIndex + ',' + iIndex} sx={{border: `1px solid ${theme.palette.primary.main}`}}>
                                                 <Typography sx={{margin: 'auto', padding: 2, textAlign: 'center'}}>
@@ -173,6 +179,8 @@ function ViewOne(props) {
                             ))
                             }
                     </Box>
+                :
+                ''
                 }
             </Box>
 
@@ -183,7 +191,6 @@ function ViewOne(props) {
 function AvForm(props) {
     const [ data, setData ] = useState({})
     const [ open, setOpen ] = useState(false);
-    console.log('field')
     return (
         <Box>
             <Button 
@@ -203,7 +210,7 @@ function AvForm(props) {
                             </Typography>
                             <TextField 
                             value={data[field.title]}
-                            onChange={(e) => {let temp = {...data}; temp[field.title] = e.target.value; console.log(temp, e.target.value, data); setData(temp)}}
+                            onChange={(e) => {let temp = {...data}; temp[field.title] = e.target.value; setData(temp)}}
                             type={field.type}
                             placeholder={field.type.toUpperCase()}
                             />

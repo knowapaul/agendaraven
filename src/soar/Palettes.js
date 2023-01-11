@@ -15,6 +15,7 @@ import { Bottom } from "./Headers";
 
 // Other Resources
 import { getPeople } from "../resources/Firebase";
+import { ErrorBoundary } from "../components/ErrorBoundary";
 
 function ItemsPalette(props) {
     const theme = useTheme();
@@ -114,14 +115,16 @@ export function Palette(props) {
         flex={0}
         >
             <Box sx={{width: '270px'}} height={'calc(100% - 54px)'}>
-                <TextField 
-                sx={{width: '100%'}}
-                variant='filled'
-                value={value}
-                placeholder={'Search'}
-                onChange={(e) => {setValue(e.target.value)}}
-                />
-                {palettes[props.palette]}
+                <ErrorBoundary>
+                    <TextField 
+                    sx={{width: '100%'}}
+                    variant='filled'
+                    value={value}
+                    placeholder={'Search'}
+                    onChange={(e) => {setValue(e.target.value)}}
+                    />
+                    {palettes[props.palette]}
+                </ErrorBoundary>
             </Box>
             <Bottom>
                 <MenuIcon 

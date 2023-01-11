@@ -34,24 +34,25 @@ before beginning the tier that is two or more levels below it.
     - (x) Availability turnin
     - () Bug testing
     - (x) Buletin board
-    - () Contact page
+    - (x) Contact page
     - (x) Dashboard Home
     - (x) Dashboard availability
     - () Dashboard inbox
     - (x) Dashboard schedules
     - (x) Database init function
-    - () Error boundaries
-    - () Firebase rules
+    - (x) Error boundaries
+    - (x) Firebase rules
     - (s) Finish Chat
-    - () Help page
+    - (x) Help page
     - (x) Home page
-    - () No broken links
-    - () Org image upload
+    - (x) No broken links
+    - (x) Org image upload
     - () Schedule creation
-    - () Setup non-production protection
+    - (x) Setup non-production protection
 3. **Accessibility**
     - () Avatar images
     - () Better schedule creation
+    - () Better schedule viewing
     - () Dashboard calendar
     - () Firebase Cloud Messaging
     - () Flask capabilities

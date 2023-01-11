@@ -97,7 +97,6 @@ export default function Organizations(props) {
     const [ orgs, setOrgs ] = useState({});
 
     useEffect(() => {
-        console.log('orggrid')
         getUserData()
             .then((data) => {
                 setOrgs(data.orgs);

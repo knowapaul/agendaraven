@@ -1,15 +1,75 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write: if true;
+    // match /{document=**} {
+    //   allow read, write: if true;
+    // }
+    match /index {
+      allow read, write: if false;
     }
+
     match /users/{userId} {
-    	allow read, write: if isOwner(userId);
+    	allow read, write: if request.auth.uid == userId;
     }
+
+    match /{org}/chat {
+      allow read: if isMember(org);
+
+      match /subscriptions/{email} {
+        allow read, write: if isOwner(email);
+      }
+      match /chats/{chatId} {
+        allow read, write: if resource.data.subs[request.auth.token.email];
+      }
+    }
+
+    match /{org}/public {
+      allow read, write: if isAdmin(org);
+      allow read: if isMember(org);
+
+      match /docs/roles {
+        allow read, write: if isAdmin(org);
+        allow read: if isMember(org);
+      }
+      match /users/{email} {
+        allow get: if isOwner(email);
+      }
+    } 
     
-    function isOwner(userId) {
-    	return request.auth.uid == userId;
+
+    match /{org}/private/docs {
+      match /roleKeys {
+        allow read, write: if isAdmin(org);
+      }
+      match /userData {
+        allow read, write: if isAdmin(org);
+      }
+    }
+
+    match /{org}/agenda {
+      allow read, write: if isAdmin(org);
+      allow read: if isMember(org);
+
+      match /schedules/{scheduleName} {
+        allow read, write: if isAdmin(org);
+        allow read: if isMember(org);
+      }
+      match /formData/{email} {
+        allow read, write: if isMember(org) && isOwner(email);
+        allow read, write: if isAdmin(org);
+      }
+    }
+
+    function isOwner(email) {
+    	return email == request.auth.token.email;
+    }
+    function isMember(org) {
+      //
+      return exists(/databases/$(database)/documents/$(org)/public/users/$(request.auth.token.email));
+    }
+    function isAdmin(org) {
+      //
+      return get(/databases/$(database)/documents/$(org)/public/users/$(request.auth.token.email)).data.admin;
     }
   }
 }

@@ -30,6 +30,7 @@ export default function CreateOrJoin(props) {
         const data = await getUserData(auth.currentUser.uid)
         const orgName = cFields.nameyourorganization;
 
+        console.log('executing...')
         const e = await cFunc({ 
             orgName: orgName, 
             phonenumber: data.info.phonenumber, 
@@ -37,6 +38,7 @@ export default function CreateOrJoin(props) {
         })
         console.log('error', e)
         if (e.data) {
+            console.error(e.data)
             setCError(e.data)
         } else {
             navigate(`/${orgName}/home`)
@@ -50,14 +52,18 @@ export default function CreateOrJoin(props) {
         const orgName = jFields.organizationname;
         const joinCode = jFields.joincode;
 
-        const time = await jFunc({ 
+        const e = await jFunc({ 
             orgName: orgName, 
             joinCode: joinCode.toUpperCase(),
             phonenumber: data.info.phonenumber, 
             schedulename: data.info.schedulename 
         })
-        console.log('Organization created at:', time)
-        navigate(`/${orgName}/home`)
+        if (e.data) {
+            console.error(e.data)
+            setJError(e.data)
+        } else {
+            navigate(`/${orgName}/home`)
+        }
         
     }
 
@@ -107,7 +113,7 @@ export default function CreateOrJoin(props) {
                     />
                 </Paper>
                 <Divider sx={{margin: 2}}/>
-                <Paper sx={{padding: 2, backgroundColor: theme.palette.primary, display: 'none'}}>
+                <Paper sx={{padding: 2, backgroundColor: theme.palette.primary}}>
                     <Typography
                     variant='h6'
                     textAlign='center'

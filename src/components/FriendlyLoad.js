@@ -19,14 +19,20 @@ import { accessImage } from "../resources/Firebase";
  * - alt 
  * - height & width are preferred to set good dimensions
  * - *deps* = {List} Refresh when one of these changes
+ * - refresh - bool
  */
 export default function FriendlyLoad(props) {
     const [ source, setSource ] = useState();
     const [ fail, setFail ] = useState();
 
+    const { refresh, setRefresh, ...imgProps } = props;
+
     useEffect(() => {
-        accessImage(props.source, setSource);
-    }, props.deps)
+        accessImage(props.source, setSource, refresh);
+        if (setRefresh) {
+            setRefresh(false)
+        }
+    }, [refresh])
 
     setTimeout(() => {
         setFail(true);
@@ -41,7 +47,7 @@ export default function FriendlyLoad(props) {
             {
             (source && source !== 'ERROR') 
             ?
-            <img {...props} alt={props.alt} src={source} /> 
+            <img {...imgProps} alt={props.alt} src={source} /> 
             : 
             <Box 
             backgroundColor="primary"
