@@ -93,6 +93,28 @@ function exists(input) {
     }
 }
 
+function document(input) {
+    if (/^[a-z0-9-_\*#\u0020]{2,20}$/.test(input)) {
+        return [false, '']
+    } else {
+        return [
+            true,
+            'Include 0 to 20 of these characters: a-z, A-Z, 0-9, +, -, _, *'
+        ]
+    }
+}
+
+function text(input) {
+    if (/^.{2,30}$/.test(input)) {
+        return [false, '']
+    } else {
+        return [
+            true,
+            'Include 0 to 30 characters with no line breaks'
+        ]
+    }
+}
+
 export default function vaildate(type, input, pass) {
     const func = {
         email: email,
@@ -104,6 +126,8 @@ export default function vaildate(type, input, pass) {
         exists: exists,
         none: () => {return ([false, ''])},
         schedule: schedule,
+        document: document,
+        text: text
     }
     return func[type](input, pass)
 }

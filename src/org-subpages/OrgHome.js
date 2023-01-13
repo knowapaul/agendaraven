@@ -55,7 +55,7 @@ function FileUpload(props) {
             }
             <CustomSnackbar
             text={error ? 'The file could not be saved' : 'File saved'}
-            error={error}
+            error={error ? 'error' : 'success'}
             open={open}
             setOpen={setOpen}
             />
@@ -198,6 +198,7 @@ function Left(props) {
                 </Box>
             </Paper>
             <CustomSnackbar
+            severity={'success'}
             text='Memo Saved'
             open={open}
             setOpen={setOpen}

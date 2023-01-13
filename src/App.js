@@ -13,9 +13,10 @@ import CreateAccount from './pages/CreateAccount.js'
 // Firebase Resources
 import { initializeApp } from "firebase/app";
 import Soar, { schLoader } from './soar/Soar.js';
-import ViewSubpages from './org-subpages/ViewSubpages.js';
+// import ViewSubpages from './org-subpages/ViewSubpages.js';
 import { setApp } from './resources/Firebase.js';
 import Help from './pages/Help.js';
+import { ScheduleView } from './pages/ScheduleView.js';
 
 // import { getAnalytics } from "firebase/analytics";
 
@@ -47,7 +48,7 @@ const router = createBrowserRouter([
 
   { errorElement: <Error />, path: "/:org/:page", element: <OrgDash page="home" />, loader: orgLoader},
 
-  { errorElement: <Error />, path: "/:org/schedules/:sch", element: <ViewSubpages />, loader: schLoader},
+  { errorElement: <Error />, path: "/:org/schedules/:sch", element: <ScheduleView />, loader: schLoader },
 
   { errorElement: <Error />, path: "logout", element: <Logout />},
   { errorElement: <Error />, path: "createaccount", element: <CreateAccount /> },
@@ -56,7 +57,8 @@ const router = createBrowserRouter([
 
   { errorElement: <Error />, path: "/soar/:org/:sch", element: <Soar />, loader: schLoader},
 
-  { errorElement: <Error />, path: "/help", element: <Help /> }
+  { errorElement: <Error />, path: "/help", element: <Help /> },
+
 ]);
    
 function App() {

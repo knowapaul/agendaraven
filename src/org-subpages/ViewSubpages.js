@@ -1,10 +1,10 @@
-import { useLoaderData } from "react-router-dom"
+// import { useLoaderData } from "react-router-dom"
 
-export default function ViewSubpages(props) {
-    const load = useLoaderData();
-    return (
-        <div>
-            subpages
-        </div>
-    )
-}
+// export default function ViewSubpages(props) {
+//     const load = useLoaderData();
+//     return (
+//         <div>
+//             subpages
+//         </div>
+//     )
+// }

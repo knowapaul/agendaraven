@@ -26,13 +26,13 @@ let storage;
 
 export function setApp(app) {
     auth = getAuth(app);
-    connectAuthEmulator(auth, "http://localhost:9099")
+    // connectAuthEmulator(auth, "http://localhost:9099")
     db = getFirestore(app);
-    connectFirestoreEmulator(db, 'localhost', 8080);
+    // connectFirestoreEmulator(db, 'localhost', 8080);
     functions = getFunctions(app);
-    connectFunctionsEmulator(functions, 'localhost', 5001);
+    // connectFunctionsEmulator(functions, 'localhost', 5001);
     storage = getStorage(app);
-    connectStorageEmulator(storage, 'localhost', 9199);
+    // connectStorageEmulator(storage, 'localhost', 9199);
 }
 
 async function getData(path, refresh) {
@@ -67,12 +67,11 @@ async function getData(path, refresh) {
 // TODO: Add an isolated document for user subscription data?
 export function addUserAccount(data, user) {
     console.log('adduseraccount')
-    const users = collection(db, 'users')
 
     const cData = Object.assign({schedulename: data.firstname}, data)
 
     return setDoc(
-        doc(users, user.uid),
+        doc(db, 'users/' + user.uid),
         {
             info: cData,
             orgs: {},
@@ -174,7 +173,6 @@ export function setMemo(org, title, contents) {
     )
 }
 
-// TODO: Make this secure with rules
 export function saveSchedule(org, title, data) {
     console.log('saveschedule')
 
@@ -221,7 +219,7 @@ export async function getSchedule(org, title) {
     return data;
 }
 
-export async function getAllSchedules(org, setContents, setSchedule) {
+export async function getAllSchedules(org, setContents) {
     console.log('getallschedules')
 
     const data = await getData(org + '/agenda');
@@ -229,7 +227,6 @@ export async function getAllSchedules(org, setContents, setSchedule) {
     setContents(
         Object.keys(data).map((key) => ({
             org: org,
-            setSchedule: setSchedule,
             ...data[key]
         }))
     )
@@ -272,7 +269,6 @@ export async function uploadFile(file, root, unique) {
 }
 
 export async function getOrgFiles(path, setFiles) {
-    console.log('path', orgFiles, path)
     if (orgFiles[path]) {
         setFiles(orgFiles[path])
     } else {

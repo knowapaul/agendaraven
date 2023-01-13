@@ -49,6 +49,7 @@ before beginning the tier that is two or more levels below it.
     - (x) Org image upload
     - () Schedule creation
     - (x) Setup non-production protection
+    - () Private schedule changes
 3. **Accessibility**
     - () Avatar images
     - () Better schedule creation

@@ -9,6 +9,8 @@ import { Close } from "@mui/icons-material";
  * text = {String} The alert's text
  * open = {Boolean} The open state of the snackbar
  * setOpen = {Function} The function to set the open value
+ * severity = {String} The alert's severity
+ * timeout? = {Number} Milliseconds until auto hide (3000 default)
  */
 export function CustomSnackbar(props) {
     const close = () => {props.setOpen(false)}
@@ -17,10 +19,10 @@ export function CustomSnackbar(props) {
         sx={{zIndex: '1201'}}
         open={props.open}
         onClose={close}
-        autoHideDuration={3000}
+        autoHideDuration={props.timeout || 3000}
         >
 
-            <Alert severity={props.error ? "error" : "success"} sx={{'& .MuiAlert-icon': {margin:'auto', mr: 2} }}>
+            <Alert severity={props.severity} sx={{'& .MuiAlert-icon': {margin:'auto', mr: 2} }}>
                     {props.text}
                     <IconButton
                     size="small"

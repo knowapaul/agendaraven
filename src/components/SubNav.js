@@ -1,4 +1,5 @@
-import { Box, Button, Paper, Tooltip, Typography } from "@mui/material";
+import { useTheme } from "@emotion/react";
+import { Box, Button, Paper, responsiveFontSizes, ThemeProvider, Tooltip, Typography } from "@mui/material";
 
 
 /**
@@ -40,17 +41,20 @@ export function NavButton(props) {
  * props.right -> the components on the right side of the nav
  */
 export function SubNav(props) {
+    const theme = useTheme();
     return (
-        <Paper elevation={0} sx={{ display: 'flex', borderRadius: '0px', height: '57.5px'}}>
-            <Box sx={{flexGrow: 1}}>
-                {props.left}
-            </Box>
-            <Typography variant='h5' noWrap sx={{margin: 'auto', flexGrow: 1}}>
-                {props.title}
-            </Typography>
-            <Box sx={{flex: 0}}>
-                {props.right}
-            </Box>
-        </Paper>
+        <ThemeProvider theme={responsiveFontSizes(theme)}>
+            <Paper elevation={0} sx={{ display: 'flex', borderRadius: '0px', height: '57.5px'}}>
+                <Box sx={{flexGrow: 1}}>
+                    {props.left}
+                </Box>
+                <Typography variant='h5' noWrap sx={{margin: 'auto', flexGrow: 1, color: theme.palette.text.secondary}}>
+                    {props.title}
+                </Typography>
+                <Box sx={{flex: 0}}>
+                    {props.right}
+                </Box>
+            </Paper>
+        </ThemeProvider>
     )
 }

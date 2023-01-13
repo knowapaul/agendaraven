@@ -1,5 +1,5 @@
 // MUI Resources
-import { Accessibility, Clear, EventAvailable, ImportantDevices, Notifications } from "@mui/icons-material";
+import { Accessibility, CalendarMonth, Clear, EventAvailable, Grid3x3, ImportantDevices, Notifications, ScheduleOutlined } from "@mui/icons-material";
 import { Box, Button, Fab, FormControl, FormControlLabel, FormLabel, Grid, Icon, IconButton, Paper, Radio, RadioGroup, Stack, TextField, ThemeProvider, Typography, useScrollTrigger } from "@mui/material";
 
 // Project Resources
@@ -11,6 +11,7 @@ import { Bottom } from './Headers'
 import { useState } from "react";
 import { bTheme, oTheme, wTheme } from "../resources/Themes";
 import { ErrorBoundary } from "../components/ErrorBoundary";
+import DataImport from "./DataImport";
 
 
 function DisplaySchedule(props) {
@@ -179,19 +180,20 @@ function Availability(props) {
 // Format of fields:
 // {List} with no duplicates
 export function Schedule(props) {
-    const [ av, setAv ] = useState(false);
+    const [ tab, setTab ] = useState('schedule');
+
+    const tabs = {
+        schedule: <DisplaySchedule {...props} />,
+        availability: <Availability avFields={props.avFields} setAvFields={props.setAvFields} setAvDate={props.setAvDate} />, 
+        dataimport: <DataImport />
+    }
 
     return (
         <ErrorBoundary>
             <Box flex={1} >
                 <ErrorBoundary>
                     <Box height={'calc(100% - 54px)'} width={'100%'} >
-                        {av 
-                        ?
-                        <Availability avFields={props.avFields} setAvFields={props.setAvFields} setAvDate={props.setAvDate} />
-                        :
-                        <DisplaySchedule {...props} />
-                        }
+                        {tabs[tab]}
                     </Box>
                 </ErrorBoundary>
                 <Bottom 
@@ -199,23 +201,56 @@ export function Schedule(props) {
                     <DeleteBucket fields={props.fields} setFields={props.setFields} />
                 }
                 >
-                    <Box display={'flex'} >
-                        <MenuIcon title="Availability" flex={1} handleClick={() => {setAv(!av)}} >
+                    <Paper square sx={{display: 'flex', border: 'none', zIndex: 1200}} variant='outlined'>
+                        <MenuIcon 
+                        title="Schedule" 
+                        flex={1} 
+                        handleClick={() => {setTab('schedule')}} 
+                        selected={tab === 'schedule'}
+                        >
+                            <CalendarMonth />
+                        </MenuIcon>
+                        <MenuIcon 
+                        title="Availability" 
+                        flex={1} 
+                        handleClick={() => {setTab('availability')}} 
+                        selected={tab === 'availability'}
+                        >                            
                             <EventAvailable />
                         </MenuIcon>
-                        <MenuIcon title="Data Import" flex={1}>
+                        <MenuIcon 
+                        title="Data Import" 
+                        flex={1} 
+                        handleClick={() => {setTab('dataimport')}} 
+                        selected={tab === 'dataimport'}
+                        >                            
                             <ImportantDevices />
                         </MenuIcon>
-                        <MenuIcon title="Templates" flex={1}>
+                        <MenuIcon 
+                        title="Templates" 
+                        flex={1} 
+                        handleClick={() => {setTab('templates')}} 
+                        selected={tab === 'templates'}
+                        >                            
                             <EventAvailable />
                         </MenuIcon>
-                        <MenuIcon title="Notifications" flex={1}>
+                        <MenuIcon 
+                        title="Notifications" 
+                        flex={1} 
+                        handleClick={() => {setTab('notifications')}} 
+                        selected={tab === 'notifications'}
+                        >                            
                             <Notifications />
                         </MenuIcon>
-                        <MenuIcon title="Access" flex={1}>
+                        <MenuIcon 
+                        title="Access" 
+                        flex={1} 
+                        handleClick={() => {setTab('access')}} 
+                        selected={tab === 'access'}
+                        >                           
                             <Accessibility />
                         </MenuIcon>
-                    </Box>
+                    </Paper>
                 </Bottom>
             </Box>
         </ErrorBoundary>
