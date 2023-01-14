@@ -84,20 +84,6 @@ export default function DashModel(props) {
     const { win } = props;
     const [ mobileOpen, setMobileOpen ] = useState(false);
     const theme = useTheme();
-
-    const navRef = useRef();
-    const [ navHeight, setNavHeight ] = useState();
-
-    function setHeight() {
-        setNavHeight(navRef.current.offsetHeight);
-    }
-
-    useEffect(() => {
-        setHeight();
-        window.addEventListener('resize', setHeight);
-
-        return () => {window.removeEventListener('resize', setHeight)}
-    }, [])
   
     const handleDrawerToggle = () => {
       setMobileOpen(!mobileOpen);
@@ -152,40 +138,7 @@ export default function DashModel(props) {
   
     return (
       <AuthCheck>
-        <Box sx={{ display: 'flex'}}>
-            <AppBar
-            square
-            elevation={0}
-            sx={{
-                width: {sm: `calc(100% - ${drawerWidth}px)`},
-            }}
-            >
-                <Toolbar  sx={{height: '100%'}} ref={navRef}>
-                <IconButton
-                    color="inherit"
-                    aria-label="open drawer"
-                    edge="start"
-                    onClick={handleDrawerToggle}
-                    sx={{ mr: 2, display: { sm: 'none' } }}
-                >
-                    <MenuIcon />
-                </IconButton>
-                <Box sx={{ flexGrow: 1, display:'flex', justifyContent: 'center', 
-    }}>
-                    <Typography 
-                    variant="h5" 
-                    noWrap 
-                    component="div"
-                    textAlign='center'
-                    color={contrastTheme.palette.text.secondary}
-                    >
-                        {props.page[0].toUpperCase() + props.page.slice(1)}
-                    </Typography>
-                </Box>
-                <CustomAvatar />
-                </Toolbar>
-                <Divider sx={{borderColor: theme.palette.background.default}}/>
-            </AppBar>
+        <Box sx={{ display: 'flex', flexDirection: 'row', height: '100vh', width: '100vw', position: 'fixed', top: 0, left: 0}}>
             <Box
                 component="nav"
                 sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
@@ -211,9 +164,6 @@ export default function DashModel(props) {
                 <Paper
                 square
                 sx={{
-                    position: 'fixed',
-                    top: 0,
-                    left: 0,
                     width: drawerWidth,
                     display: { xs: 'none', sm: 'block' },
                     borderRight: `1px solid ${theme.palette.background.default}`,
@@ -223,22 +173,55 @@ export default function DashModel(props) {
                 {drawer}
                 </Paper>
             </Box>
-            <ThemeProvider theme={contrastTheme}>
-                <ErrorBoundary>
-                    <Box
-                    sx={{ 
-                        flexGrow: 1, 
-                        position: 'fixed', 
-                        bottom: '0px', 
-                        right: '0px', 
-                        width: {xs: '100%', sm: `calc(100% - ${drawerWidth}px)` }, 
-                        backgroundColor: theme.palette.background.paper, 
-                        height: `calc(100vh - ${navHeight}px)`
-                    }}>
-                            {props.children}
+            <Box flex={1}>
+                <Paper
+                square
+                elevation={0}
+                sx={{
+                    width: '100%',
+                    flex: '0 1 auto'
+                }}
+                >
+                    <Toolbar  sx={{height: '100%'}} >
+                    <IconButton
+                        color="inherit"
+                        aria-label="open drawer"
+                        edge="start"
+                        onClick={handleDrawerToggle}
+                        sx={{ mr: 2, display: { sm: 'none' } }}
+                    >
+                        <MenuIcon />
+                    </IconButton>
+                    <Box sx={{ flexGrow: 1, display:'flex', justifyContent: 'center', 
+        }}>
+                        <Typography 
+                        variant="h5" 
+                        noWrap 
+                        component="div"
+                        textAlign='center'
+                        color={contrastTheme.palette.text.secondary}
+                        >
+                            {props.page[0].toUpperCase() + props.page.slice(1)}
+                        </Typography>
                     </Box>
-                </ErrorBoundary>
-            </ThemeProvider>
+                    <CustomAvatar />
+                    </Toolbar>
+                    <Divider sx={{borderColor: theme.palette.background.default}}/>
+                </Paper>
+                <ThemeProvider theme={contrastTheme}>
+                    <ErrorBoundary>
+                        <Box
+                        sx={{ 
+                            flexGrow: 1, 
+                            width: '100%', 
+                            backgroundColor: theme.palette.background.paper, 
+                            height: '100%',
+                        }}>
+                                {props.children}
+                        </Box>
+                    </ErrorBoundary>
+                </ThemeProvider>
+            </Box>
         </Box>
       </AuthCheck>
     );

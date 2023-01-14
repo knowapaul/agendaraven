@@ -9,7 +9,7 @@ import { Alert, Box, Button, CssBaseline, Grid, Icon, IconButton, Paper, Popover
 import Cards from "../components/Cards";
 import AddButton from "../components/AddButton";
 import AdminCheck from "../components/AdminCheck";
-import { getAllSchedules, getSchedule, saveAvailability, saveSchedule } from "../resources/Firebase";
+import { getAllSchedules, getAvailability, getSchedule, saveAvailability, saveSchedule } from "../resources/Firebase";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { NavButton, SubNav } from "../components/SubNav";
 import { CustomSnackbar } from "../components/CustomSnackbar";
@@ -22,6 +22,13 @@ import { useTheme } from "@emotion/react";
 function AvForm(props) {
     const [ data, setData ] = useState({})
     const [ open, setOpen ] = useState(false);
+
+    console.log('avs')
+
+    useEffect(() => {
+        getAvailability(props.org, props.title, setData)
+    }, []);
+
     return (
         <Box>
             <Button 
@@ -31,16 +38,16 @@ function AvForm(props) {
             >
                 Save
             </Button>
-            <Paper sx={{padding: 2, margin: 2}}>
+            <Paper sx={{padding: 2, margin: 2}} variant='outlined'>
                 
                 <Stack spacing={2}>
-                    {data.avFields.map((field) => (
-                        <Box>
+                    {props.avFields.map((field) => (
+                        <Box key={field.title}>
                             <Typography>
                                 {field.title}
                             </Typography>
                             <TextField 
-                            value={data[field.title]}
+                            value={data[field.title] || ''}
                             onChange={(e) => {let temp = {...data}; temp[field.title] = e.target.value; setData(temp)}}
                             type={field.type}
                             placeholder={field.type.toUpperCase()}
@@ -59,11 +66,8 @@ function AvForm(props) {
     )
 }
 
-
 function InfoButton(props) {
     const [anchorEl, setAnchorEl] = useState(null);
-    const [ openBottom, setOpenBottom ] = useState(true);
-
     
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -101,32 +105,15 @@ function InfoButton(props) {
                     <Typography variant='body1'>{props.description}</Typography>
                 </Paper>
             </Popover>
-            {
-                openBottom ?
-                <Paper square sx={{position: 'absolute', bottom: 0, left: 0, display: {xs: 'flex', sm: 'none'}, backgroundColor: wTheme.palette.secondary.main, width: '100%'}}>
-                    <ErrorOutline sx={{my: 2, ml: 1}}/>
-                    <Typography sx={{m: 2, flex: 1}} variant='body1'>
-                        Try turning your phone on it side for a better view
-                    </Typography>
-                    <IconButton
-                    size="small"
-                    aria-label="close"
-                    color="inherit"
-                    onClick={() => {setOpenBottom(false)}}
-                    sx={{m: 1 }}
-                    >
-                        <Close />
-                    </IconButton>
-                </Paper>
-                :
-                ''
-            }
         </div>
     );
 }
 
 function Internal() {
     const theme = useTheme();
+    
+    const [ openBottom, setOpenBottom ] = useState(true);
+
     
     const [ data, setData ] = useState();
     const navigate = useNavigate();
@@ -146,12 +133,12 @@ function Internal() {
                 '')
                 )
                 
-                useEffect(() => {
-                    getSchedule(load.org, load.sch).then(data => { setData(data) })
-                })
-                return (
-                    data ?
-                    <Box>
+    useEffect(() => {
+        getSchedule(load.org, load.sch).then(data => { setData(data) })
+    })
+    return (
+        data ?
+        <Box>
             <SubNav 
             title={load.sch}
             left={
@@ -222,6 +209,26 @@ function Internal() {
                                 }
                             </tbody>
                         </table>
+                        {
+                            openBottom ?
+                            <Paper square sx={{position: 'absolute', bottom: 0, left: 0, display: {xs: 'flex', sm: 'none'}, backgroundColor: wTheme.palette.secondary.main, width: '100%'}}>
+                                <ErrorOutline sx={{my: 2, ml: 1}}/>
+                                <Typography sx={{m: 2, flex: 1}} variant='body1'>
+                                    Try turning your phone on it side for a better view
+                                </Typography>
+                                <IconButton
+                                size="small"
+                                aria-label="close"
+                                color="inherit"
+                                onClick={() => {setOpenBottom(false)}}
+                                sx={{m: 1 }}
+                                >
+                                    <Close />
+                                </IconButton>
+                            </Paper>
+                            :
+                            ''
+                        }
                     </Box>
                 }
             </Box>
@@ -230,7 +237,7 @@ function Internal() {
         :
         <Typography>Loading</Typography>
         )
-    }
+}
 
 export function ScheduleView() {
     return (

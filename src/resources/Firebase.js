@@ -17,6 +17,7 @@ let reuseDocs = {};
 let pendingDocs = {};
 let imageURLs = {};
 let orgFiles = {};
+let allAvs;
 
 let auth;
 let db;
@@ -33,6 +34,13 @@ export function setApp(app) {
     // connectFunctionsEmulator(functions, 'localhost', 5001);
     storage = getStorage(app);
     // connectStorageEmulator(storage, 'localhost', 9199);
+}
+
+/** Wipes all saved document data and forces a refresh.
+ */
+export function reloadAllDocs() {
+    reuseDocs = {};
+    pendingDocs = {};
 }
 
 async function getData(path, refresh) {
@@ -138,6 +146,7 @@ async function internalCheckAdmin(org) {
     
 }
 
+
 export async function checkAdmin(org, setIsAdmin) {
     console.log('checkadmin')
 
@@ -204,11 +213,32 @@ export function saveAvailability(org, schedule, data) {
 
     console.log('dat', data)
 
+    reuseDocs[org + '/agenda/availability/' + auth.currentUser.email] = undefined;
+
+    console.log('writing', org + '/agenda/availability/' + auth.currentUser.email)
+
     return setDoc(
         doc(db, org + '/agenda/availability/' + auth.currentUser.email),
         {[schedule]: data},
         {merge: true}
     )
+}
+
+export async function getAvailability(org, schedule, setAvailability) {
+    const data = await getData(org + '/agenda/availability/' + auth.currentUser.email)
+    setAvailability(data[schedule])
+}
+
+export async function getAllAvs(org, setAllAvs) {
+    if (allAvs) {
+        setAllAvs(allAvs)
+    } else {
+        allAvs = {};
+        const q = query(collection(db, org + '/agenda/availability/'));
+        const snap = await getDocs(q);
+        snap.forEach(item => {allAvs[item.id] = item.data()})
+        setAllAvs(allAvs)
+    }
 }
 
 export async function getSchedule(org, title) {
@@ -223,13 +253,16 @@ export async function getAllSchedules(org, setContents) {
     console.log('getallschedules')
 
     const data = await getData(org + '/agenda');
+    
+    if (data) {
+        setContents(
+            Object.keys(data).map((key) => ({
+                org: org,
+                ...data[key]
+            }))
+        )
+    }
 
-    setContents(
-        Object.keys(data).map((key) => ({
-            org: org,
-            ...data[key]
-        }))
-    )
 }
 
 export function getFirebase() {

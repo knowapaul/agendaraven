@@ -1,5 +1,5 @@
 // MUI Resources
-import { Accessibility, CalendarMonth, Clear, EventAvailable, Grid3x3, ImportantDevices, Notifications, ScheduleOutlined } from "@mui/icons-material";
+import { Accessibility, CalendarMonth, Clear, EventAvailable, Grid3x3, Group, ImportantDevices, Notifications, ScheduleOutlined } from "@mui/icons-material";
 import { Box, Button, Fab, FormControl, FormControlLabel, FormLabel, Grid, Icon, IconButton, Paper, Radio, RadioGroup, Stack, TextField, ThemeProvider, Typography, useScrollTrigger } from "@mui/material";
 
 // Project Resources
@@ -12,6 +12,7 @@ import { useState } from "react";
 import { bTheme, oTheme, wTheme } from "../resources/Themes";
 import { ErrorBoundary } from "../components/ErrorBoundary";
 import DataImport from "./DataImport";
+import PeopleAvs from "./PeopleAvs";
 
 
 function DisplaySchedule(props) {
@@ -24,63 +25,74 @@ function DisplaySchedule(props) {
         props.fields[0]
         ?
         <Box display={'flex'} flexDirection={'row'} height={'100%'} ml='20px'>
-            {props.fields.map((field, oIndex) => (
-                <Box flex={1} key={oIndex} height={'100%'}>
-                    <FieldBucket 
-                    item={field}
-                    fields={props.fields} 
-                    setFields={props.setFields} 
-                    index={oIndex}
-                    outlined
-                    >
-                        {props.items[0]
+            <table >
+                <thead>
+                    <tr>
+                        {props.fields.map((field, oIndex) => (
+                            <th key={field}>
+                                <FieldBucket 
+                                item={field}
+                                fields={props.fields} 
+                                setFields={props.setFields} 
+                                index={oIndex}
+                                outlined
+                                ></FieldBucket>
+                            </th>
+                        ))}
+                    </tr>
+                </thead>
+                <tbody>
+                    {props.items[0]
                         ?
-                        props.items.map((person, iIndex) => {
-                            return (
-                                <Box key={iIndex} minHeight={'50px'} sx={{border: '1px solid black', margin: 1}}>
-                                    {person[field]
-                                    ?
-                                    <Box display='flex' flexDirection={'row'}>
-                                        <IconButton onClick={() => {handleDelete(iIndex, field)}} sx={{width: '40px', height: '40px', margin: '5px'}}>
-                                            <Clear sx={{float: 'right'}}/>
-                                        </IconButton>
-                                        <Typography sx={{margin: 'auto', lineHeight: '50px'}}>
-                                            {person[field]}
-                                        </Typography>
-                                    </Box>
-                                    :
-                                    <PersonBucket 
-                                    item={person[field]}
-                                    items={props.items} 
-                                    setItems={props.setItems} 
-                                    index={iIndex}
-                                    parent={field}
-                                    />
-                                    }
-                                </Box>
-                            )
-                        })
+                        props.items.map((row, iIndex) => (
+                            <tr key={'row' + iIndex}>
+                                {props.fields.map((field, fIndex) => (
+                                    <td key={field} style={{border: '1px solid black', padding: 2, maxHeight: '50px' }}>
+                                        {row[field]
+                                        ?
+                                        <Stack direction={'row'}>
+                                            <IconButton onClick={() => {handleDelete(iIndex, field)}} sx={{width: '24px', height: '24px', margin: '3px'}}>
+                                                <Clear />
+                                            </IconButton>
+                                            <Typography sx={{margin: 'auto'}}>
+                                                {row[field]}
+                                            </Typography>
+                                        </Stack>
+                                        :
+                                        <PersonBucket 
+                                        item={row[field]}
+                                        items={props.items} 
+                                        setItems={props.setItems} 
+                                        index={iIndex}
+                                        parent={field}
+                                        />
+                                        }
+                                    </td>
+                                ))}
+                            </tr>
+                        ))
                         :
                         ''
-                        }
-                        <Box item key={'new' + oIndex} minHeight={'50px'} sx={{border: '1px dotted grey', margin: 1}}>
-                            <PersonBucket
-                            key={props.items.length} 
-                            index={props.items.length}
-                            parent={field}
-                            item={props.items[props.items.length]}
-                            items={props.items} 
-                            setItems={props.setItems} 
-                            />
-                        </Box>
-                    </FieldBucket>
-                </Box>
-                
-            ))
-            }
-            <FieldBucket index={props.fields.length + 1} fields={props.fields} setFields={props.setFields}>
-                <Box width={'50px'} height={'100%'}/>
-            </FieldBucket>
+                    }
+                    <tr>
+                        {props.fields.map((field, fIndex) => (
+                            <td key={fIndex} style={{border: '1px dotted grey', margin: 1}}>
+                                <FieldBucket index={props.fields.length + 1} fields={props.fields} setFields={props.setFields}>
+                                    <Box width={'50px'} height={'100%'}/>
+                                    <PersonBucket
+                                    key={props.items.length} 
+                                    index={props.items.length}
+                                    parent={field}
+                                    item={props.items[props.items.length]}
+                                    items={props.items} 
+                                    setItems={props.setItems} 
+                                    />
+                                </FieldBucket>
+                            </td>
+                        ))}
+                    </tr>
+                </tbody>
+            </table>
         </Box>
         :
         <FieldBucket index={0} fields={props.fields} setFields={props.setFields} >
@@ -88,6 +100,82 @@ function DisplaySchedule(props) {
         </FieldBucket>
     )
 }
+
+
+// function DisplaySchedule(props) {
+//     const handleDelete = (index, field) => {
+//         let adapted = [...props.items];
+//         delete adapted[index][field];
+//         props.setItems(adapted)
+//     }
+//     return (
+//         props.fields[0]
+//         ?
+//         <Box display={'flex'} flexDirection={'row'} height={'100%'} ml='20px'>
+//             {props.fields.map((field, oIndex) => (
+//                 <Box flex={1} key={oIndex} height={'100%'}>
+//                     <FieldBucket 
+//                     item={field}
+//                     fields={props.fields} 
+//                     setFields={props.setFields} 
+//                     index={oIndex}
+//                     outlined
+//                     >
+//                         {props.items[0]
+//                         ?
+//                         props.items.map((person, iIndex) => {
+//                             return (
+//                                 <Box key={iIndex} minHeight={'50px'} sx={{border: '1px solid black', margin: 1}}>
+//                                     {person[field]
+//                                     ?
+//                                     <Box display='flex' flexDirection={'row'}>
+//                                         <IconButton onClick={() => {handleDelete(iIndex, field)}} sx={{width: '40px', height: '40px', margin: '5px'}}>
+//                                             <Clear sx={{float: 'right'}}/>
+//                                         </IconButton>
+//                                         <Typography sx={{margin: 'auto', lineHeight: '50px'}}>
+//                                             {person[field]}
+//                                         </Typography>
+//                                     </Box>
+//                                     :
+//                                     <PersonBucket 
+//                                     item={person[field]}
+//                                     items={props.items} 
+//                                     setItems={props.setItems} 
+//                                     index={iIndex}
+//                                     parent={field}
+//                                     />
+//                                     }
+//                                 </Box>
+//                             )
+//                         })
+//                         :
+//                         ''
+//                         }
+//                         <Box item key={'new' + oIndex} minHeight={'50px'} sx={{border: '1px dotted grey', margin: 1}}>
+//                             <PersonBucket
+//                             key={props.items.length} 
+//                             index={props.items.length}
+//                             parent={field}
+//                             item={props.items[props.items.length]}
+//                             items={props.items} 
+//                             setItems={props.setItems} 
+//                             />
+//                         </Box>
+//                     </FieldBucket>
+//                 </Box>
+                
+//             ))
+//             }
+//             <FieldBucket index={props.fields.length + 1} fields={props.fields} setFields={props.setFields}>
+//                 <Box width={'50px'} height={'100%'}/>
+//             </FieldBucket>
+//         </Box>
+//         :
+//         <FieldBucket index={0} fields={props.fields} setFields={props.setFields} >
+//             Drag a field here to begin
+//         </FieldBucket>
+//     )
+// }
 
 function Field(props) {
     function handleType(type, e) {
@@ -185,7 +273,8 @@ export function Schedule(props) {
     const tabs = {
         schedule: <DisplaySchedule {...props} />,
         availability: <Availability avFields={props.avFields} setAvFields={props.setAvFields} setAvDate={props.setAvDate} />, 
-        dataimport: <DataImport />
+        dataimport: <DataImport />,
+        people: <PeopleAvs {...props} />
     }
 
     return (
@@ -233,6 +322,14 @@ export function Schedule(props) {
                         selected={tab === 'templates'}
                         >                            
                             <EventAvailable />
+                        </MenuIcon>
+                        <MenuIcon 
+                        title="People" 
+                        flex={1} 
+                        handleClick={() => {setTab('people')}} 
+                        selected={tab === 'people'}
+                        >                            
+                            <Group />
                         </MenuIcon>
                         <MenuIcon 
                         title="Notifications" 

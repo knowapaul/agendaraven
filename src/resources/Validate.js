@@ -94,7 +94,7 @@ function exists(input) {
 }
 
 function document(input) {
-    if (/^[a-z0-9-_\*#\u0020]{2,20}$/.test(input)) {
+    if (/^[\w-\*#\u0020]{2,20}$/.test(input)) {
         return [false, '']
     } else {
         return [

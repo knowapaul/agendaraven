@@ -73,7 +73,7 @@ function Header(props) {
             display: 'flex', 
             alignItems: 'center', 
             justifyContent: 'center',
-            padding: 1,
+            py: 1,
             flexDirection: 'row'
         }}>
             <Box height={'162px'}>
@@ -314,14 +314,11 @@ function Right(props) {
 
 export default function OrgHome(props) {
     const theme = useTheme();
-    const [ selected ] = useState('left')
 
     return (
-        <Box display={'flex'} flexDirection={{ xs: 'column', md: 'row' }} height={'100%'} overflow={'auto'}>
+        <Box display={'flex'} flexDirection={{ xs: 'column', md: 'row', }}  height={'calc(100% - 64px)'}  overflow={'auto'}>
             <Box 
-            width={{ xs: '100%', md: '50%'}}
-            display={{ xs: selected === 'left' ? 'block' : 'none', md: 'block' }}
-            >
+            width={{ xs: '100%', md: '50%'}}            >
                 <ErrorBoundary>
                     <Left org={props.org} />
                 </ErrorBoundary>
@@ -336,6 +333,7 @@ export default function OrgHome(props) {
                 <Box
                 width={'1px'}
                 display={{xs: `none`, md: 'block'}}
+                height={'100%'}
                 sx={{backgroundColor: theme.palette.primary.main}}
                 />
                 <ErrorBoundary>

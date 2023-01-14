@@ -54,7 +54,7 @@ service cloud.firestore {
         allow read, write: if isAdmin(org);
         allow read: if isMember(org);
       }
-      match /formData/{email} {
+      match /availability/{email} {
         allow read, write: if isMember(org) && isOwner(email);
         allow read, write: if isAdmin(org);
       }

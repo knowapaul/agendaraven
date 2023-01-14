@@ -47,14 +47,14 @@ export function PersonBucket(props) {
     }
 
     return (
-        <Box>
+        <Box sx={{height: '100%'}}>  
             <Bucket
             accept={'person'}
             drop={handleDrop}
             deps={[props.items]}
             ariaRole={'Person Bucket'}
             >
-                <Box sx={{minHeight: '50px'}}>
+                <Box >
                     {
                     props.item 
                     ?

@@ -17,7 +17,7 @@
 | /private    | docs          | roleKeys       | roleName: {roleName: -, roleKey: -, roleDescription: - }                 | Admin (r, w)                                    | N/A                            |
 | /private    | docs          | userData       | [userEmail]: {phonenumber: -, scheduleName: - }                          | Admin (r, w) & join org (w)                     | N/A                            |
 | /agenda     | schedules     | [scheduleName] | title: -, type: -, contents: [{[column1]: -, [column2]: -}, ]            | Admin (r, w) & org members (r)                  | N/A                            |
-| /agenda     | formData      | [userEmail]    | [scheduleName]: {[field]: string}                                        | Admin (r) & org member owners (r, w)            | N/A                            |
+| /agenda     | availability      | [userEmail]    | [scheduleName]: {[field]: string}                                        | Admin (r) & org member owners (r, w)            | N/A                            |
 
 
 sd = include sub documents and collections in access rules
