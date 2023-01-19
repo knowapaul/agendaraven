@@ -1,28 +1,25 @@
 // React Resources
-import { useEffect, useState } from "react"
+import { useEffect, useState } from "react";
 
 // MUI Resources
-import { AddBusiness, ArrowBack, Clear, Close, Edit, ErrorOutline, EventAvailable, Info, Visibility } from '@mui/icons-material'
-import { Alert, Box, Button, CssBaseline, Grid, Icon, IconButton, Paper, Popover, Snackbar, Stack, TextField, ThemeProvider, Tooltip, Typography } from "@mui/material";
+import { ArrowBack, Close, ErrorOutline, Info } from '@mui/icons-material';
+import { Box, Button, CssBaseline, IconButton, Paper, Popover, Stack, TextField, ThemeProvider, Typography } from "@mui/material";
 
 // Project Resources
-import Cards from "../components/Cards";
-import AddButton from "../components/AddButton";
-import AdminCheck from "../components/AdminCheck";
-import { getAllSchedules, getAvailability, getSchedule, saveAvailability, saveSchedule } from "../resources/Firebase";
-import { useLoaderData, useNavigate } from "react-router-dom";
-import { NavButton, SubNav } from "../components/SubNav";
-import { CustomSnackbar } from "../components/CustomSnackbar";
-import Form from "../components/Form"
-import { ErrorBoundary } from "../components/ErrorBoundary";
-import { wTheme, cTheme } from "../resources/Themes";
 import { useTheme } from "@emotion/react";
+import { useLoaderData, useNavigate } from "react-router-dom";
+import { CustomSnackbar } from "../components/CustomSnackbar";
+import { NavButton, SubNav } from "../components/SubNav";
+import { getAvailability, getSchedule, saveAvailability } from "../resources/Firebase";
+import { cTheme, wTheme } from "../resources/Themes";
 
 
 function AvForm(props) {
+    const theme = useTheme();
     const [ data, setData ] = useState({})
     const [ open, setOpen ] = useState(false);
 
+    console.log('theme', theme)
     console.log('avs')
 
     useEffect(() => {

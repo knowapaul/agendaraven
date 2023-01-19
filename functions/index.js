@@ -143,7 +143,7 @@ async function join(orgName, transaction, role, uid, email, displayName, schedul
         transaction.set(userDoc, { orgs: Object.assign(orgs, {[orgName]: true}) }, {merge: true})
     
         // Add to roles
-        transaction.set(db.doc(orgName + `/public/users/${email}`), { admin: role === 'owner', roles: [role] }, {merge: true})
+        transaction.set(db.doc(orgName + `/public/users/${email}`), { admin: role === 'owner' || role.toLowerCase() === 'admin', roles: [role] }, {merge: true})
     
         // Add to org user data
         transaction.set(db.doc(orgName + '/private/docs/userData'),

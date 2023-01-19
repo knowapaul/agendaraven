@@ -3,18 +3,16 @@ import { useEffect, useRef, useState } from "react";
 
 // MUI Resources
 import { useTheme } from "@emotion/react";
-import { Button, Box, Divider, Paper, Stack, Typography, IconButton, TextField, Snackbar, Fab, Alert, Input } from "@mui/material";
-import { Circle, Clear, Close, Edit, Image, PictureAsPdf, Save, Upload } from "@mui/icons-material";
+import { Clear, Edit, Image, PictureAsPdf, Save } from "@mui/icons-material";
+import { Box, Button, Divider, Fab, IconButton, Paper, Stack, TextField, Typography } from "@mui/material";
 
 // Project Resources
-import FriendlyLoad from "../components/FriendlyLoad";
-import { getMemo, setMemo } from "../resources/Firebase";
-import { setPersistence } from "firebase/auth";
-import AdminCheck from "../components/AdminCheck";
-import { getOrgFiles, uploadFile } from "../resources/Firebase";
 import { getDownloadURL } from "firebase/storage";
+import AdminCheck from "../components/AdminCheck";
 import { CustomSnackbar } from "../components/CustomSnackbar";
 import { ErrorBoundary } from "../components/ErrorBoundary";
+import FriendlyLoad from "../components/FriendlyLoad";
+import { getMemo, getOrgFiles, setMemo, uploadFile } from "../resources/Firebase";
 
 
 function FileUpload(props) {

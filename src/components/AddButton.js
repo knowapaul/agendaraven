@@ -1,12 +1,11 @@
 // MUI Resources
-import { ArrowBack, Add } from "@mui/icons-material"
-import { Paper, Box, Typography, Grid, CircularProgress, Divider } from "@mui/material"
+import { Add } from "@mui/icons-material";
+import { Box, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import AdminCheck from "./AdminCheck";
 
 // Project Resources
 import PopupForm from "./PopupForm";
-import { NavButton, SubNav } from "./SubNav";
+import { NavButton } from "./SubNav";
 
 
 /**

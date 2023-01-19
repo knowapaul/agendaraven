@@ -1,5 +1,5 @@
 // MUI Resources
-import { BottomNavigation, Typography, Link, Stack, Divider, AppBar, Box, Paper } from "@mui/material";
+import { Divider, Link, Paper, Stack, Typography } from "@mui/material";
 
 
 export default function Footer() {

@@ -1,6 +1,6 @@
 // React Resources
 import { useEffect, useState } from "react";
-import { DndProvider } from 'react-dnd'
+import { DndProvider } from 'react-dnd';
 
 // MUI Resources
 import { ThemeProvider } from "@emotion/react";
@@ -8,18 +8,20 @@ import { Box } from "@mui/material";
 
 // Project Resources
 import { cTheme } from "../resources/Themes";
-import { Schedule } from './Schedule'
+import { Schedule } from './Schedule';
 
 // Other Resources
-import { HTML5Backend } from 'react-dnd-html5-backend'
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useLoaderData } from "react-router-dom";
 import AdminCheck from "../components/AdminCheck";
 import AuthCheck from "../components/AuthCheck";
-import { Palette } from "./Palettes";
-import { Top } from './Headers'
-import { getSchedule, saveSchedule } from "../resources/Firebase";
 import { CustomSnackbar } from "../components/CustomSnackbar";
 import { ErrorBoundary } from "../components/ErrorBoundary";
+import { getSchedule, saveSchedule } from "../resources/Firebase";
+import AvFields from "./AvFields";
+import DataImport from "./DataImport";
+import { Bottom, Top } from './Headers';
+import PeopleAvs from "./PeopleAvs";
 
 
 // export async function newLoader({ params }) {
@@ -55,18 +57,20 @@ export default function Soar() {
     const [ avFields, setAvFields ] = useState([]);
     const [ avDate, setAvDate ] = useState('');
 
+    const [ tab, setTab ] = useState('schedule');
+
     const load = useLoaderData();
     const org = load.org;
 
     useEffect(() => {
-        if (load.sch) {
-            getSchedule(org, load.sch).then((data) => {
-                setTitle(data.title)
-                setType(data.type)
-                setFields(data.fields)
-                setItems(data.contents)
-            })
-        }
+        getSchedule(org, load.sch).then((data) => {
+            setTitle(data.title)
+            setType(data.type)
+            setFields(data.fields)
+            setItems(data.contents)
+            setAvFields(data.avFields)
+            setAvDate(data.avDate)
+        })
     }, [])
 
     function save() {
@@ -118,8 +122,19 @@ export default function Soar() {
         palette: palette,
         setPalette: setPalette,
         
+        avDate: avDate,
         setAvDate: setAvDate,
         save: save,
+
+        setTab: setTab
+    }
+
+
+    const tabs = {
+        schedule: <Schedule {...inProps} />,
+        forms: <AvFields {...inProps} />, 
+        import: <DataImport {...inProps} />,
+        availability: <PeopleAvs {...inProps} />
     }
 
     return (
@@ -127,14 +142,14 @@ export default function Soar() {
             <AuthCheck>
                 <AdminCheck org={org} helperText={"Sorry, this page is for authorized viewers only."}>
                     <DndProvider backend={HTML5Backend}>
-                        <Box minWidth={915} width='100%' margin={0} height={'calc(100% - 64px)'} position={'fixed'} top='0px' left='0px'>
+                        <Box width='100%' margin={0} height={'calc(100% - 64px)'} position={'fixed'} top='0px' left='0px'>
                             <Top {...inProps} />
                             <ErrorBoundary>
-                                <Box display={'flex'} flexDirection='row' height={'100%'}>
-                                    <Schedule {...inProps}/>
-                                    <Palette {...inProps}/>
+                                <Box height={{xs: '100%'}} width={'100%'} >
+                                    {tabs[tab]}
                                 </Box>
                             </ErrorBoundary>
+                            <Bottom {...inProps} />
                         </Box> 
                     </DndProvider>      
                 </AdminCheck>

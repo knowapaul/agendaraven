@@ -1,12 +1,33 @@
 import { useTheme } from "@emotion/react";
 import { ArrowBack, Save } from "@mui/icons-material";
-import { Paper, TextField, Box, Typography, Button } from "@mui/material";
+import { Box, Button, Paper, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 
 export default function DataImport(props) {
     const theme = useTheme();
     const [ data, setData ] = useState('');
     const [ preview, setPreview ] = useState(false);
+
+    function saveData() {
+        const [ header, ...rows ] = data.split('\n');
+
+        const newRows = rows.map((row) => {
+            let out = {};
+            for (let fn in header.split('\t')) {
+                out[header.split('\t')[fn]] = row.split('\t')[fn]
+            }
+            return out
+        })
+
+        props.setFields(props.fields.concat(header.split('\t')))
+        props.setItems(props.items.concat(newRows))
+        props.setTab('schedule')
+        console.log('fields', props.fields)
+        console.log( 'items', props.items)
+    }
+
+    console.log('fields', props.fields)
+        console.log( 'items', props.items)
 
     return (
         <Box sx={{padding: 1, height: 'calc(100% - 16px)', overflow: 'auto'}}>
@@ -20,7 +41,7 @@ export default function DataImport(props) {
                                 Back
                             </Button>
                         </Box>
-                        <Button variant='contained'>
+                        <Button variant='contained' onClick={saveData}>
                             <Save sx={{mr: 1}} />
                             Save
                         </Button>

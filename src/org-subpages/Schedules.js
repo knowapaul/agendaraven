@@ -1,21 +1,18 @@
 // React Resources
-import { useEffect, useState } from "react"
+import { useEffect, useState } from "react";
 
 // MUI Resources
-import { AddBusiness, ArrowBack, Edit, EventAvailable, Visibility } from '@mui/icons-material'
-import { Box, Button, Grid, IconButton, Paper, Stack, TextField, Tooltip, Typography } from "@mui/material";
+import { Edit, Visibility } from '@mui/icons-material';
+import { Box, IconButton, Tooltip } from "@mui/material";
 
 // Project Resources
-import Cards from "../components/Cards";
+import { useNavigate } from "react-router-dom";
 import AddButton from "../components/AddButton";
 import AdminCheck from "../components/AdminCheck";
-import { getAllSchedules, getSchedule, saveAvailability, saveSchedule } from "../resources/Firebase";
-import { useNavigate } from "react-router-dom";
-import { useTheme } from "@emotion/react";
-import { NavButton, SubNav } from "../components/SubNav";
-import { CustomSnackbar } from "../components/CustomSnackbar";
-import Form from "../components/Form"
+import Cards from "../components/Cards";
 import { ErrorBoundary } from "../components/ErrorBoundary";
+import Form from "../components/Form";
+import { getAllSchedules, saveSchedule } from "../resources/Firebase";
 
 
 {/* <Tooltip title={"My Availability"}>

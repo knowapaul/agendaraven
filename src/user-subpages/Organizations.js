@@ -3,15 +3,15 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 // MUI Resources
-import { CircularProgress, Fab, Card, CardContent, Grid, Box, Typography } from "@mui/material"
-import AddIcon from '@mui/icons-material/Add'
+import AddIcon from '@mui/icons-material/Add';
+import { Box, Card, CardContent, Fab, Grid, Typography } from "@mui/material";
 
 // Project Resources
-import CreateOrJoin from '../components/CreateOrJoin'
-import { getCurrentAuth, getFirebase, getUserData } from "../resources/Firebase";
-import { MiniLoad } from "../components/Loading";
 import { useTheme } from "@emotion/react";
+import CreateOrJoin from '../components/CreateOrJoin';
 import FriendlyLoad from "../components/FriendlyLoad";
+import { MiniLoad } from "../components/Loading";
+import { getUserData } from "../resources/Firebase";
  
 
 function OrgCard(props) {

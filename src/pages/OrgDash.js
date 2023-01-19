@@ -1,21 +1,21 @@
 // React Resources
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
 
 // MUI Resources
 import { ThemeProvider } from "@emotion/react";
-import { CssBaseline, Typography, Stack } from "@mui/material";
-import { CalendarToday, Insights, Logout, Settings, Home, Message, DonutLarge, Groups } from '@mui/icons-material'
+import { CalendarToday, Dashboard, DonutLarge, Groups, Home, Logout, Settings } from '@mui/icons-material';
+import { CssBaseline, Stack, Typography } from "@mui/material";
 
 // Project Resources
-import { wTheme } from '../resources/Themes'
+import { useEffect } from "react";
 import AuthCheck from "../components/AuthCheck";
-import DashModel from '../components/DashModel'
-import People from "../org-subpages/People";
-import Schedules from "../org-subpages/Schedules";
+import DashModel from '../components/DashModel';
+import OrgCheck from "../components/OrgCheck";
 import OrgHome from "../org-subpages/OrgHome";
 import OrgSettings from "../org-subpages/OrgSettings";
-import OrgCheck from "../components/OrgCheck";
-import { ErrorBoundary } from "../components/ErrorBoundary";
+import People from "../org-subpages/People";
+import Schedules from "../org-subpages/Schedules";
+import { wTheme } from '../resources/Themes';
 
 
 //  ["Availability", <EventAvailable color={'secondary'} />],
@@ -27,10 +27,10 @@ import { ErrorBoundary } from "../components/ErrorBoundary";
 const menu = [
   ["Home", <Home color="secondary"/>],
   ["Schedules", <CalendarToday color={'secondary'} />],
-  ["1" , ""],
   ["People", <Groups color={'secondary'} />],
   ["Settings", <Settings color={'secondary'} />],
   ["3" , ""],
+  ["My Dashboard", <Dashboard color={'secondary'} />],
   ["Log Out", <Logout color={'secondary'} />],
 ]
 
@@ -63,6 +63,16 @@ export async function orgLoader({ params }) {
     return [params.org, params.page];
 }
 
+function DashNavigate() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    navigate('/dashboard')
+  }, [])
+
+  return <div></div>
+}
+
 export function OrgDash(props) {
   const [ org, page ] = useLoaderData();
 
@@ -73,6 +83,7 @@ export function OrgDash(props) {
     schedules: <Schedules org={org} />,
     home: <OrgHome org={org}/>,
     settings: <OrgSettings org={org} />,
+    dashboard: <DashNavigate />
   };
 
   return (

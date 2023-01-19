@@ -1,9 +1,10 @@
 // MUI Resources
-import { Delete } from "@mui/icons-material";
-import { Box } from "@mui/material";
+import { Delete, DeleteForeverOutlined } from "@mui/icons-material";
+import { Box, Menu, MenuItem, Typography } from "@mui/material";
+import { useState } from "react";
 
 // Project Resources
-import { Drag, Bucket } from "../components/Drag";
+import { Bucket } from "../components/Drag";
 
 
 export function DeleteBucket(props) {
@@ -54,7 +55,7 @@ export function PersonBucket(props) {
             deps={[props.items]}
             ariaRole={'Person Bucket'}
             >
-                <Box >
+                <Box sx={{height: '100%', minHeight: '24px'}}>
                     {
                     props.item 
                     ?
@@ -69,6 +70,15 @@ export function PersonBucket(props) {
 }
 
 export function FieldBucket(props) {
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
     function handleDrop (item, monitor) {
         if (props.fields[0]) {
             let add = item.id;
@@ -76,12 +86,20 @@ export function FieldBucket(props) {
                 add = item.id + ' ' + i;
             }
             let fields = [...props.fields]
-            fields.splice(props.index, 0, add)
+            fields.splice(props.index + 1, 0, add)
             props.setFields(fields)
         } else {
             props.setFields([item.id])
         }
     }
+
+    function handleDelete() {
+        let out = [...props.fields];
+        out.splice(props.index, 1)
+        props.setFields(out)
+        handleClose()
+    }
+
 
     return (
       <Bucket
@@ -91,14 +109,39 @@ export function FieldBucket(props) {
       outlined={props.outlined}
       ariaRole={'Field Bucket'}
       >
-        <Drag
-        type={'movingField'}
-        id={props.item}
-        deps={[props.fields]}
+        <Box 
+        fontWeight={'bold'}
+        id="basic-button"
+        aria-controls={open ? 'basic-menu' : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? 'true' : undefined}
+        onClick={handleClick}
+        sx={{mr: '2px'}}
         >
-            {props.item}
+            <Typography 
+            variant='subtitle2'
+            fontWeight='bold'
+            >
+                {props.item}
+            </Typography>
             {props.children}
-        </Drag>
+        </Box>
+        <Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        MenuListProps={{
+          'aria-labelledby': 'basic-button',
+        }}
+        >
+            {props.item ? 
+            <Typography variant="subtitle1" fontWeight={'bold'} textTransform='capitalize' sx={{mx: 2}}>{'Column "' + props.item + '"'}</Typography>
+            :
+            ''
+            }
+            <MenuItem onClick={handleDelete}><DeleteForeverOutlined sx={{mr: 1, ml: 0}}/> Delete</MenuItem>
+        </Menu>
       </Bucket>
     )
 }

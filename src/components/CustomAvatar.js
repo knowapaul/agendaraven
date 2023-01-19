@@ -17,7 +17,7 @@ export default function CustomAvatar(props) {
     const [anchorElUser, setAnchorElUser] = useState(null);
     const navigate = useNavigate();
 
-    const settings = ['Dashboard', 'Logout'];
+    const settings = ['Dashboard', 'Account', 'Logout'];
 
 
     const handleOpenUserMenu = (event, user) => {

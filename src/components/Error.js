@@ -1,9 +1,8 @@
 // React Resources
-import { Link } from "react-router-dom";
 
 // MUI Resources
 import { ThemeProvider } from "@emotion/react";
-import { Typography, Paper, Button, CssBaseline} from "@mui/material";
+import { CssBaseline, Paper, Typography } from "@mui/material";
 
 // Project Resources
 import Nav from '../components/Nav';

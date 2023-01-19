@@ -50,6 +50,7 @@ before beginning the tier that is two or more levels below it.
     - () Schedule creation
     - (x) Setup non-production protection
     - () Private schedule changes
+    - () Error reporting
 3. **Accessibility**
     - () Avatar images
     - () Better schedule creation
@@ -58,7 +59,9 @@ before beginning the tier that is two or more levels below it.
     - () Firebase Cloud Messaging
     - () Flask capabilities
     - () Password changing
+    - () Account details modification
     - () Terms & Conditions
+    - () Analyze performance
 4. **Workflow**
     - () Automatic notifications
     - () How-to shorts (3)

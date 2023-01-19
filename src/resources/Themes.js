@@ -203,6 +203,7 @@ export const cTheme = createTheme({
     },
     secondary: {
       main: '#001f3d',
+      light: '#e87a00'
     },
     text: {
       primary: '#001f3d',

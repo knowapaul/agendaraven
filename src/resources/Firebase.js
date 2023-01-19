@@ -1,13 +1,11 @@
 // Firebase Resources
-import { collection, doc, getDoc, setDoc, onSnapshot, getDocs, Query, query, QuerySnapshot, namedQuery, writeBatch } from "firebase/firestore"; 
+import { collection, doc, getDoc, setDoc, getDocs, query, writeBatch } from "firebase/firestore"; 
 import { ref, getDownloadURL, uploadBytes, listAll } from "firebase/storage"; 
 
-import { getAuth, connectAuthEmulator } from "firebase/auth";
+import { getAuth, connectAuthEmulator, updateProfile, sendPasswordResetEmail, updatePassword, createUserWithEmailAndPassword, reauthenticateWithCredential, EmailAuthProvider } from "firebase/auth";
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
 import { getStorage, connectStorageEmulator } from "firebase/storage";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { Typography } from "@mui/material";
 
 
 let countCalls = 0;
@@ -41,6 +39,59 @@ export function setApp(app) {
 export function reloadAllDocs() {
     reuseDocs = {};
     pendingDocs = {};
+}
+
+export function handleProfileUpdate(data)  {
+    return updateProfile(auth.currentUser, data);
+}
+
+export async function handleUpdatePassword(oldPassword, newPassword) {
+    console.log('user', auth.currentUser)
+    console.log('hut', auth, auth.EmailAuthProvider)
+    const cred = auth.currentUser.auth.EmailAuthProvider.credential(auth.currentUser.email, oldPassword);
+    console.log('cred', cred)
+    console.log('func')
+    
+    const result = await reauthenticateWithCredential(auth.currentUser, cred)
+    console.log('result', result)
+    return await updatePassword(auth.currentUser, newPassword)
+}
+
+export function forgotPassword(email) {
+    return sendPasswordResetEmail(auth, email);
+}
+
+export function createNewAccount(inData, navigate, setError) {
+    let data = Object.assign({}, inData)
+    createUserWithEmailAndPassword(auth, data.email, data.password)
+        .then((userCred) => {
+            const displayName = data.firstname + ' ' + data.lastname;
+            updateProfile(userCred.user, {displayName: displayName})
+                .then(() => {
+                    if (!data.schedulename) {
+                        data.schedulename = data.firstname
+                    }
+                    
+                    const acountInfo = {
+                        schedulename: data.schedulename,
+                        phonenumber: data.phonenumber
+                    }
+        
+                    return addUserAccount(acountInfo, auth.currentUser)
+                })
+                .then(() => {
+                    navigate('/dashboard')
+                })
+                .catch((error) => {
+                    alert(`The following error occured while creating your account. 
+                        It may affect the functionality of the site. ${error.message}`)
+                })
+        })
+        .catch((error) => {
+            setError(error.message)
+        })
+        
+        
 }
 
 async function getData(path, refresh) {
@@ -137,6 +188,7 @@ export async function getPeople(org, setPeople) {
     }
 
     setPeople(adaptedPeople)
+    console.log('done getpeople')
 }
 
 async function internalCheckAdmin(org) {
@@ -230,6 +282,7 @@ export async function getAvailability(org, schedule, setAvailability) {
 }
 
 export async function getAllAvs(org, setAllAvs) {
+    console.log('getallavs')
     if (allAvs) {
         setAllAvs(allAvs)
     } else {
@@ -262,9 +315,11 @@ export async function getAllSchedules(org, setContents) {
             }))
         )
     }
+    console.log('done with getschedules')
 
 }
 
+// ! May become deprecated. All firebase actions should take place in this file.
 export function getFirebase() {
     return {
         auth: auth,

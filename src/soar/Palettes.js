@@ -4,18 +4,18 @@ import { useEffect, useState } from "react";
 // MUI Resources
 import { useTheme } from "@emotion/react";
 import { GridOn, Group, OtherHouses } from "@mui/icons-material";
-import { Box, Grid, Paper, Switch, TextField, Typography } from "@mui/material";
+import { Box, Button, Grid, Paper, Switch, TextField, Tooltip, Typography } from "@mui/material";
 
 // Project Resources
-import { searchSort } from "../resources/SearchSort";
 import { Drag } from "../components/Drag";
-import { MenuIcon } from './MenuIcon'
-import { Bottom } from "./Headers";
+import { searchSort } from "../resources/SearchSort";
 
 
 // Other Resources
-import { getPeople } from "../resources/Firebase";
+import { Stack } from "@mui/system";
 import { ErrorBoundary } from "../components/ErrorBoundary";
+import { getPeople } from "../resources/Firebase";
+
 
 function ItemsPalette(props) {
     const theme = useTheme();
@@ -32,7 +32,7 @@ function ItemsPalette(props) {
                 const firstName = key.split(' ')[0][0].toUpperCase() + key.split(' ')[0].slice(1).toLowerCase();
                 return (
                     <Grid key={key}  item sx={{margin: 1}}>
-                        <Drag type="person" id={key} >
+                        <Drag type="person" id={people[key].schedulename} >
                             <Typography 
                             variant='body1'
                             >
@@ -97,6 +97,44 @@ function FieldsPalette(props) {
     )
 }
 
+function Tab(props) {
+
+}
+
+function Tabs(props) {
+    const options = {
+        Fields: <GridOn />,
+        People: <Group />,
+        Other: <OtherHouses />,
+    }
+
+    return (
+        <Stack direction='row' spacing={'2px'}>
+            {
+                Object.entries(options).map((opt) => (
+                        <Button
+                        key={opt[0]}
+                        variant="contained"
+                        sx={{ padding: .5, borderTopLeftRadius: 0, borderTopRightRadius: 0}}
+                        width={'100%'} 
+                        onClick={() => {props.setPalette(opt[0].toLowerCase()); props.setValue('')}} 
+                        selected={props.palette === opt[0].toLowerCase()}
+                        >
+                            <Tooltip title={opt[0]}>
+                                <Stack direction={'row'}>
+                                    {opt[1]}
+                                    <Typography variant="subtitle2">
+                                        {opt[0]}
+                                    </Typography>
+                                </Stack>
+                            </Tooltip>
+                        </Button>
+                ))
+            }
+        </Stack>
+    )
+}
+
 export function Palette(props) {
     const theme = useTheme();
     const [ value, setValue ] = useState('');
@@ -117,41 +155,45 @@ export function Palette(props) {
             <Box sx={{width: '270px'}} height={'calc(100% - 54px)'}>
                 <ErrorBoundary>
                     <TextField 
-                    sx={{width: '100%'}}
+                    sx={{width: '100%', mb: '1px'}}
                     variant='filled'
                     value={value}
                     placeholder={'Search'}
                     onChange={(e) => {setValue(e.target.value)}}
                     />
+                                    <Tabs {...props} value={value} setValue={setValue} />
+
                     {palettes[props.palette]}
                 </ErrorBoundary>
             </Box>
-            <Bottom>
-                <MenuIcon 
-                title="Fields" 
-                width={'54px'} 
-                handleClick={() => {props.setPalette('fields'); setValue('')}} 
-                selected={props.palette === 'fields'}
-                >
-                    <GridOn />
-                </MenuIcon>
-                <MenuIcon 
-                title="People" 
-                width={'54px'} 
-                handleClick={() => {props.setPalette('people'); setValue('')}} 
-                selected={props.palette === 'people'}
-                >
-                    <Group />
-                </MenuIcon>
-                <MenuIcon 
-                title="Other" 
-                width={'54px'} 
-                handleClick={() => {props.setPalette('other'); setValue('')}} 
-                selected={props.palette === 'other'}
-                >
-                    <OtherHouses />
-                </MenuIcon>
-            </Bottom>
+            
         </Box>
     )
 }
+
+// <Bottom>
+//                 <MenuIcon 
+//                 title="Fields" 
+//                 width={'54px'} 
+//                 handleClick={() => {props.setPalette('fields'); setValue('')}} 
+//                 selected={props.palette === 'fields'}
+//                 >
+//                     <GridOn />
+//                 </MenuIcon>
+//                 <MenuIcon 
+//                 title="People" 
+//                 width={'54px'} 
+//                 handleClick={() => {props.setPalette('people'); setValue('')}} 
+//                 selected={props.palette === 'people'}
+//                 >
+//                     <Group />
+//                 </MenuIcon>
+//                 <MenuIcon 
+//                 title="Other" 
+//                 width={'54px'} 
+//                 handleClick={() => {props.setPalette('other'); setValue('')}} 
+//                 selected={props.palette === 'other'}
+//                 >
+//                     <OtherHouses />
+//                 </MenuIcon>
+//             </Bottom>

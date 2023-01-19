@@ -1,9 +1,9 @@
 // MUI Resources
-import { CssBaseline, Box, Typography, Paper } from '@mui/material';
 import { ThemeProvider } from '@emotion/react';
+import { CssBaseline, Paper, Typography } from '@mui/material';
 
 // Project Resources
-import Nav from '../components/Nav.js'
+import Nav from '../components/Nav.js';
 import { mTheme } from '../resources/Themes.js';
 
 

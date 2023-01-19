@@ -64,7 +64,7 @@ function User(props) {
                         <Typography m={1}>
                             {data.roles ? `Role${data.roles.length > 1 ? 's' : ''}: ` +  data.roles.join(', ') : ''}
                         </Typography>
-                        <Typography m={1}>
+                        <Typography m={1} display={'none'}>
                             {data.email ? "Email: " + data.email : ''}
                         </Typography>
                         <Button variant="contained" color="secondary" sx={{display: 'none'}}>

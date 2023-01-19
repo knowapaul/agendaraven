@@ -3,24 +3,24 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 
 // MUI Resources
-import { AccountCircle, CalendarToday, DashboardCustomize, EventAvailable, Insights as InsightsIcon, Mail, Payments as PaymentsIcon, Logout } from '@mui/icons-material'
+import { ThemeProvider, useTheme } from '@emotion/react';
+import { AccountCircle, DashboardCustomize, Logout } from '@mui/icons-material';
 import CssBaseline from '@mui/material/CssBaseline';
+import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import Stack from '@mui/material/Stack'
-import { ThemeProvider } from '@emotion/react';
 
 // Project Resources
-import { bTheme } from '../resources/Themes';
-import Organizations from '../user-subpages/Organizations';
-import Inbox from '../user-subpages/Inbox.js';
-import Schedules from '../user-subpages/Schedules.js';
-import Availability from '../user-subpages/Availability.js';
-import Insights from '../user-subpages/Insights.js';
-import Payments from '../user-subpages/Payments.js';
-import Account from '../user-subpages/Account.js';
-import AuthCheck from '../components/AuthCheck';
 import { useLoaderData } from 'react-router-dom';
+import AuthCheck from '../components/AuthCheck';
 import DashModel from '../components/DashModel';
+import { wTheme } from '../resources/Themes';
+import Account from '../user-subpages/Account.js';
+import Availability from '../user-subpages/Availability.js';
+import Inbox from '../user-subpages/Inbox.js';
+import Insights from '../user-subpages/Insights.js';
+import Organizations from '../user-subpages/Organizations';
+import Payments from '../user-subpages/Payments.js';
+import Schedules from '../user-subpages/Schedules.js';
 
 
 // ["Inbox", <Mail color="secondary" />],
@@ -33,13 +33,19 @@ import DashModel from '../components/DashModel';
 
 // ["Account", <AccountCircle color="secondary" />],
 
+//   ["Account", <AccountCircle color="secondary" />],
+
+
+
 const menu = [
   ["My Organizations", <DashboardCustomize color="secondary" />],
-  ["", ""],
+  ["1", ""],
   ["Log Out", <Logout color="secondary" />]
 ]
 
 function Logo() {
+  const theme = useTheme();
+
   return (
     <Link to="/" style={{textDecoration: 'none'}}>
       <Stack
@@ -55,7 +61,7 @@ function Logo() {
         fontFamily: 'quicksand',
         fontWeight: 700,
         letterSpacing: '.3rem',
-        color: 'white',
+        color: theme.palette.text.secondary
         }}
         >
           AgendaRaven
@@ -85,7 +91,7 @@ export function Dashboard(props) {
 
   return (
     <AuthCheck >
-      <ThemeProvider theme={bTheme}>
+      <ThemeProvider theme={wTheme}>
         <CssBaseline />
           <DashModel 
           menuItems={menu} 

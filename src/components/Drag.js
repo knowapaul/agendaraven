@@ -34,22 +34,18 @@ export function Bucket(props) {
     const color = isOver ? theme.palette.warning.light : (canDrop ? theme.palette.success.main : theme.palette.background.default)
   
     return (
-        <div
-            ref={drop}
-            role={props.ariaRole}
-            style={{height: '100%'}}
+        <Box 
+        ref={drop}
+        role={props.ariaRole}
+        height={'100%'} 
+        style={{
+            backgroundColor: props.outlined ? null : color,
+            borderRight: props.outlined ? `3px solid ${color}` : null,
+            userSelect: 'none'
+        }}
         >
-            <Box 
-            height={'100%'} 
-            style={{
-                backgroundColor: props.outlined ? null : color,
-                borderLeft: props.outlined ? `3px solid ${color}` : null,
-                userSelect: 'none'
-            }}
-            >
-                {props.children}
-            </Box>
-        </div>
+            {props.children}
+        </Box>
     )
 }
 

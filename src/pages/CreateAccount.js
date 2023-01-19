@@ -3,58 +3,22 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 // MUI Resources
-import { Typography, Box } from "@mui/material";
 import { ArrowBack } from "@mui/icons-material";
+import { Box, Typography } from "@mui/material";
 
 // Project Resources
-import Form from "../components/Form";
-import Nav from '../components/Nav'
 import CenterForm from "../components/CenterForm";
-import { addUserAccount, getFirebase } from "../resources/Firebase";
+import Form from "../components/Form";
+import Nav from '../components/Nav';
+import { createNewAccount } from "../resources/Firebase";
 
 // Firebase Resources
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 
-
-function createNewAccount(auth, db, inData, navigate, setError) {
-    let data = Object.assign({}, inData)
-    createUserWithEmailAndPassword(auth, data.email, data.password)
-        .then((userCred) => {
-            const displayName = data.firstname + ' ' + data.lastname;
-            updateProfile(userCred.user, {displayName: displayName})
-                .then(() => {
-                    if (!data.schedulename) {
-                        data.schedulename = data.firstname
-                    }
-                    
-                    const acountInfo = {
-                        schedulename: data.schedulename,
-                        phonenumber: data.phonenumber
-                    }
-        
-                    return addUserAccount(acountInfo, auth.currentUser)
-                })
-                .then(() => {
-                    navigate('/dashboard')
-                })
-                .catch((error) => {
-                    alert(`The following error occured while creating your account. 
-                        It may affect the functionality of the site. ${error.message}`)
-                })
-        })
-        .catch((error) => {
-            setError(error.message)
-        })
-        
-        
-}
 
 export default function CreateAccount() {
     const [data, setData] = useState({});
     const navigate = useNavigate();
     const [error, setError] = useState()
-
-    const firebase = getFirebase();
 
     return (
         <div>
@@ -138,7 +102,7 @@ export default function CreateAccount() {
                 buttonText="Continue to Dashboard"
                 data={data}
                 setData={setData}
-                handleSubmit={() => {createNewAccount(firebase.auth, firebase.db, data, navigate, setError)}}
+                handleSubmit={() => {createNewAccount(data, navigate, setError)}}
                 formError={error}
                 />
             </CenterForm>

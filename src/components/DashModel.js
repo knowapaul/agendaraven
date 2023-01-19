@@ -99,6 +99,13 @@ export default function DashModel(props) {
                 },
               },
             },
+            MuiInputBase: {
+                styleOverrides: {
+                    root: {
+                        color: theme.palette.text.primary
+                    }
+                }
+            }
           },
         palette: {
             type: theme.palette.type,

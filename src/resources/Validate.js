@@ -1,5 +1,5 @@
 function email(input) {
-    const format = /^\w+@\w+\.\w+/;
+    const format = /^\S+@\S+\.\S+/;
     if (format.test(input)) {
         return [false, '']
     } else {

@@ -4,45 +4,76 @@ import { useState } from "react";
 
 // MUI Resources
 import { useTheme } from "@emotion/react";
-import { Download, Redo, Save, Undo } from "@mui/icons-material";
-import { Box, Chip, Paper, TextField, Typography } from "@mui/material";
+import { Save } from "@mui/icons-material";
+import { Backdrop, Box, Chip, Paper, SpeedDial, SpeedDialAction, SpeedDialIcon, Typography } from "@mui/material";
 
 // Project Resources
-import { MenuIcon } from './MenuIcon'
-import { saveSchedule } from "../resources/Firebase";
+import { MenuIcon } from './MenuIcon';
 
 // Other Resources
+
+// MUI Resources
+import { CalendarMonth, EventAvailable, Group, ImportantDevices } from "@mui/icons-material";
+
+
+// Other Resources
+
+function nameToURL(name) {
+    return name.toLowerCase().split(' ').join('')
+}
 
 
 export function Bottom(props) {
     const theme = useTheme();
+
+    const [ open, setOpen ] = useState(false);
+
+    const options = {
+        "Schedule": <CalendarMonth />,
+        "Forms": <EventAvailable />,
+        "Import": <ImportantDevices />,
+        "Availability":  <Group />
+    }
+    
     return (
-        <Box 
-        display={'flex'}
-        flexDirection='row'
-        sx={{ height: '54px' }}
-        >
-            <Box 
-            flex={0}
-            display={'flex'}
-            flexDirection={'row'}
-            >
-                {props.children}
-            </Box>
-            <Box
-            sx={{
-                backgroundColor: theme.palette.primary.main, 
-                flexGrow: 1
-            }}
-            elevation={0}
-            >
-                <Box sx={{float: 'right'}}>
-                    {props.right}
-                </Box>
-            </Box>
+        <Box>
+            <Backdrop open={open} sx={{display: {xs: 'initial', md: 'none'}}}/>
+            <SpeedDial
+                ariaLabel="Tab Selection"
+                direction="up"
+                icon={<SpeedDialIcon />}
+                sx={{ position: 'fixed', bottom: 16, right: 16}}
+                onClose={() => {setOpen(false)}}
+                onOpen={() => {setOpen(true)}}
+                open={open}
+                >
+                    {Object.keys(options).map(opt => (
+                        <SpeedDialAction
+                        key={opt}
+                        tooltipTitle={opt}
+                        tooltipOpen
+                        onClick={() => {props.setTab(nameToURL(opt)); setOpen(false)}} 
+                        selected={props.tab === nameToURL(opt)}
+                        icon={options[opt]}
+                        />
+                    ))}
+                </SpeedDial>
         </Box>
     )
 }
+
+{/* <Box
+sx={{
+    flexGrow: 1
+}}
+elevation={0}
+>
+    <Box sx={{float: 'right'}}>
+        <DeleteBucket fields={props.fields} setFields={props.setFields} />
+    </Box>
+</Box> */}
+
+
 /**
  * @param  {Map} props
  * 
@@ -83,22 +114,25 @@ export function Top(props) {
                 flexDirection={'row'}
                 >
                     <Chip label="Not Saved" sx={{margin: 'auto'}} color={'error'} />
-                    <MenuIcon title="Undo">
-                        <Undo />
-                    </MenuIcon>
-                    <MenuIcon title="Redo">
-                        <Redo />
-                    </MenuIcon>
                     <MenuIcon title="Save"
                     handleClick={props.save}
                     >
                         <Save />
                     </MenuIcon>
-                    <MenuIcon title="Download">
-                        <Download/> 
-                    </MenuIcon>
+                    
                 </Box>
             </Paper>
         </Box>
     )
 }
+
+{/* <MenuIcon title="Undo">
+        <Undo />
+    </MenuIcon>
+    <MenuIcon title="Redo">
+        <Redo />
+    </MenuIcon> 
+    <MenuIcon title="Download">
+        <Download/> 
+    </MenuIcon>
+                */}
