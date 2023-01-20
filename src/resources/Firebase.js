@@ -234,7 +234,43 @@ export function setMemo(org, title, contents) {
     )
 }
 
-export function saveSchedule(org, title, data) {
+export function saveAvailability(org, schedule, data, otherUser) {
+    console.log('saveavailability')
+
+    console.log('dat', data)
+
+    const writeEmail = otherUser || auth.currentUser.email;
+
+    reuseDocs[org + '/agenda/availability/' + writeEmail] = undefined;
+
+    console.log('writing', org + '/agenda/availability/' + writeEmail)
+
+    return setDoc(
+        doc(db, org + '/agenda/availability/' + writeEmail),
+        {[schedule]: data},
+        {merge: true}
+    )
+}
+
+export async function getAvailability(org, schedule, setAvailability) {
+    const data = await getData(org + '/agenda/availability/' + auth.currentUser.email)
+    setAvailability(data[schedule])
+}
+
+export async function getAllAvs(org, setAllAvs, refresh) {
+    console.log('getallavs')
+    if (allAvs && !refresh) {
+        setAllAvs(allAvs)
+    } else {
+        allAvs = {};
+        const q = query(collection(db, org + '/agenda/availability/'));
+        const snap = await getDocs(q);
+        snap.forEach(item => {allAvs[item.id] = item.data()})
+        setAllAvs(allAvs)
+    }
+}
+
+export function saveSchedule(org, title, data, published) {
     console.log('saveschedule')
 
     const description = (data) => (
@@ -253,51 +289,20 @@ export function saveSchedule(org, title, data) {
 
     const batch = writeBatch(db);
 
+    console.log('address', org + `/agenda/${published ? 'schedules' : 'unpublished'}/` + title)
 
-    batch.set(doc(db, org + '/agenda/schedules/' + title), data, {merge: true})
-    batch.set(doc(db, org + '/agenda'), {[title]: {title: title, description: description(data), subtitle: data.type }}, {merge: true})
+    batch.set(doc(db, org + `/agenda/${published ? 'schedules' : 'unpublished'}/` + title), data, {merge: true})
+    if (published) {
+        batch.set(doc(db, org + '/agenda'), {[title]: {title: title, description: description(data), subtitle: data.type }}, {merge: true})
+    }
 
     return batch.commit();
 }
 
-export function saveAvailability(org, schedule, data) {
-    console.log('saveavailability')
-
-    console.log('dat', data)
-
-    reuseDocs[org + '/agenda/availability/' + auth.currentUser.email] = undefined;
-
-    console.log('writing', org + '/agenda/availability/' + auth.currentUser.email)
-
-    return setDoc(
-        doc(db, org + '/agenda/availability/' + auth.currentUser.email),
-        {[schedule]: data},
-        {merge: true}
-    )
-}
-
-export async function getAvailability(org, schedule, setAvailability) {
-    const data = await getData(org + '/agenda/availability/' + auth.currentUser.email)
-    setAvailability(data[schedule])
-}
-
-export async function getAllAvs(org, setAllAvs) {
-    console.log('getallavs')
-    if (allAvs) {
-        setAllAvs(allAvs)
-    } else {
-        allAvs = {};
-        const q = query(collection(db, org + '/agenda/availability/'));
-        const snap = await getDocs(q);
-        snap.forEach(item => {allAvs[item.id] = item.data()})
-        setAllAvs(allAvs)
-    }
-}
-
-export async function getSchedule(org, title) {
+export async function getSchedule(org, title, unpublished, refresh) {
     console.log('getschedule')
 
-    const data = await getData(org + '/agenda/schedules/' + title);
+    const data = await getData(org + `/agenda/${unpublished ? 'unpublished' : 'schedules'}/` + title, refresh);
 
     return data;
 }

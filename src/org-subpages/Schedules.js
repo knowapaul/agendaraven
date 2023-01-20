@@ -63,9 +63,11 @@ function View(props) {
             timestamp: new Date().toString()
         })
             .then(() => {
+                console.log('sucess!')
                 navigate(`/soar/${props.org}/${data.schedulename}`)
             })
             .catch((e) => {
+                console.log(e)
                 setError(e.message)
             })
     }

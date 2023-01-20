@@ -58,6 +58,9 @@ service cloud.firestore {
         allow read, write: if isMember(org) && isOwner(email);
         allow read, write: if isAdmin(org);
       }
+      match /unpublished/{sch} {
+         allow read, write: if isAdmin(org);
+      }
     }
 
     function isOwner(email) {

@@ -68,7 +68,7 @@ export default function Login(props) {
                     required: true
                     },
                 ]}
-                buttonText="Continue to Dashboard"
+                buttonText="Login and Continue"
                 handleSubmit={(event) => {
                     SignIn(getFirebase().auth, fields, setError)
                 }}

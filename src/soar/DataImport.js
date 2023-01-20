@@ -22,12 +22,8 @@ export default function DataImport(props) {
         props.setFields(props.fields.concat(header.split('\t')))
         props.setItems(props.items.concat(newRows))
         props.setTab('schedule')
-        console.log('fields', props.fields)
-        console.log( 'items', props.items)
     }
 
-    console.log('fields', props.fields)
-        console.log( 'items', props.items)
 
     return (
         <Box sx={{padding: 1, height: 'calc(100% - 16px)', overflow: 'auto'}}>

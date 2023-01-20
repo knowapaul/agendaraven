@@ -4,7 +4,7 @@ import { useState } from "react";
 
 // MUI Resources
 import { useTheme } from "@emotion/react";
-import { Save } from "@mui/icons-material";
+import { Public, Save, ViewAgenda } from "@mui/icons-material";
 import { Backdrop, Box, Chip, Paper, SpeedDial, SpeedDialAction, SpeedDialIcon, Typography } from "@mui/material";
 
 // Project Resources
@@ -62,18 +62,6 @@ export function Bottom(props) {
     )
 }
 
-{/* <Box
-sx={{
-    flexGrow: 1
-}}
-elevation={0}
->
-    <Box sx={{float: 'right'}}>
-        <DeleteBucket fields={props.fields} setFields={props.setFields} />
-    </Box>
-</Box> */}
-
-
 /**
  * @param  {Map} props
  * 
@@ -115,9 +103,14 @@ export function Top(props) {
                 >
                     <Chip label="Not Saved" sx={{margin: 'auto'}} color={'error'} />
                     <MenuIcon title="Save"
-                    handleClick={props.save}
+                    handleClick={() => {props.save(false)}}
                     >
                         <Save />
+                    </MenuIcon>
+                    <MenuIcon title="Publish"
+                    handleClick={() => {props.save(true)}}
+                    >
+                        <Public />
                     </MenuIcon>
                     
                 </Box>

@@ -25,13 +25,10 @@ export default function Account(props) {
             setSch(data.info.schedulename)
         })
         setName(getFirebase().auth.currentUser.displayName)
-        console.log('theme', theme)
     }, [])
 
     function handleChangePassword() {
-        console.log('changing password')
         if (pass === conf && pass.length > 8) {
-            console.log('ok')
             handleUpdatePassword(pass)
                 .then(() => {
                     setMessage('Password successfully changed')
@@ -42,7 +39,6 @@ export default function Account(props) {
                     setSeverity('error')
                 })
         } else {
-            console.log('not ok')
         }
     }
 

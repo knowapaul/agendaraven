@@ -6,55 +6,10 @@ import { Box, Menu, MenuItem, Typography } from "@mui/material";
 
 // Other Resources
 import { useState } from "react";
-import { ErrorBoundary } from "../components/ErrorBoundary";
-import { FieldBucket, PersonBucket } from './Buckets';
+import { ErrorBoundary } from "../../components/ErrorBoundary";
+import { DisplayItem, FieldBucket, PersonBucket } from './Objects';
 import { Palette } from "./Palettes";
 
-
-function Item(props) {
-    const handleDelete = () => {
-        let adapted = [...props.items];
-        delete adapted[props.index][props.field];
-        props.setItems(adapted)
-    }
-
-
-    const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  return (
-    <div>
-      <Typography
-        id="basic-button"
-        aria-controls={open ? 'basic-menu' : undefined}
-        aria-haspopup="true"
-        aria-expanded={open ? 'true' : undefined}
-        onClick={handleClick}
-        sx={{textTransform: 'none', margin: 'auto'}}
-      >
-        {props.row[props.field]}
-      </Typography>
-      <Menu
-        id="basic-menu"
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        MenuListProps={{
-          'aria-labelledby': 'basic-button',
-        }}
-      >
-        <Typography variant="subtitle1" fontWeight={'bold'} sx={{mx: 2}}>{'Item "' + props.row[props.field] + '"'}</Typography>
-        <MenuItem onClick={handleDelete} sx={{minWidth: '100px'}}><DeleteForeverOutlined sx={{mr: 1, ml: 0}}/> Delete</MenuItem>
-      </Menu>
-    </div>
-  )
-}
 
 function RowHandle(props) {
     const [anchorEl, setAnchorEl] = useState(null);
@@ -93,10 +48,8 @@ function RowHandle(props) {
     )
 }
 
-function DisplaySchedule(props) {
-    
+function DisplaySchedule(props) { 
     return (
-        
         <Box display={'flex'} flexDirection={'row'} height={'100%'} width={'100%'}  overflow={'auto'}>
             {
                 props.fields[0]
@@ -105,15 +58,19 @@ function DisplaySchedule(props) {
                     <thead>
                         <tr>
                             <th>
-                                <FieldBucket index={-1} fields={props.fields} setFields={props.setFields} ><Box width='100%' height={'100%'} >-</Box></FieldBucket>
+                                <FieldBucket 
+                                index={-1} 
+                                {...props}
+                                >
+                                    <Box width='100%' height={'100%'} >-</Box>
+                                </FieldBucket>
                             </th>
                             {props.fields.map((field, oIndex) => (
                                 <th key={field}>
                                     <FieldBucket 
                                     item={field}
-                                    fields={props.fields} 
-                                    setFields={props.setFields} 
                                     index={oIndex}
+                                    {...props}
                                     outlined
                                     />
                                 </th>
@@ -132,14 +89,13 @@ function DisplaySchedule(props) {
                                         <td key={field} style={{border: '1px solid black', padding: 2 }}>
                                             {row[field]
                                             ?
-                                            <Item {...props} row={row} index={iIndex} field={field}/>
+                                            <DisplayItem {...props} row={row} index={iIndex} field={field}/>
                                             :
                                             <PersonBucket 
                                             item={row[field]}
-                                            items={props.items} 
-                                            setItems={props.setItems} 
                                             index={iIndex}
                                             parent={field}
+                                            {...props}
                                             />
                                             }
                                         </td>
@@ -158,8 +114,7 @@ function DisplaySchedule(props) {
                                     index={props.items.length}
                                     parent={field}
                                     item={props.items[props.items.length]}
-                                    items={props.items} 
-                                    setItems={props.setItems} 
+                                    {...props}
                                     />
                                 </td>
                             ))}

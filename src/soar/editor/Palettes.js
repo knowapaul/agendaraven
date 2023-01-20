@@ -7,14 +7,16 @@ import { GridOn, Group, OtherHouses } from "@mui/icons-material";
 import { Box, Button, Grid, Paper, Switch, TextField, Tooltip, Typography } from "@mui/material";
 
 // Project Resources
-import { Drag } from "../components/Drag";
-import { searchSort } from "../resources/SearchSort";
+import { searchSort } from "../../resources/SearchSort";
+import { DraggablePerson } from './Objects'
 
 
 // Other Resources
 import { Stack } from "@mui/system";
-import { ErrorBoundary } from "../components/ErrorBoundary";
-import { getPeople } from "../resources/Firebase";
+import { ErrorBoundary } from "../../components/ErrorBoundary";
+import { getPeople } from "../../resources/Firebase";
+
+import { Drag } from "./Objects";
 
 
 function ItemsPalette(props) {
@@ -32,18 +34,7 @@ function ItemsPalette(props) {
                 const firstName = key.split(' ')[0][0].toUpperCase() + key.split(' ')[0].slice(1).toLowerCase();
                 return (
                     <Grid key={key}  item sx={{margin: 1}}>
-                        <Drag type="person" id={people[key].schedulename} >
-                            <Typography 
-                            variant='body1'
-                            >
-                                {firstName}
-                            </Typography>
-                            <Typography 
-                            variant='body2'
-                            >
-                                {key.toUpperCase().split(' ')[1]}
-                            </Typography>
-                        </Drag>
+                        <DraggablePerson person={key} people={people} {...props} />
                     </Grid>
                 )
             })}
@@ -97,10 +88,6 @@ function FieldsPalette(props) {
     )
 }
 
-function Tab(props) {
-
-}
-
 function Tabs(props) {
     const options = {
         Fields: <GridOn />,
@@ -142,7 +129,7 @@ export function Palette(props) {
     const fieldItems = ['Time', 'Place', 'Day'];
 
     const palettes = {
-        people: <ItemsPalette org={props.org} firebase={props.firebase} value={value} />,
+        people: <ItemsPalette {...props} value={value} />,
         fields: <FieldsPalette value={value} dragItems={fieldItems} palette={props.palette} fields={props.fields}/>,
         other: <OtherPalette value={value} />
     }
@@ -161,7 +148,7 @@ export function Palette(props) {
                     placeholder={'Search'}
                     onChange={(e) => {setValue(e.target.value)}}
                     />
-                                    <Tabs {...props} value={value} setValue={setValue} />
+                        <Tabs {...props} value={value} setValue={setValue} />
 
                     {palettes[props.palette]}
                 </ErrorBoundary>
@@ -170,30 +157,3 @@ export function Palette(props) {
         </Box>
     )
 }
-
-// <Bottom>
-//                 <MenuIcon 
-//                 title="Fields" 
-//                 width={'54px'} 
-//                 handleClick={() => {props.setPalette('fields'); setValue('')}} 
-//                 selected={props.palette === 'fields'}
-//                 >
-//                     <GridOn />
-//                 </MenuIcon>
-//                 <MenuIcon 
-//                 title="People" 
-//                 width={'54px'} 
-//                 handleClick={() => {props.setPalette('people'); setValue('')}} 
-//                 selected={props.palette === 'people'}
-//                 >
-//                     <Group />
-//                 </MenuIcon>
-//                 <MenuIcon 
-//                 title="Other" 
-//                 width={'54px'} 
-//                 handleClick={() => {props.setPalette('other'); setValue('')}} 
-//                 selected={props.palette === 'other'}
-//                 >
-//                     <OtherHouses />
-//                 </MenuIcon>
-//             </Bottom>

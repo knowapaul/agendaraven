@@ -10,7 +10,7 @@ import { useTheme } from "@emotion/react";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { CustomSnackbar } from "../components/CustomSnackbar";
 import { NavButton, SubNav } from "../components/SubNav";
-import { getAvailability, getSchedule, saveAvailability } from "../resources/Firebase";
+import { getAvailability, getFirebase, getPeople, getSchedule, saveAvailability } from "../resources/Firebase";
 import { cTheme, wTheme } from "../resources/Themes";
 
 
@@ -18,10 +18,7 @@ function AvForm(props) {
     const theme = useTheme();
     const [ data, setData ] = useState({})
     const [ open, setOpen ] = useState(false);
-
-    console.log('theme', theme)
-    console.log('avs')
-
+    
     useEffect(() => {
         getAvailability(props.org, props.title, setData)
     }, []);
@@ -106,10 +103,44 @@ function InfoButton(props) {
     );
 }
 
+function ScheduleItem(props) {
+    const theme = useTheme();
+    let displayText = props.row[props.field];
+    let highlight;
+    try {
+        if (props.data.cats[props.field] === 'person') {
+            displayText = props.people[props.row[props.field]].schedulename
+            // console.log('1, 2', props.people[props.row[props.field]].email, getFirebase().auth.currentUser.email )
+            if (props.people[props.row[props.field]].email === getFirebase().auth.currentUser.email) {
+                highlight = theme.palette.success.light;
+            }
+        } else if (props.data.cats[props.field] === 'time') {
+            let iDate = new Date();
+            let text = props.row[props.field].split(':');
+            iDate.setHours(text[0], text[1], 0, 0)
+            let out = iDate.toLocaleString('en-US', {timeStyle: 'short'});
+            displayText = isNaN(iDate.getTime()) ? props.cats[props.field] : out
+        }
+    } catch (valueError) {
+        console.log("not working: ", valueError)
+    }
+    if (!displayText) {
+        displayText = '---'
+    }
+    return (
+        <Box xs={6} display='flex' flexDirection={'row'} sx={{backgroundColor: highlight}}>
+            <Typography sx={{margin: 'auto', padding: '3px', textAlign: 'center'}} variant={"body1"}>
+                {displayText}
+            </Typography>
+        </Box>
+    )
+}
+
 function Internal() {
     const theme = useTheme();
     
     const [ openBottom, setOpenBottom ] = useState(true);
+    const [ people, setPeople ] = useState(true);
 
     
     const [ data, setData ] = useState();
@@ -131,8 +162,10 @@ function Internal() {
                 )
                 
     useEffect(() => {
-        getSchedule(load.org, load.sch).then(data => { setData(data) })
-    })
+        getSchedule(load.org, load.sch).then(data => { setData(data) });
+        getPeople(load.org, setPeople)
+    }, [])
+
     return (
         data ?
         <Box>
@@ -186,16 +219,7 @@ function Internal() {
                                         <tr key={'row' + iIndex}>
                                             {data.fields.map((field, oIndex) => (
                                                 <td key={oIndex + ',' + iIndex} style={{border: `1px solid ${theme.palette.primary.main}`, }}>
-                                                    <Box xs={6} display='flex' flexDirection={'row'} >
-                                                        <Typography sx={{margin: 'auto', padding: '3px', textAlign: 'center'}} variant={"body1"}>
-                                                            {row[field]
-                                                            ? 
-                                                            row[field]
-                                                            :
-                                                            '---'
-                                                        }
-                                                        </Typography>
-                                                    </Box>
+                                                    <ScheduleItem field={field} row={row} data={data} people={people} />
                                                 </td>
                                             ))
                                         }

@@ -8,7 +8,7 @@ import { Box } from "@mui/material";
 
 // Project Resources
 import { cTheme } from "../resources/Themes";
-import { Schedule } from './Schedule';
+import { Schedule } from './editor/Schedule';
 
 // Other Resources
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -17,7 +17,7 @@ import AdminCheck from "../components/AdminCheck";
 import AuthCheck from "../components/AuthCheck";
 import { CustomSnackbar } from "../components/CustomSnackbar";
 import { ErrorBoundary } from "../components/ErrorBoundary";
-import { getSchedule, saveSchedule } from "../resources/Firebase";
+import { getAllAvs, getPeople, getSchedule, saveSchedule } from "../resources/Firebase";
 import AvFields from "./AvFields";
 import DataImport from "./DataImport";
 import { Bottom, Top } from './Headers';
@@ -57,23 +57,36 @@ export default function Soar() {
     const [ avFields, setAvFields ] = useState([]);
     const [ avDate, setAvDate ] = useState('');
 
+    const [ avs, setAllAvs ] = useState();
+    const [ people, setPeople ] = useState();
+
+    const [ highlight, setHighlight ] = useState();
+
     const [ tab, setTab ] = useState('schedule');
+
+    const [ cats, setCats ] = useState({});
 
     const load = useLoaderData();
     const org = load.org;
 
-    useEffect(() => {
-        getSchedule(org, load.sch).then((data) => {
+    function getData() {
+        getSchedule(org, load.sch, true, true).then((data) => {
             setTitle(data.title)
             setType(data.type)
             setFields(data.fields)
             setItems(data.contents)
-            setAvFields(data.avFields)
-            setAvDate(data.avDate)
+            if (data.avFields) {setAvFields(data.avFields)}
+            if (data.avDate) {setAvDate(data.avDate)}
+            if (data.cats) {setCats(data.cats)}
         })
+    }
+    useEffect(() => {
+        getData()
+        getAllAvs(org, setAllAvs);
+        getPeople(org, setPeople)
     }, [])
 
-    function save() {
+    function save(publish) {
         // Remove empty rows
         let ol = []
         for (let i in items) {
@@ -82,22 +95,37 @@ export default function Soar() {
             }
         }
 
+        console.log('fields', fields)
+
         const data = {
             type: type,
             fields: fields,
             contents: ol,
             avFields: avFields,
             avDate: avDate,
+            cats: cats,
             timestamp: new Date().toString()
         }
         
         saveSchedule(org, title, data)
             .then(() => {
-                setOpen(true)
+                console.log('publish', publish)
+                if (publish) {
+                    return saveSchedule(org, title, data, true)
+                } else {
+                    return false;
+                }
             })
+            .then(() => {
+                setOpen(true)
+                getData()
+            })
+        
+        
     }
 
-    const inProps = {
+    // Pass all schedule related states to children
+    const universalProps = {
         org: org,
         sch: load.sch, 
 
@@ -121,9 +149,20 @@ export default function Soar() {
         
         palette: palette,
         setPalette: setPalette,
+
+        cats: cats,
+        setCats: setCats,
+
+        highlight, 
+        setHighlight, 
+
+        avs: avs,
+        setAllAvs: setAllAvs,
+        people: people,
         
         avDate: avDate,
         setAvDate: setAvDate,
+
         save: save,
 
         setTab: setTab
@@ -131,10 +170,10 @@ export default function Soar() {
 
 
     const tabs = {
-        schedule: <Schedule {...inProps} />,
-        forms: <AvFields {...inProps} />, 
-        import: <DataImport {...inProps} />,
-        availability: <PeopleAvs {...inProps} />
+        schedule: <Schedule {...universalProps} />,
+        forms: <AvFields {...universalProps} />, 
+        import: <DataImport {...universalProps} />,
+        availability: <PeopleAvs {...universalProps} />
     }
 
     return (
@@ -143,13 +182,13 @@ export default function Soar() {
                 <AdminCheck org={org} helperText={"Sorry, this page is for authorized viewers only."}>
                     <DndProvider backend={HTML5Backend}>
                         <Box width='100%' margin={0} height={'calc(100% - 64px)'} position={'fixed'} top='0px' left='0px'>
-                            <Top {...inProps} />
+                            <Top {...universalProps} />
                             <ErrorBoundary>
                                 <Box height={{xs: '100%'}} width={'100%'} >
                                     {tabs[tab]}
                                 </Box>
                             </ErrorBoundary>
-                            <Bottom {...inProps} />
+                            <Bottom {...universalProps} />
                         </Box> 
                     </DndProvider>      
                 </AdminCheck>
