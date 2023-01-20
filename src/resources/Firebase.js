@@ -95,6 +95,7 @@ export function createNewAccount(inData, navigate, setError) {
 }
 
 async function getData(path, refresh) {
+    console.log('getData', path)
     try {
         if (reuseDocs[path] && !refresh) {
             savedCalls++;
@@ -139,8 +140,6 @@ export function addUserAccount(data, user) {
 }
 
 export async function getSubscriptions(org, email) {
-    console.log('getsubscriptions')
-
     return await getData(org + '/chat/docs/' + email);
 }
 
@@ -154,14 +153,11 @@ export async function getChatMessaging(location, setMessages) {
 }
 
 export async function getUserData() {
-    console.log('getuserdata')
     return await getData('users/' + auth.currentUser.uid);
 }
 
 // TODO: look at this
 export async function getRolesDoc(org, setDoc, setLoading, refresh) {
-    console.log('getrolesdoc')
-
     setLoading(true)
 
     let data;
@@ -178,8 +174,6 @@ export async function getRolesDoc(org, setDoc, setLoading, refresh) {
 }
 
 export async function getPeople(org, setPeople) {
-    console.log('getpeople')
-
     const people = await getData(org + '/chat');
 
     let adaptedPeople = {};
@@ -212,8 +206,6 @@ export async function checkAdmin(org, setIsAdmin) {
 }
 
 export async function getMemo(org, setTitle, setPerson, setContents) {
-    console.log('getmemo')
-
     const data = await getData(org + '/public');
 
     setTitle(data.title)
@@ -258,7 +250,6 @@ export async function getAvailability(org, schedule, setAvailability) {
 }
 
 export async function getAllAvs(org, setAllAvs, refresh) {
-    console.log('getallavs')
     if (allAvs && !refresh) {
         setAllAvs(allAvs)
     } else {
@@ -300,16 +291,12 @@ export function saveSchedule(org, title, data, published) {
 }
 
 export async function getSchedule(org, title, unpublished, refresh) {
-    console.log('getschedule')
-
     const data = await getData(org + `/agenda/${unpublished ? 'unpublished' : 'schedules'}/` + title, refresh);
 
     return data;
 }
 
 export async function getAllSchedules(org, setContents) {
-    console.log('getallschedules')
-
     const data = await getData(org + '/agenda');
     
     if (data) {

@@ -221,8 +221,8 @@ export function FieldBucket(props) {
             {props.cats && props.item ? 
                 props.cats[props.item] === 'time' ?
                 [
-                    <MenuItem onClick={() => {convertTimesTo('AM')}}><PunchClock sx={{mr: 1, ml: 0}}/> Set all to AM</MenuItem>,
-                    <MenuItem onClick={() => {convertTimesTo('PM')}}><PunchClock sx={{mr: 1, ml: 0}}/> Set all to PM</MenuItem>
+                    <MenuItem key={'AM'} onClick={() => {convertTimesTo('AM')}}><PunchClock sx={{mr: 1, ml: 0}}/> Set all to AM</MenuItem>,
+                    <MenuItem key={'PM'} onClick={() => {convertTimesTo('PM')}}><PunchClock sx={{mr: 1, ml: 0}}/> Set all to PM</MenuItem>
                 ]
                 :
                 ''
@@ -274,7 +274,11 @@ export function DisplayItem(props) {
     let displayText = props.row[props.field];
     if (props.cats) {
         if (props.cats[props.field] === 'person') {
-            displayText = props.people[props.row[props.field]].schedulename;
+            try {
+                displayText = props.people[props.row[props.field]].schedulename;
+            } catch (typeError) {
+                console.log(typeError.message)
+            }
         } else if (props.cats[props.field] === 'time') {
             let iDate = new Date();
             let text = props.row[props.field].split(':');
@@ -335,8 +339,6 @@ export function DraggablePerson(props) {
     }
 
     if (!personAv) {personAv = {}}
-
-    console.log('personav', personAv)
 
     return (
         <Drag type="person" id={props.person} handleClick={onDrag}>

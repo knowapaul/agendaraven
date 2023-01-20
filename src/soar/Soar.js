@@ -70,7 +70,9 @@ export default function Soar() {
     const org = load.org;
 
     function getData() {
+        console.log('running...', org, load.sch)
         getSchedule(org, load.sch, true, true).then((data) => {
+            console.log('data', data)
             setTitle(data.title)
             setType(data.type)
             setFields(data.fields)
@@ -106,6 +108,8 @@ export default function Soar() {
             cats: cats,
             timestamp: new Date().toString()
         }
+
+        console.log('savedata', data)
         
         saveSchedule(org, title, data)
             .then(() => {

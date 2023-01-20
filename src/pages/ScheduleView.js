@@ -186,7 +186,7 @@ function Internal() {
                 <InfoButton title={data.type} description={description(data)} />
             }
             />
-            <Box height='calc(100vh - 64px - 57.5px)' overflow='auto' >
+            <Box height='calc(100vh - 57.5px)' overflow='auto' >
                 <Box padding={1} pb={0} sx={{display: {xs: 'none', md: 'block'}}}>
                     <Typography whiteSpace={'break-spaces'} >
                         {description(data)}
