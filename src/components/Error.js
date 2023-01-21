@@ -46,7 +46,7 @@ export default function Error(props) {
             <Nav />
             <ThemeProvider theme={mTheme}>
                 <CssBaseline />
-                <Paper sx={{padding: 3, mt: 10}}>
+                <Paper sx={{padding: 3, margin: 3}}>
                     <Typography variant="h6" sx={{mb: 3}}>
                         Sorry, an error has occured
                     </Typography>

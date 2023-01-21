@@ -69,6 +69,11 @@ export default function Soar() {
     const load = useLoaderData();
     const org = load.org;
 
+    // window.onbeforeunload = confirmExit;
+    // function confirmExit() {
+    //     return "You have attempted to leave this page.  If you have made any changes to the fields without clicking the Save button, your changes will be lost.  Are you sure you want to exit this page?";
+    // }
+
     function getData() {
         console.log('running...', org, load.sch)
         getSchedule(org, load.sch, true, true).then((data) => {

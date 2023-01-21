@@ -11,6 +11,7 @@ import { getUserData } from "../resources/Firebase";
 import Nav from "./Nav";
 import { ThemeProvider } from "@emotion/react";
 import { bTheme, mTheme } from "../resources/Themes";
+import Error404 from "./404";
 
 
 export default function OrgCheck(props) {
@@ -26,16 +27,7 @@ export default function OrgCheck(props) {
         (
             Object.keys(orgs).includes(props.org) ? props.children
             :
-            <ThemeProvider theme={mTheme}>
-                <CssBaseline />
-                <Nav />
-                <Paper sx={{margin: 2, padding: 2}}>
-                    <Typography>
-                        Sorry, you are not able to view this page. It might be an organization that you do not have permission to access,
-                        or it might be an incorrectly typed link.
-                    </Typography>
-                </Paper>
-            </ThemeProvider>
+            <Error404 />
         )
     )
 }

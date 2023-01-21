@@ -12,6 +12,8 @@ import { CustomSnackbar } from "../components/CustomSnackbar";
 import { NavButton, SubNav } from "../components/SubNav";
 import { getAvailability, getFirebase, getPeople, getSchedule, saveAvailability } from "../resources/Firebase";
 import { cTheme, wTheme } from "../resources/Themes";
+import OrgCheck from '../components/OrgCheck'
+import AuthCheck from "../components/AuthCheck";
 
 
 function AvForm(props) {
@@ -167,74 +169,39 @@ function Internal() {
     }, [])
 
     return (
-        data ?
-        <Box>
-            <SubNav 
-            title={load.sch}
-            left={
-                <NavButton handleClick={() => {navigate(`/${load.org}/schedules/`)}} variant={'contained'} sx={{m: 1}}>
-                <ArrowBack sx={{mr: 1}}/>
-                <Typography
-                sx={{display: {xs: 'none', sm: 'block'}}}
-                noWrap
-                >
-                    Back
-                </Typography>
-            </NavButton>
-            }
-            right={
-                <InfoButton title={data.type} description={description(data)} />
-            }
-            />
-            <Box height='calc(100vh - 57.5px)' overflow='auto' >
-                <Box padding={1} pb={0} sx={{display: {xs: 'none', md: 'block'}}}>
-                    <Typography whiteSpace={'break-spaces'} >
-                        {description(data)}
-                    </Typography>
-                </Box>
-                
+        <AuthCheck>
+            <OrgCheck org={load.org}>
                 {
-                    (new Date() < new Date(data.avDate)) && !data.contents[0]
-                    ?
-                    <AvForm avFields={data.avFields} org={load.org} title={load.sch} />
-                    :
-                    <Box display={'flex'} flexDirection={'row'} ml='20px' margin={0} sx={{ padding: 1}}>
-                        <table style={{borderCollapse: 'collapse', }}>
-                            <thead>
-                                <tr>
-                                    {data.fields.map((field, oIndex) => (
-                                        <th key={field}>
-                                            <Typography sx={{mx: 1, fontWeight: 'bold'}}>
-                                                {field}
-                                            </Typography>
-                                        </th>
-                                    ))}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {
-                                    data.contents[0]
-                                    ?
-                                    data.contents.map((row, iIndex) => ((
-                                        <tr key={'row' + iIndex}>
-                                            {data.fields.map((field, oIndex) => (
-                                                <td key={oIndex + ',' + iIndex} style={{border: `1px solid ${theme.palette.primary.main}`, }}>
-                                                    <ScheduleItem field={field} row={row} data={data} people={people} />
-                                                </td>
-                                            ))
-                                        }
-                                        </tr>
-                                    )))
-                                    :
-                                    ''
-                                }
-                            </tbody>
-                        </table>
+                data ?
+                <Box height='100vh' overflow='auto'>
+                    <SubNav 
+                    title={load.sch}
+                    left={
+                        <NavButton handleClick={() => {navigate(`/${load.org}/schedules/`)}} variant={'contained'} sx={{m: 1}}>
+                        <ArrowBack sx={{mr: 1}}/>
+                        <Typography
+                        sx={{display: {xs: 'none', sm: 'block'}}}
+                        noWrap
+                        >
+                            Back
+                        </Typography>
+                    </NavButton>
+                    }
+                    right={
+                        <InfoButton title={data.type} description={description(data)} />
+                    }
+                    />
+                    <Box >
+                        <Box padding={1} pb={0} sx={{width: '100%', display: {xs: 'none', md: 'block'}}}>
+                            <Typography whiteSpace={'break-spaces'} >
+                                {description(data)}
+                            </Typography>
+                        </Box>
                         {
                             openBottom ?
-                            <Paper square sx={{position: 'absolute', bottom: 0, left: 0, display: {xs: 'flex', sm: 'none'}, backgroundColor: wTheme.palette.secondary.main, width: '100%'}}>
-                                <ErrorOutline sx={{my: 2, ml: 1}}/>
-                                <Typography sx={{m: 2, flex: 1}} variant='body1'>
+                            <Paper square sx={{ display: {xs: 'flex', sm: 'none'}, backgroundColor: wTheme.palette.secondary.main, width: '100%'}}>
+                                <ErrorOutline sx={{my: 1, ml: 1}}/>
+                                <Typography sx={{m: 1, flex: 1}} variant='body1'>
                                     Try turning your phone on it side for a better view
                                 </Typography>
                                 <IconButton
@@ -250,14 +217,56 @@ function Internal() {
                             :
                             ''
                         }
+                        
+                        {
+                            (new Date() < new Date(data.avDate)) && !data.contents[0]
+                            ?
+                            <AvForm avFields={data.avFields} org={load.org} title={load.sch} />
+                            :
+                            <Box display={'flex'} flexDirection={'row'} ml='20px' margin={0} sx={{ padding: 1}}>
+                                <table style={{borderCollapse: 'collapse', }}>
+                                    <thead>
+                                        <tr>
+                                            {data.fields.map((field, oIndex) => (
+                                                <th key={field}>
+                                                    <Typography sx={{mx: 1, fontWeight: 'bold'}}>
+                                                        {field}
+                                                    </Typography>
+                                                </th>
+                                            ))}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {
+                                            data.contents[0]
+                                            ?
+                                            data.contents.map((row, iIndex) => ((
+                                                <tr key={'row' + iIndex}>
+                                                    {data.fields.map((field, oIndex) => (
+                                                        <td key={oIndex + ',' + iIndex} style={{border: `1px solid ${theme.palette.primary.main}`, }}>
+                                                            <ScheduleItem field={field} row={row} data={data} people={people} />
+                                                        </td>
+                                                    ))
+                                                }
+                                                </tr>
+                                            )))
+                                            :
+                                            ''
+                                        }
+                                    </tbody>
+                                </table>
+                                
+                            </Box>
+                        }
                     </Box>
+        
+                </Box>
+                :
+                <Typography>Loading</Typography>
                 }
-            </Box>
-
-        </Box>
-        :
-        <Typography>Loading</Typography>
-        )
+            </OrgCheck>
+        </AuthCheck>
+    )
 }
 
 export function ScheduleView() {

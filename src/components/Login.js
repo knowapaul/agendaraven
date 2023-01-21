@@ -1,9 +1,9 @@
 // React Resources
 import { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 // MUI Resources
-import { Button, Typography } from "@mui/material"
+import { Button, Paper, Typography } from "@mui/material"
 
 // Project Resources
 import Form from "./Form"
@@ -81,6 +81,9 @@ export default function Login(props) {
                 onClick={() => {navigate('/createaccount')}}
                 >
                     Create Account
+                </Button>
+                <Button variant="outlined" onClick={() => {navigate('/forgotpassword')}}>
+                    Forgot Password?
                 </Button>
             </CenterForm>
         </div>

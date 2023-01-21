@@ -9,6 +9,7 @@ import { OrgDash, orgLoader } from './pages/OrgDash'
 import Loading from './components/Loading.js';
 import Error from './components/Error'
 import CreateAccount from './pages/CreateAccount.js'
+import Page404 from './components/404'
 
 // Firebase Resources
 import { initializeApp } from "firebase/app";
@@ -17,6 +18,8 @@ import Soar, { schLoader } from './soar/Soar.js';
 import { setApp } from './resources/Firebase.js';
 import Help from './pages/Help.js';
 import { ScheduleView } from './pages/ScheduleView.js';
+import ForgotPassword from './pages/ForgotPassword.js';
+
 
 // import { getAnalytics } from "firebase/analytics";
 
@@ -46,6 +49,8 @@ const router = createBrowserRouter([
   { errorElement: <Error />, path: "/dashboard/:page", element: <Dashboard />, loader: dashLoader},
   { errorElement: <Error />, path: "/dashboard", element: <Dashboard />, loader: dashLoader},
 
+  {errorElement: <Error />, path: '/forgotpassword', element: <ForgotPassword />},
+
   { errorElement: <Error />, path: "/:org/:page", element: <OrgDash page="home" />, loader: orgLoader},
 
   { errorElement: <Error />, path: "/:org/schedules/:sch", element: <ScheduleView />, loader: schLoader },
@@ -58,6 +63,8 @@ const router = createBrowserRouter([
   { errorElement: <Error />, path: "/soar/:org/:sch", element: <Soar />, loader: schLoader},
 
   { errorElement: <Error />, path: "/help", element: <Help /> },
+
+  { path: "*", element: <Page404 /> }
 
 ]);
    

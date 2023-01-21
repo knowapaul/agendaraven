@@ -4,7 +4,7 @@ import { useState } from "react";
 
 // MUI Resources
 import { useTheme } from "@emotion/react";
-import { Public, Save, ViewAgenda } from "@mui/icons-material";
+import { ArrowBack, Public, Save, ViewAgenda } from "@mui/icons-material";
 import { Backdrop, Box, Chip, Paper, SpeedDial, SpeedDialAction, SpeedDialIcon, Typography } from "@mui/material";
 
 // Project Resources
@@ -14,6 +14,7 @@ import { MenuIcon } from './MenuIcon';
 
 // MUI Resources
 import { CalendarMonth, EventAvailable, Group, ImportantDevices } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 
 // Other Resources
@@ -68,6 +69,7 @@ export function Bottom(props) {
  * props.db
  */
 export function Top(props) {
+    const navigate = useNavigate();
     return (
         <Box>
             <Paper 
@@ -102,6 +104,11 @@ export function Top(props) {
                 flexDirection={'row'}
                 >
                     <Chip label="Not Saved" sx={{margin: 'auto'}} color={'error'} />
+                    <MenuIcon title="Back"
+                    handleClick={() => {navigate(`/${props.org}/schedules/`)}}
+                    >
+                        <ArrowBack />
+                    </MenuIcon>
                     <MenuIcon title="Save"
                     handleClick={() => {props.save(false)}}
                     >

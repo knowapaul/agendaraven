@@ -43,8 +43,8 @@ export default function Help(props) {
                                 Your password must be longer than 8 characters.
                             </li>
                             <li>
-                                As of now, it is impossible to change any of your login credentials, so make sure that they are correct. Please 
-                                remember your password because I have not built a password recovery system yet!
+                                As of now, it is impossible to change any of your login credentials, so make sure that they are correct. You can recover
+                                your password if you inputed a correct email upon account creation.
                             </li>
                         </ul>
                     </li>

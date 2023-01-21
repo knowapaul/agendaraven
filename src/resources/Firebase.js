@@ -2,10 +2,12 @@
 import { collection, doc, getDoc, setDoc, getDocs, query, writeBatch } from "firebase/firestore"; 
 import { ref, getDownloadURL, uploadBytes, listAll } from "firebase/storage"; 
 
-import { getAuth, connectAuthEmulator, updateProfile, sendPasswordResetEmail, updatePassword, createUserWithEmailAndPassword, reauthenticateWithCredential, EmailAuthProvider } from "firebase/auth";
+import { getAuth, connectAuthEmulator, updateProfile, sendPasswordResetEmail, updatePassword, createUserWithEmailAndPassword, reauthenticateWithCredential, EmailAuthProvider, confirmPasswordReset } from "firebase/auth";
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
 import { getStorage, connectStorageEmulator } from "firebase/storage";
+import { getPerformance } from "firebase/performance";
+
 
 
 let countCalls = 0;
@@ -21,6 +23,7 @@ let auth;
 let db;
 let functions;
 let storage;
+let perf;
 
 
 export function setApp(app) {
@@ -32,6 +35,9 @@ export function setApp(app) {
     // connectFunctionsEmulator(functions, 'localhost', 5001);
     storage = getStorage(app);
     // connectStorageEmulator(storage, 'localhost', 9199);
+    perf = getPerformance(app);
+    console.log('perf', perf)
+
 }
 
 /** Wipes all saved document data and forces a refresh.
@@ -43,6 +49,14 @@ export function reloadAllDocs() {
 
 export function handleProfileUpdate(data)  {
     return updateProfile(auth.currentUser, data);
+}
+
+export function ForgotPassword(email) {
+    return sendPasswordResetEmail(auth, email)
+}
+
+export function resetPassword(oobCode, newPassword) {
+    return confirmPasswordReset(auth, oobCode, newPassword)
 }
 
 export async function handleUpdatePassword(oldPassword, newPassword) {
