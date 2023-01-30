@@ -10,8 +10,8 @@ working down the hierarchy to more advanced levels of the
 program. 
 
 <br>
-> *Carpe Diem* \
-> *Soli Deo gloria* 
+*Carpe Diem*
+*Soli Deo gloria* 
 <br>
 
 # Future Features ToDo List: 
