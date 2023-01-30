@@ -1,26 +1,23 @@
 # AgendaRaven
 
 This project is an idea for a comprehensive scheduling app. 
-It is currently not complete. The necessary changes for the
-app are divided into "tiers" which are listed below. These
-tiers should be worked on in order, starting at tier one and
-working down the hirearcy to more advanced levels of the
-program. At least 90% of one tier needs to be complete to 
-*start* the next tier, and **all** of a tier should be complete
-before beginning the tier that is two or more levels below it.
+It is currently deployed and in use at https://agendaraven.com, 
+but it is still under very active development. 
+Goals and features for future versions of the
+app are divided into "tiers" which are listed below. The features of 
+these tiers will be added in order, starting at tier one and
+working down the hierarchy to more advanced levels of the
+program. 
+
 <br>
-### **A few latin maxims to keep in mind**
-> **Use your opportunities** \
 > *Carpe Diem* \
-> **As with everything else in life** \
 > *Soli Deo gloria* 
-
 <br>
 
-# The Hireracy of TODOness: 
+# Future Features ToDo List: 
 
 (*"s" => started / "x" => complete*)
-1. **First Trial** 
+1. **First Trial** (Version 0.1 upon completion)
     - (x) Scheduler
     - (x) Schedules
     - (x) Login
@@ -29,10 +26,10 @@ before beginning the tier that is two or more levels below it.
     - (x) How-tos
     - (x) Availability
     - (x) Push to online
-2. **Basic Operation**
+2. **Basic Operation** (Version 0.1 upon completion)
     - (x) Add organization users
     - (x) Availability turnin
-    - () Bug testing
+    - (x) Bug testing
     - (x) Buletin board
     - (x) Contact page
     - (x) Dashboard Home
@@ -47,9 +44,9 @@ before beginning the tier that is two or more levels below it.
     - (x) Home page
     - (x) No broken links
     - (x) Org image upload
-    - () Schedule creation
+    - (x) Schedule creation
     - (x) Setup non-production protection
-    - () Private schedule changes
+    - (x) Private schedule changes
     - () Error reporting
 3. **Accessibility**
     - () Avatar images
@@ -57,15 +54,18 @@ before beginning the tier that is two or more levels below it.
     - () Better schedule viewing
     - () Dashboard calendar
     - () Firebase Cloud Messaging
+    - () Twilio SMS Reminders
     - () Flask capabilities
     - () Password changing
+    - (x) Make user emails private (use UIDs instead)
+    - (x) Password recovery
     - () Account details modification
     - () Terms & Conditions
     - () Analyze performance
-4. **Workflow**
+    - (x) Better schedule printing
+    - () Improve smartphone scrolling
+4. **Workflow** 
     - () Automatic notifications
-    - () How-to shorts (3)
-    - () Payments
-5. **Automation**
-    - () Schedule AI
+5. **Automation** (Version 1 upon completion)
+    - () Schedule AI or automatic scheduler
     - (x) Purchase "AgendaRaven.com"?

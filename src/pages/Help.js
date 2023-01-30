@@ -30,20 +30,16 @@ export default function Help(props) {
                                 Your email can only be used for one account.
                             </li>
                             <li>
-                                Your email will be automatically shared with all the other members of your organizations. This is required in 
-                                order to differentiate between users with similar names.
+                                The "Schedule Name" field is for your preferred name. If your preferred name is your first name, you can leave this field blank.
                             </li>
                             <li>
-                                The "Schedule Name" field is for your preferred name. If your preferred name is your first name, leave this field blank.
-                            </li>
-                            <li>
-                                Your phone number can be shared with your organization's administrators, but it is not public.
+                                Your organizations can send messages to your phone number, but it is not public.
                             </li>
                             <li>
                                 Your password must be longer than 8 characters.
                             </li>
                             <li>
-                                As of now, it is impossible to change any of your login credentials, so make sure that they are correct. You can recover
+                                As of now, it is impossible to change most of your credentials, so make sure that they are correct. However, you can recover
                                 your password if you inputed a correct email upon account creation.
                             </li>
                         </ul>
@@ -66,7 +62,7 @@ export default function Help(props) {
                         into the provided fields
                         <ul>
                             <li>
-                                Organization names do not have spaces. If there is a space in the organization name, use an underscore symbol "_".
+                                Organization names are case-sensitive.
                             </li>
                             <li>
                                 The join code can only consist of seven letters and numbers. Do not include the dash or any spaces.

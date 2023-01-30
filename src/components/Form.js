@@ -17,17 +17,19 @@ function cleanName(name) {
 class Input extends React.Component {
     constructor(props) {
         super(props);
+        const errorState = this.props.required && !this.props.data[cleanName(this.props.name)]
         this.state = {
-            value: '', 
             check: false,
-            error: this.props.required,
-            help: this.props.required ? 'Please complete this field' : ''
+            error: errorState,
+            help: errorState ? 'Please complete this field' : ''
         };
+
+        console.log(this.props.data[cleanName(this.props.name)])
 
         this.props.setErrors(
             Object.assign(
                 this.props.errors, 
-                {[this.props.name]: this.props.required}
+                {[this.props.name]: errorState}
             ))
     
         this.handleChange = this.handleChange.bind(this);
@@ -39,14 +41,19 @@ class Input extends React.Component {
     }
     
     handleChange(event) {
+        let prunedValue = event.target.value
+        if (this.props.validate === 'title') {
+            // Remove whitespace
+            prunedValue = prunedValue.replaceAll(/\s/g, '')
+        }
         const [error, help] = validate(
             this.props.validate, 
-            event.target.value, 
+            prunedValue, 
             this.props.password
         )
 
         this.setState({
-            value: event.target.value,
+            value: prunedValue,
             error: error,
             help: help
         });
@@ -61,7 +68,7 @@ class Input extends React.Component {
             this.props.setPassword(event.target.value)
         }
         
-        this.props.setData(Object.assign(this.props.data, {[cleanName(this.props.name)]: event.target.value}))
+        this.props.setData(Object.assign(this.props.data, {[cleanName(this.props.name)]: prunedValue}))
     }
 
     handleBlur(event) {
@@ -78,7 +85,7 @@ class Input extends React.Component {
             type={this.props.type} 
             required={this.props.required}
             multiline={this.props.multiline}
-            value={this.state.value} 
+            value={this.props.data[cleanName(this.props.name)]} 
             placeholder={this.props.placeholder}
             error={((this.state.check || this.props.check) && (this.state.error || error))}
             helperText={(this.state.check || this.props.check) ? help : ''}

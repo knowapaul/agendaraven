@@ -10,6 +10,7 @@ function email(input) {
     }
 }
 
+//TODO: Fix allowed period
 function phone(input) {
     const adapted = input.replaceAll(/((?!\w).)/g, '')
     const format = /^\d{10}$/i
@@ -37,6 +38,7 @@ function title(input) {
     }
 }
 
+// TODO: Fix this
 function schedule(input) {
     const format = /^\w{2,20}$/
     if (format.test(input) || input.length=== 0) {

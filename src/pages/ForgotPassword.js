@@ -26,9 +26,7 @@ export default function ForgotPassword(props) {
     const navigate = useNavigate();
 
     const queryString = window.location.search;
-    console.log(queryString);
     const urlParams = new URLSearchParams(queryString);
-    console.log('params', urlParams.get('not'))
 
     return (
         <ThemeProvider theme={mTheme}>

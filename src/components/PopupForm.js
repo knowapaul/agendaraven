@@ -16,13 +16,13 @@ export default function PopupForm(props) {
                 <ClickAwayListener onClickAway={() => {props.setOpen(false)}}>
                     <Paper
                     sx={{
-                        padding: 3, 
+                        padding: 'min(24px, 5%)',
                         pt: 0, 
                         backgroundColor: theme.palette.secondary.main,
                         width: props.width,
                     }}
                     >   
-                        <IconButton sx={{ml: -3, height: "32px", width: "32px", float: 'left'}} onClick={() => {props.setOpen(false)}}>
+                        <IconButton sx={{ml: 'max(-24px, -5%)', height: "32px", width: "32px", float: 'left'}} onClick={() => {props.setOpen(false)}}>
                             <CancelOutlined />
                         </IconButton>
                         <Typography

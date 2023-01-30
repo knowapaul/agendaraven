@@ -15,11 +15,11 @@ service cloud.firestore {
     match /{org}/chat {
       allow read: if isMember(org);
 
-      match /subscriptions/{email} {
-        allow read, write: if isOwner(email);
+      match /subscriptions/{uid} {
+        allow read, write: if isOwner(uid);
       }
       match /chats/{chatId} {
-        allow read, write: if resource.data.subs[request.auth.token.email];
+        allow read, write: if resource.data.subs[request.auth.uid];
       }
     }
 
@@ -31,8 +31,8 @@ service cloud.firestore {
         allow read, write: if isAdmin(org);
         allow read: if isMember(org);
       }
-      match /users/{email} {
-        allow get: if isOwner(email);
+      match /users/{uid} {
+        allow get: if isOwner(uid);
       }
     } 
     
@@ -54,8 +54,8 @@ service cloud.firestore {
         allow read, write: if isAdmin(org);
         allow read: if isMember(org);
       }
-      match /availability/{email} {
-        allow read, write: if isMember(org) && isOwner(email);
+      match /availability/{uid} {
+        allow read, write: if isMember(org) && isOwner(uid);
         allow read, write: if isAdmin(org);
       }
       match /unpublished/{sch} {
@@ -63,16 +63,16 @@ service cloud.firestore {
       }
     }
 
-    function isOwner(email) {
-    	return email == request.auth.token.email;
+    function isOwner(uid) {
+    	return uid == request.auth.uid;
     }
     function isMember(org) {
       //
-      return exists(/databases/$(database)/documents/$(org)/public/users/$(request.auth.token.email));
+      return exists(/databases/$(database)/documents/$(org)/public/users/$(request.auth.uid));
     }
     function isAdmin(org) {
       //
-      return get(/databases/$(database)/documents/$(org)/public/users/$(request.auth.token.email)).data.admin;
+      return get(/databases/$(database)/documents/$(org)/public/users/$(request.auth.uid)).data.admin;
     }
   }
 }

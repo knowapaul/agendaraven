@@ -13,8 +13,7 @@ function Person(props) {
 
     let iAv;
     if (props.avs) {
-        iAv = props.avs[props.people[props.person].email]
-        
+        iAv = props.avs[props.people[props.person].uid]
     }
     useEffect(() => {
         if (iAv) {
@@ -32,14 +31,11 @@ function Person(props) {
                             <Typography  sx={{fontWeight: 'bold'}}>
                                 {props.person}
                             </Typography>
-                            <Typography>
-                                {props.people[props.person].email}
-                            </Typography>
                         </Box>
                         {edit ? 
                         <IconButton 
                         sx={{width: '48px', height: '48px'}}
-                        onClick={() => {saveAvailability(props.org, props.title, data, props.people[props.person].email).then(() => {setEdit(false); getAllAvs(props.org, props.setAllAvs, true)})}}
+                        onClick={() => {saveAvailability(props.org, props.title, data, props.people[props.person].uid).then(() => {setEdit(false); getAllAvs(props.org, props.setAllAvs, true)})}}
                         >
                             <Save />
                         </IconButton>
@@ -84,6 +80,7 @@ function Person(props) {
 }
 
 export default function PeopleAvs(props) {
+    console.log('avshere', props.avs)
     return (
         <Grid container width={'100%'} height={'100%'} overflow={'auto'}>
             {

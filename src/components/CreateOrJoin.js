@@ -55,7 +55,7 @@ export default function CreateOrJoin(props) {
                     setLoading(false);
                     navigate(`/${orgName}/home`);
                 }
-            })        
+            })   
     }
 
     const joinOrg = async (db, auth, jFunc) => {
@@ -70,16 +70,18 @@ export default function CreateOrJoin(props) {
         const orgName = jFields.organizationname;
         const joinCode = jFields.joincode;
 
-        await jFunc({ 
+        jFunc({ 
                 orgName: orgName, 
                 joinCode: joinCode.toUpperCase(),
                 phonenumber: data.info.phonenumber, 
                 schedulename: data.info.schedulename 
             })
             .then((e) => {
+                console.log('EEE', e)
+
                 if (e.data) {
-                    console.error(e.data);
-                    setJError(e.data);
+                    console.error(e.data.error);
+                    setJError(e.data.error);
                     setLoading(false);
                 } else {
                     setLoading(false);
@@ -87,6 +89,8 @@ export default function CreateOrJoin(props) {
                 }
             })        
     }
+
+    console.log('jfields', jFields)
 
     const firebase = getFirebase();
     const functions = firebase.functions
@@ -117,7 +121,7 @@ export default function CreateOrJoin(props) {
                 </Stack>
             </Backdrop>
             :
-            <PopupForm open={props.open} setOpen={props.setOpen} title="Create or Join">
+            <PopupForm width={'350px'} open={props.open} setOpen={props.setOpen} title="Create or Join">
                 <Paper sx={{padding: 2, backgroundColor: theme.palette.primary}}>
                     <Typography
                     variant='h6'
@@ -152,8 +156,8 @@ export default function CreateOrJoin(props) {
                     formError={jError}
                     />
                 </Paper>
-                <Divider sx={{margin: 2}}/>
-                <Paper sx={{padding: 2, backgroundColor: theme.palette.primary, display: 'none'}}>
+                <Divider sx={{margin: 2,  display: 'none'}}/>
+                <Paper sx={{padding: 2, backgroundColor: theme.palette.primary, display: 'none' }}>
                     <Typography
                     variant='h6'
                     textAlign='center'

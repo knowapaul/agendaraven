@@ -103,7 +103,7 @@ export function Top(props) {
                 display='flex' 
                 flexDirection={'row'}
                 >
-                    <Chip label="Not Saved" sx={{margin: 'auto'}} color={'error'} />
+                    <Chip label={props.isSaved ? "Saved" : "Not Saved"} sx={{margin: 'auto'}} color={props.isSaved ? 'success' : 'error'} />
                     <MenuIcon title="Back"
                     handleClick={() => {navigate(`/${props.org}/schedules/`)}}
                     >

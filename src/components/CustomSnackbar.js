@@ -1,5 +1,5 @@
 // MUI Resources
-import { IconButton, Snackbar, Alert } from "@mui/material";
+import { IconButton, Snackbar, Alert, useMediaQuery } from "@mui/material";
 import { Close } from "@mui/icons-material";
 
 
@@ -13,12 +13,15 @@ import { Close } from "@mui/icons-material";
  * timeout? = {Number} Milliseconds until auto hide (3000 default)
  */
 export function CustomSnackbar(props) {
+    const matches = useMediaQuery('(min-width:600px)');
     const close = () => {props.setOpen(false)}
     return (
         <Snackbar
         sx={{zIndex: '1201'}}
         open={props.open}
         onClose={close}
+        anchorOrigin={{ vertical: matches ? 'bottom' : 'top', horizontal: matches ? 'left' : 'right'}}
+         
         autoHideDuration={props.timeout || 3000}
         >
 

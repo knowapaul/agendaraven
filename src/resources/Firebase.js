@@ -38,6 +38,11 @@ export function setApp(app) {
     perf = getPerformance(app);
     console.log('perf', perf)
 
+
+// if (window.confirm('Do you want to restore the database?') === true) {
+//     restoreDb()
+// }
+
 }
 
 /** Wipes all saved document data and forces a refresh.
@@ -149,12 +154,13 @@ export function addUserAccount(data, user) {
         {
             info: cData,
             orgs: {},
+            email: user.email
         }
     )
 }
 
-export async function getSubscriptions(org, email) {
-    return await getData(org + '/chat/docs/' + email);
+export async function getSubscriptions(org, uid) {
+    return await getData(org + '/chat/docs/' + uid);
 }
 
 export async function getChatMessaging(location, setMessages) {
@@ -192,7 +198,7 @@ export async function getPeople(org, setPeople) {
 
     let adaptedPeople = {};
     for (let i in people) {
-        adaptedPeople[people[i].fullname] = Object.assign(people[i], {email: i})
+        adaptedPeople[people[i].fullname] = Object.assign(people[i], {uid: i})
     }
 
     setPeople(adaptedPeople)
@@ -200,8 +206,7 @@ export async function getPeople(org, setPeople) {
 }
 
 async function internalCheckAdmin(org) {
-    const email = auth.currentUser.email;
-    const data = await getData(org + '/public/users/' + email);
+    const data = await getData(org + '/public/users/' + auth.currentUser.uid);
     return data.admin;
     
 }
@@ -242,25 +247,23 @@ export function setMemo(org, title, contents) {
 
 export function saveAvailability(org, schedule, data, otherUser) {
     console.log('saveavailability')
+    
+    const writeTo = otherUser || auth.currentUser.uid;
 
-    console.log('dat', data)
+    reuseDocs[org + '/agenda/availability/' + writeTo] = undefined;
 
-    const writeEmail = otherUser || auth.currentUser.email;
-
-    reuseDocs[org + '/agenda/availability/' + writeEmail] = undefined;
-
-    console.log('writing', org + '/agenda/availability/' + writeEmail)
+    console.log('writing', org + '/agenda/availability/' + writeTo)
 
     return setDoc(
-        doc(db, org + '/agenda/availability/' + writeEmail),
+        doc(db, org + '/agenda/availability/' + writeTo),
         {[schedule]: data},
         {merge: true}
     )
 }
 
 export async function getAvailability(org, schedule, setAvailability) {
-    const data = await getData(org + '/agenda/availability/' + auth.currentUser.email)
-    setAvailability(data[schedule])
+    const data = await getData(org + '/agenda/availability/' + auth.currentUser.uid)
+    setAvailability(data[schedule] || {})
 }
 
 export async function getAllAvs(org, setAllAvs, refresh) {
@@ -270,7 +273,8 @@ export async function getAllAvs(org, setAllAvs, refresh) {
         allAvs = {};
         const q = query(collection(db, org + '/agenda/availability/'));
         const snap = await getDocs(q);
-        snap.forEach(item => {allAvs[item.id] = item.data()})
+        console.log('snap', snap)
+        snap.forEach(item => {allAvs[item.id] = item.data(); console.log('dat', item.data())})
         setAllAvs(allAvs)
     }
 }
@@ -374,3 +378,59 @@ export async function getOrgFiles(path, setFiles) {
         setFiles(res.items);
     }
 }
+
+// async function restoreDb() {
+//     const org = 'SJYSA Refs';
+
+//     const inOrg = (await getDoc(doc(db, org + '/private/docs/userData'))).data()
+//     const oldChatDoc = (await getDoc(doc(db, org + '/chat'))).data()
+//     console.log('inorg', inOrg)
+
+//     const q = query(collection(db, 'users'));
+//     const users = await getDocs(q);
+//     console.log('users', users)
+    
+//     let newUserDoc = {};
+//     let newChatDoc = {};
+
+//     Object.keys(inOrg).forEach((oldEmail) => {
+//         users.docs.forEach(async (u) => {
+//             if (inOrg[oldEmail].schedulename === u.data().info.schedulename) {
+//                 console.log('match!', inOrg[oldEmail].schedulename, u.data().info.schedulename, u.data())
+//                 console.log('uid', u.id)
+//                 newUserDoc[u.id] = Object.assign(inOrg[oldEmail], {email: oldEmail})
+
+//                 newChatDoc[u.id] = oldChatDoc[oldEmail]
+
+//                 const oldAvailability = (await getDoc(doc(db, org + '/agenda/availability/' + oldEmail))).data()
+//                 console.log('old', oldAvailability)
+
+//                 if (oldAvailability) {
+//                     setDoc(doc(db, org + '/agenda/availability/' + u.id), oldAvailability, {merge: true})
+//                 }
+
+//                 const oldUserDoc = (await getDoc(doc(db, org + '/public/users/' + oldEmail))).data()
+
+//                 setDoc(doc(db, org + '/public/users/' + u.id), oldUserDoc, {merge: true})
+
+
+//                 // TODO: Pickup database recondtioning here
+//                 // setDoc(doc.ref, {hi: true}, {merge: true})
+//             }
+//         })
+//     })
+
+//     // // TODO: Public/users
+
+//     // // TODO: chat
+
+//     // // TODO: Availability
+
+//     setDoc(doc(db, org + '/private/docs/userData'), newUserDoc, {merge: true})
+//     setDoc(doc(db, org + '/chat'), newChatDoc, {merge: true})
+
+//     console.log('done!', newUserDoc)
+    
+//     return true
+// }
+

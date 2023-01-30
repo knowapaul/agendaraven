@@ -66,6 +66,8 @@ export default function Soar() {
 
     const [ cats, setCats ] = useState({});
 
+    const [ isSaved, setIsSaved ] = useState(true);
+
     const load = useLoaderData();
     const org = load.org;
 
@@ -126,7 +128,7 @@ export default function Soar() {
                 }
             })
             .then(() => {
-                setOpen(true)
+                setIsSaved(true)
                 getData()
             })
         
@@ -148,13 +150,13 @@ export default function Soar() {
         setPalette: setPalette, 
         
         fields: fields,
-        setFields: setFields,
+        setFields: (v) => {setFields(v); setIsSaved(false)},
         
         items: items,
-        setItems: setItems,
+        setItems: (v) => {setItems(v); setIsSaved(false)},
         
         avFields: avFields,
-        setAvFields: setAvFields,
+        setAvFields: (v) => {setAvFields(v); setIsSaved(false)},
         
         palette: palette,
         setPalette: setPalette,
@@ -170,9 +172,13 @@ export default function Soar() {
         people: people,
         
         avDate: avDate,
-        setAvDate: setAvDate,
+        setAvDate: (v) => {setAvDate(v); setIsSaved(false)},
 
         save: save,
+
+        isSaved: isSaved,
+
+        setIsSaved: setIsSaved,
 
         setTab: setTab
     }

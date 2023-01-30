@@ -327,12 +327,12 @@ export function DisplayItem(props) {
  */
 export function DraggablePerson(props) {
     function onDrag() {
-        props.setHighlight(getPeopleHighlight(props.people[props.person].email, props))
+        props.setHighlight(getPeopleHighlight(props.people[props.person].uid, props))
     }
 
     let personAv;
     try {
-        personAv = props.avs[props.people[props.person].email][props.title]
+        personAv = props.avs[props.people[props.person].uid][props.title]
 
     } catch (error) {
         console.log(error.message)
