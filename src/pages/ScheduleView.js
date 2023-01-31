@@ -15,6 +15,7 @@ import { cTheme, wTheme } from "../resources/Themes";
 import OrgCheck from '../components/OrgCheck'
 import AuthCheck from "../components/AuthCheck";
 import { ErrorBoundary } from "../components/ErrorBoundary";
+import { onAuthStateChanged } from "firebase/auth";
 
 
 function AvForm(props) {
@@ -165,6 +166,7 @@ function Internal() {
     
     const [ openBottom, setOpenBottom ] = useState(true);
     const [ people, setPeople ] = useState(true);
+    const [ error, setError ] = useState('Loading...');
 
     
     const [ data, setData ] = useState();
@@ -186,15 +188,13 @@ function Internal() {
                 )
                 
     useEffect(() => {
-        getSchedule(load.org, load.sch).then(data => { setData(data) });
+        getSchedule(load.org, load.sch).then(data => { setData(data) }).catch((error) => {setError(error.message)});
         getPeople(load.org, setPeople)
     }, [])
 
     return (
-        <AuthCheck>
-            <OrgCheck org={load.org}>
-                <ErrorBoundary>
-                    {
+        
+                    
                     data ?
                     <Box>
                         <div className="printHidden" >
@@ -290,19 +290,24 @@ function Internal() {
             
                     </Box>
                     :
-                    <Typography>Loading</Typography>
-                    }
-                </ErrorBoundary>
-            </OrgCheck>
-        </AuthCheck>
+                    <Typography>{error}</Typography>
+                    
     )
 }
 
 export function ScheduleView() {
+    const load = useLoaderData();
+
     return (
         <ThemeProvider theme={cTheme} >
             <CssBaseline />
-            <Internal />
+            <AuthCheck>
+                <OrgCheck org={load.org}>
+                    <ErrorBoundary>
+                        <Internal />
+                    </ErrorBoundary>
+                </OrgCheck>
+            </AuthCheck>
         </ThemeProvider>
     )
 }

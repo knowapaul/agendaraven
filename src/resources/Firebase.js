@@ -2,7 +2,7 @@
 import { collection, doc, getDoc, setDoc, getDocs, query, writeBatch } from "firebase/firestore"; 
 import { ref, getDownloadURL, uploadBytes, listAll } from "firebase/storage"; 
 
-import { getAuth, connectAuthEmulator, updateProfile, sendPasswordResetEmail, updatePassword, createUserWithEmailAndPassword, reauthenticateWithCredential, EmailAuthProvider, confirmPasswordReset } from "firebase/auth";
+import { getAuth, connectAuthEmulator, updateProfile, sendPasswordResetEmail, updatePassword, createUserWithEmailAndPassword, reauthenticateWithCredential, EmailAuthProvider, confirmPasswordReset, signInWithEmailAndPassword } from "firebase/auth";
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
 import { getStorage, connectStorageEmulator } from "firebase/storage";
@@ -25,6 +25,14 @@ let functions;
 let storage;
 let perf;
 
+function fullRefresh() {
+    console.log('REFRESHING...', reuseDocs, pendingDocs)
+    reuseDocs = {};
+    pendingDocs = {};
+    imageURLs = {};
+    orgFiles = {};
+    allAvs = undefined;
+}
 
 export function setApp(app) {
     auth = getAuth(app);
@@ -78,6 +86,11 @@ export async function handleUpdatePassword(oldPassword, newPassword) {
 
 export function forgotPassword(email) {
     return sendPasswordResetEmail(auth, email);
+}
+
+export function handleLogin(email, password) {
+    fullRefresh()
+    return signInWithEmailAndPassword(auth, email, password)
 }
 
 export function createNewAccount(inData, navigate, setError) {
@@ -140,6 +153,7 @@ async function getData(path, refresh) {
     } catch (error) {
         console.log(error)
         console.error('Document read failed:', path)
+        throw error;
     }
 }
 

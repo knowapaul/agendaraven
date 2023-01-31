@@ -12,14 +12,12 @@ import Nav from './Nav';
 
 // Firebase Resources
 import { signInWithEmailAndPassword } from "firebase/auth"
-import { getFirebase } from "../resources/Firebase"
+import { handleLogin } from "../resources/Firebase"
 
 
-function SignIn(auth, fields, setError) {
-    signInWithEmailAndPassword(auth, fields.email, fields.password).then(
-        out => {
-        }
-    ).catch((error) => {
+function SignIn(fields, setError) {
+    handleLogin(fields.email, fields.password)
+        .catch((error) => {
         let message = error.message;
 
         if (message.includes('wrong-password') || message.includes('user-not-found')) {
@@ -70,7 +68,7 @@ export default function Login(props) {
                 ]}
                 buttonText="Login and Continue"
                 handleSubmit={(event) => {
-                    SignIn(getFirebase().auth, fields, setError)
+                    SignIn(fields, setError)
                 }}
                 data={fields}
                 setData={setFields}

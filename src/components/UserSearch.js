@@ -8,6 +8,7 @@ import { useTheme } from "@emotion/react"
 // Project Resources
 import { getPeople } from "../resources/Firebase";
 import { searchSort } from '../resources/SearchSort'
+import MiniScroll from "./MiniScroll";
 
 
 /**
@@ -42,51 +43,51 @@ export default function UserSearch(props) {
                 />
                 {props.button}
             </Box>
-            
-            <Grid container spacing={1} padding={2} maxHeight={'calc(100vh - 64px - 88px)'} overflow="auto">
-                {searchSort(value, Object.keys(people)).map((key) => {
-                    function handleSelect() {
-                        const person = {[key]: people[key]}
-                        const newSelected = Object.assign({}, person, props.selected)
-                        if (Object.keys(props.selected).includes(key)) {
-                            if (props.multiple) {
-                                let clone = Object.assign({}, props.selected)
-                                delete clone[key]
-                                props.setSelected(clone)
+        
+                <Grid container spacing={1} padding={2} sx={{maxHeight: {xs: '100%', sm: 'calc(100vh - 64px - 88px)'}, overflow: {xs: "auto", sm: 'none'}}}>
+                    {searchSort(value, Object.keys(people)).map((key) => {
+                        function handleSelect() {
+                            const person = {[key]: people[key]}
+                            const newSelected = Object.assign({}, person, props.selected)
+                            if (Object.keys(props.selected).includes(key)) {
+                                if (props.multiple) {
+                                    let clone = Object.assign({}, props.selected)
+                                    delete clone[key]
+                                    props.setSelected(clone)
+                                }
+                            } else {
+                                props.setSelected(props.multiple ? newSelected : person)
                             }
-                        } else {
-                            props.setSelected(props.multiple ? newSelected : person)
+                
                         }
-            
-                    }
-                    ;
-                    return (
-                    <Grid item xs={6} sm={6} md={4} lg={3} height='110px' key={key}>
-                        <Button 
-                        variant={Object.keys(props.selected).includes(key) ? "contained" : 'outlined'}
-                        sx={{width: '100%', height: '100%', textTransform: 'none'}}
-                        onClick={handleSelect}
-                        >
-                            <Box>
-                                <Avatar sx={{margin: 'auto'}}>{key[0].toUpperCase()}</Avatar>
-                                <Typography 
-                                variant='body1'
-                                textAlign={'center'}
-                                >
-                                    {key.split(' ')[0][0].toUpperCase() + key.split(' ')[0].slice(1).toLowerCase()}
-                                </Typography>
-                                <Typography 
-                                variant='body2'
-                                textAlign={'center'}
-                                >
-                                    {key.toUpperCase().split(' ')[1]}
-                                </Typography>
-                            </Box>
-                        </Button>
-                    </Grid>
-                    )
-                })}
-            </Grid>
+                        ;
+                        return (
+                        <Grid item xs={6} sm={6} md={4} lg={3} height='110px' key={key}>
+                            <Button 
+                            variant={Object.keys(props.selected).includes(key) ? "contained" : 'outlined'}
+                            sx={{width: '100%', height: '100%', textTransform: 'none'}}
+                            onClick={handleSelect}
+                            >
+                                <Box>
+                                    <Avatar sx={{margin: 'auto'}}>{key[0].toUpperCase()}</Avatar>
+                                    <Typography 
+                                    variant='body1'
+                                    textAlign={'center'}
+                                    >
+                                        {key.split(' ')[0][0].toUpperCase() + key.split(' ')[0].slice(1).toLowerCase()}
+                                    </Typography>
+                                    <Typography 
+                                    variant='body2'
+                                    textAlign={'center'}
+                                    >
+                                        {key.toUpperCase().split(' ')[1]}
+                                    </Typography>
+                                </Box>
+                            </Button>
+                        </Grid>
+                        )
+                    })}
+                </Grid>
         </Box>
     )
 }

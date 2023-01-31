@@ -61,8 +61,6 @@ export default function Cards(props) {
             props.loading ? <MiniLoad />
             :
             <Grid container 
-            maxHeight={'100%'} 
-            overflow='auto' 
             padding={1} 
             spacing={2} 
             rowSpacing={0}

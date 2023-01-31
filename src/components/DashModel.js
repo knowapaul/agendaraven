@@ -145,7 +145,7 @@ export default function DashModel(props) {
   
     return (
       <AuthCheck>
-        <Box sx={{ display: 'flex', flexDirection: 'row', height: '100vh', width: '100vw', position: 'fixed', top: 0, left: 0}}>
+        <Box sx={{ display: 'flex', flexDirection: 'row', height: {xs: '100%', sm: '100vh'}, width: '100vw', position: { xs: 'static', sm: 'fixed' } , top: 0, left: 0}}>
             <Box
                 component="nav"
                 sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}

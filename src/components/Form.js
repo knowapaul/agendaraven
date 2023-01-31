@@ -24,8 +24,6 @@ class Input extends React.Component {
             help: errorState ? 'Please complete this field' : ''
         };
 
-        console.log(this.props.data[cleanName(this.props.name)])
-
         this.props.setErrors(
             Object.assign(
                 this.props.errors, 

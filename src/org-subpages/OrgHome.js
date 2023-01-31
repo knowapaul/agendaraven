@@ -13,6 +13,7 @@ import { CustomSnackbar } from "../components/CustomSnackbar";
 import { ErrorBoundary } from "../components/ErrorBoundary";
 import FriendlyLoad from "../components/FriendlyLoad";
 import { getMemo, getOrgFiles, setMemo, uploadFile } from "../resources/Firebase";
+import MiniScroll from "../components/MiniScroll";
 
 
 function FileUpload(props) {
@@ -234,8 +235,8 @@ function FileItem(props) {
             justifyContent: 'left', 
             textAlign: 'left',
             borderRadius: 0,
-            borderRight: {xs: `1px solid ${theme.palette.primary.main}`, md: 'none'},
-            borderLeft: {xs: `1px solid ${theme.palette.primary.main}`, md: 'none'},
+            borderRight: {xs: `1px solid ${theme.palette.primary.main}`},
+            borderLeft: {xs: `1px solid ${theme.palette.primary.main}`},
             borderBottom: `1px solid ${theme.palette.primary.main}`,
         }}
         >   
@@ -314,30 +315,32 @@ export default function OrgHome(props) {
     const theme = useTheme();
 
     return (
-        <Box display={'flex'} flexDirection={{ xs: 'column', md: 'row', }}  height={'calc(100% - 64px)'}  overflow={'auto'}>
-            <Box 
-            width={{ xs: '100%', md: '50%'}}            >
-                <ErrorBoundary>
-                    <Left org={props.org} />
-                </ErrorBoundary>
-            </Box>
-            <Box 
-            width={{ xs: '100%', md: '50%'}} 
-            height={'100%'}
-            display={'flex'}
-            flexDirection={'row'}
-            padding={{ xs: 2, md: 0}}
-            >
-                <Box
-                width={'1px'}
-                display={{xs: `none`, md: 'block'}}
+        <MiniScroll>
+            <Box display={'flex'} flexDirection={{ xs: 'column', md: 'row', }}>
+                <Box 
+                width={{ xs: '100%', md: '50%'}}            >
+                    <ErrorBoundary>
+                        <Left org={props.org} />
+                    </ErrorBoundary>
+                </Box>
+                <Box 
+                width={{ xs: '100%', md: '50%'}} 
                 height={'100%'}
-                sx={{backgroundColor: theme.palette.primary.main}}
-                />
-                <ErrorBoundary>
-                    <Right org={props.org} />
-                </ErrorBoundary>
+                display={'flex'}
+                flexDirection={'row'}
+                padding={{ xs: 2, md: 0}}
+                >
+                    <Box
+                    width={'1px'}
+                    display={{xs: `none`, md: 'block'}}
+                    height={'100%'}
+                    sx={{backgroundColor: theme.palette.primary.main}}
+                    />
+                    <ErrorBoundary>
+                        <Right org={props.org} />
+                    </ErrorBoundary>
+                </Box>
             </Box>
-        </Box>
+        </MiniScroll>
     )
 }

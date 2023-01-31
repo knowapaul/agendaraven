@@ -13,6 +13,7 @@ import Cards from "../components/Cards";
 import { ErrorBoundary } from "../components/ErrorBoundary";
 import Form from "../components/Form";
 import { getAllSchedules, saveSchedule } from "../resources/Firebase";
+import MiniScroll from "../components/MiniScroll";
 
 
 {/* <Tooltip title={"My Availability"}>
@@ -119,9 +120,9 @@ export default function Schedules(props) {
 
     return (
         <ErrorBoundary>
-            <Box height={'100%'} overflow={'auto'}>
+            <MiniScroll>
                 <View org={props.org} title={props.title} firebase={props.firebase} data={data} />
-            </Box>
+            </MiniScroll>
         </ErrorBoundary>
     )
 }
