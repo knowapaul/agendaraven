@@ -12,6 +12,7 @@ import CreateOrJoin from '../components/CreateOrJoin';
 import FriendlyLoad from "../components/FriendlyLoad";
 import { MiniLoad } from "../components/Loading";
 import { getUserData } from "../resources/Firebase";
+import MiniScroll from "../components/MiniScroll";
  
 
 function OrgCard(props) {
@@ -104,17 +105,18 @@ export default function Organizations(props) {
     }, [])
 
     return (
-        <Box height='calc(100vh - 64px)' overflow='auto' padding={2}>
-            {orgs !== {} ? 
-                <Grid container spacing={2}>
-                    {Object.keys(orgs).map((text) => {
-                        return (<OrgCard key={text} text={text} />)
-                    })}
-                    <Add />
-                </Grid> :
-                <MiniLoad />
-            }
-        </Box>
-        
+        <MiniScroll>
+            <Box padding={2}>
+                {orgs !== {} ? 
+                    <Grid container spacing={2}>
+                        {Object.keys(orgs).map((text) => {
+                            return (<OrgCard key={text} text={text} />)
+                        })}
+                        <Add />
+                    </Grid> :
+                    <MiniLoad />
+                }
+            </Box>
+        </MiniScroll>   
     )
 }
