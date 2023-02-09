@@ -60,7 +60,7 @@ const router = createBrowserRouter([
   
   { errorElement: <Error />, path: "loading", element: <Loading />},
 
-  { errorElement: <Error />, path: "/soar/:org/:sch", element: <Soar />, loader: schLoader},
+  { errorElement: <Error />, path: "/soar/:org/:sch/:tab", element: <Soar />, loader: schLoader},
 
   { errorElement: <Error />, path: "/help", element: <Help /> },
 

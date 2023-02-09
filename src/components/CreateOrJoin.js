@@ -18,8 +18,8 @@ import { httpsCallable } from "firebase/functions";
 
 
 export default function CreateOrJoin(props) {
-    const [ cFields, setCFields ] = useState({});
-    const [ jFields, setJFields ] = useState({});
+    const [ cFields, setCFields ] = useState({nameyourorganization: ''});
+    const [ jFields, setJFields ] = useState({organizationname: '', joincode: ''});
     const [ cError, setCError ] = useState('');
     const [ jError, setJError ] = useState('');
 
@@ -28,7 +28,15 @@ export default function CreateOrJoin(props) {
     const navigate = useNavigate();
     const theme = useTheme();
 
-    const newOrg = async (db, auth, cFunc) => {
+    const firebase = getFirebase();
+    const functions = firebase.functions
+    const db = firebase.db;
+    const auth = firebase.auth;
+
+    const createOrganization = httpsCallable(functions, 'createOrganization');
+    const joinOrganization = httpsCallable(functions, 'joinOrganization');
+
+    const handleCreate = async () => {
         setLoading(true)
         
         // TODO: Perform checks here
@@ -41,7 +49,7 @@ export default function CreateOrJoin(props) {
 
         console.log('executing...')
 
-        await cFunc({ 
+        await createOrganization({ 
                 orgName: orgName, 
                 phonenumber: data.info.phonenumber, 
                 schedulename: data.info.schedulename 
@@ -58,7 +66,7 @@ export default function CreateOrJoin(props) {
             })   
     }
 
-    const joinOrg = async (db, auth, jFunc) => {
+    const handleJoin = async () => {
         setLoading(true)
         
         // TODO: Perform checks here
@@ -70,7 +78,7 @@ export default function CreateOrJoin(props) {
         const orgName = jFields.organizationname;
         const joinCode = jFields.joincode;
 
-        jFunc({ 
+        joinOrganization({ 
                 orgName: orgName, 
                 joinCode: joinCode.toUpperCase(),
                 phonenumber: data.info.phonenumber, 
@@ -92,13 +100,6 @@ export default function CreateOrJoin(props) {
 
     console.log('jfields', jFields)
 
-    const firebase = getFirebase();
-    const functions = firebase.functions
-    const db = firebase.db;
-    const auth = firebase.auth;
-
-    const createOrganization = httpsCallable(functions, 'createOrganization');
-    const joinOrganization = httpsCallable(functions, 'joinOrganization');
 
     return (
         <ThemeProvider theme={mTheme}>
@@ -148,16 +149,14 @@ export default function CreateOrJoin(props) {
                         },
                     ]}
                     buttonText="Continue to Organiztion"
-                    handleSubmit={(event) => {
-                        joinOrg(db, auth, joinOrganization)
-                    }}
+                    handleSubmit={handleJoin}
                     data={jFields}
                     setData={setJFields}
                     formError={jError}
                     />
                 </Paper>
-                <Divider sx={{margin: 2,  display: 'none'}}/>
-                <Paper sx={{padding: 2, backgroundColor: theme.palette.primary, display: 'none' }}>
+                <Divider sx={{margin: 2, }}/>
+                <Paper sx={{padding: 2, backgroundColor: theme.palette.primary, }}>
                     <Typography
                     variant='h6'
                     textAlign='center'
@@ -176,9 +175,7 @@ export default function CreateOrJoin(props) {
                         },
                     ]}
                     buttonText="Create!"
-                    handleSubmit={(event) => {
-                        newOrg(db, auth, createOrganization)
-                    }}
+                    handleSubmit={handleCreate}
                     data={cFields}
                     setData={setCFields}
                     formError={cError}

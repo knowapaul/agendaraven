@@ -82,7 +82,7 @@ function Person(props) {
 export default function PeopleAvs(props) {
     console.log('avshere', props.avs)
     return (
-        <Grid container width={'100%'} height={'100%'} overflow={'auto'}>
+        <Grid container width={'100%'} maxHeight={'100%'} overflow={'auto'}>
             {
                 props.people ?
                 Object.keys(props.people).sort().map(person => (

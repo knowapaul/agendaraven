@@ -1,9 +1,9 @@
 // React Resources
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 // MUI Resources
-import { ThemeProvider } from '@emotion/react';
+import { ThemeProvider, useTheme } from '@emotion/react';
 import { AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Button, MenuItem } from '@mui/material';
 import { Menu as MenuIcon } from '@mui/icons-material';
 
@@ -17,7 +17,8 @@ function nameToURL(name) {
 }
 
 export default function Nav() {
-  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [ anchorElNav, setAnchorElNav ] = useState(null);
+  const [ atTop, setAtTop ] = useState(true);
   const navigate = useNavigate();
 
   const handleOpenNavMenu = (event) => {
@@ -28,13 +29,33 @@ export default function Nav() {
     setAnchorElNav(null);
   };
 
+  useEffect(() => {
+    window.onscroll = () => {
+        if (window.scrollY === 0) {
+            setAtTop(true)
+        } else {
+            if (atTop) {
+                setAtTop(false)
+            }
+        }
+    }
+  })
+
+  const theme = useTheme();
 
   const pages = ['Dashboard', 'Help'];
   const title = 'AgendaRaven';
 
   return (
     <ThemeProvider theme={mTheme}>
-        <AppBar position="fixed">
+        <AppBar 
+        position="fixed" 
+        elevation={atTop ? 0 : 10}
+        sx={{
+            backgroundColor: mTheme.palette.background.default.replace(')', ', .6)').replace('rgb', 'rgba'),
+            WebkitBackdropFilter: 'blur(10px)',
+            backdropFilter: 'blur(10px)',
+        }}>
             <Toolbar>
                 <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }}>
                     <img src='/favicon.ico' width='32' height='32' />
@@ -77,7 +98,7 @@ export default function Nav() {
                     }}
                     keepMounted
                     transformOrigin={{
-                        vertical: 'top',
+                        vertical: 'atTop',
                         horizontal: 'left',
                     }}
                     open={Boolean(anchorElNav)}

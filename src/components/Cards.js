@@ -1,6 +1,7 @@
 // MUI Resources
-import { ArrowBack } from "@mui/icons-material";
-import { Box, Divider, Grid, Paper, Typography } from "@mui/material";
+import { useTheme } from "@emotion/react";
+import { ArrowBack, PrivacyTipOutlined, VisibilityOff } from "@mui/icons-material";
+import { Box, Divider, Grid, Paper, Stack, Typography } from "@mui/material";
 
 // Project Resources
 import { MiniLoad } from "./Loading";
@@ -31,32 +32,35 @@ import { NavButton, SubNav } from "./SubNav";
  * 
  */
 export default function Cards(props) {
+    const theme = useTheme();
     return (
         <div>
-            <SubNav 
-            title={props.title}
-            left={
-                <div>
-                    {props.back ? 
-                    <NavButton
-                    title={props.back.tooltip}
-                    handleClick={props.back.handleBack}
-                    >
-                        <ArrowBack sx={{mr: 1}}/>
-                        <Typography
-                        noWrap
+            <div style={{display: props.noHeader ? 'none' : 'initial'}}>
+                <SubNav 
+                title={props.title}
+                left={
+                    <div>
+                        {props.back ? 
+                        <NavButton
+                        title={props.back.tooltip}
+                        handleClick={props.back.handleBack}
                         >
-                            Back
-                        </Typography>
-                    </NavButton> : '' 
-                    }
-                </div>
-            }
-            right={
-                props.add
-            }
-            >
-            </SubNav>
+                            <ArrowBack sx={{mr: 1}}/>
+                            <Typography
+                            noWrap
+                            >
+                                Back
+                            </Typography>
+                        </NavButton> : '' 
+                        }
+                    </div>
+                }
+                right={
+                    props.add
+                }
+                >
+                </SubNav>
+            </div>
             {
             props.loading ? <MiniLoad />
             :
@@ -83,12 +87,15 @@ export default function Cards(props) {
                             }}
                             >
                                 <Box flex={0}>
-                                    <Typography
-                                    variant='h6'
-                                    fontWeight={'bold'}
-                                    >
-                                        {card.title}
-                                    </Typography>
+                                    <Stack direction='row'>
+                                        <VisibilityOff fontSize="small" sx={{display: card.published === false ? 'initial' : 'none', my: '5px', mr: 1}} />
+                                        <Typography
+                                        variant='h6'
+                                        fontWeight={'bold'}
+                                        >
+                                            {card.title}
+                                        </Typography>
+                                    </Stack>
                                     <Divider />
                                     <Typography
                                     variant='body2'
@@ -119,7 +126,7 @@ export default function Cards(props) {
                     )
                 )       
                 :
-                <Typography padding={4} textAlign={'center'}>
+                <Typography padding={4} textAlign={'center'} color={theme.palette.text.secondary}>
                     {props.helperMessage}
                 </Typography>   
             }

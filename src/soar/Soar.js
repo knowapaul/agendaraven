@@ -4,15 +4,15 @@ import { DndProvider } from 'react-dnd';
 
 // MUI Resources
 import { ThemeProvider } from "@emotion/react";
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 
 // Project Resources
-import { cTheme } from "../resources/Themes";
+import { bTheme, cTheme, mTheme, uTheme } from "../resources/Themes";
 import { Schedule } from './editor/Schedule';
 
 // Other Resources
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import AdminCheck from "../components/AdminCheck";
 import AuthCheck from "../components/AuthCheck";
 import { CustomSnackbar } from "../components/CustomSnackbar";
@@ -22,6 +22,9 @@ import AvFields from "./AvFields";
 import DataImport from "./DataImport";
 import { Bottom, Top } from './Headers';
 import PeopleAvs from "./PeopleAvs";
+import Automation from "./Automation";
+import DashModel from "../components/DashModel";
+import { AutoAwesome, CalendarMonth, Circle, DonutLarge, EventAvailable, FormatPaint, Group, Home, ImportantDevices, ImportExport, ScheduleOutlined } from "@mui/icons-material";
 
 
 // export async function newLoader({ params }) {
@@ -37,8 +40,19 @@ user-friendliness is vital to the success of the program.
 */
 
 export async function schLoader({ params }) {
-    return { org: params.org, sch: params.sch }
+    return { ...params }
 }
+
+function LoadNav(props) {
+    const navigate = useNavigate();
+  
+    useEffect(() => {
+      navigate(props.to)
+    }, [])
+  
+    return <div></div>
+}
+  
 
 /**
  * ## The Soar Scheduling Component
@@ -62,7 +76,7 @@ export default function Soar() {
 
     const [ highlight, setHighlight ] = useState();
 
-    const [ tab, setTab ] = useState('schedule');
+    // const [ tab, setTab ] = useState('schedule');
 
     const [ cats, setCats ] = useState({});
 
@@ -70,6 +84,7 @@ export default function Soar() {
 
     const load = useLoaderData();
     const org = load.org;
+    const tab = load.tab;
 
     // window.onbeforeunload = confirmExit;
     // function confirmExit() {
@@ -180,7 +195,7 @@ export default function Soar() {
 
         setIsSaved: setIsSaved,
 
-        setTab: setTab
+        // setTab: setTab
     }
 
 
@@ -188,23 +203,36 @@ export default function Soar() {
         schedule: <Schedule {...universalProps} />,
         forms: <AvFields {...universalProps} />, 
         import: <DataImport {...universalProps} />,
-        availability: <PeopleAvs {...universalProps} />
+        availability: <PeopleAvs {...universalProps} />,
+        automation: <Automation {...universalProps} />,
+        all: <LoadNav to={`/${org}/schedules/`} />
     }
 
+    const menu = [
+        ["Schedule", <CalendarMonth color="secondary"/>],
+        ["Forms", <EventAvailable color="secondary"/>],
+        ["Import", <ImportantDevices color="secondary"/>],
+        ["Availability",  <Group color="secondary"/>],
+        ["Automation",  <AutoAwesome color="secondary"/>],
+        ['1', ''],
+        ['View All', <Home color="secondary" />]
+      ]
+    
+
     return (
-        <ThemeProvider theme={cTheme}>  
+        <ThemeProvider theme={uTheme}>  
             <AuthCheck>
                 <AdminCheck org={org} helperText={"Sorry, this page is for authorized viewers only."}>
                     <DndProvider backend={HTML5Backend}>
-                        <Box width='100%' margin={0} height={'calc(100% - 64px)'} position={'fixed'} top='0px' left='0px'>
-                            <Top {...universalProps} />
-                            <ErrorBoundary>
-                                <Box height={{xs: '100%'}} width={'100%'} >
-                                    {tabs[tab]}
-                                </Box>
-                            </ErrorBoundary>
-                            <Bottom {...universalProps} />
-                        </Box> 
+                        <DashModel 
+                        menuItems={menu} 
+                        page={tab} 
+                        title={tab} 
+                        logo={{title: load.sch, href: `/${org}/schedules/${load.sch}/`}} 
+                        path={`/soar/${org}/${load.sch}/`} 
+                        >
+                            {tabs[tab]}
+                        </DashModel>
                     </DndProvider>      
                 </AdminCheck>
             </AuthCheck>

@@ -17,7 +17,7 @@ const twilio = require('twilio');
 
 // Add subscription data to user or organziation
 /**
- * @param  {Map} data provide: orgName, phonenumber, schedulename
+ * @param  {Map} data provide: orgName, schedulename
  * @param  {Map} context (provided by default)
  */
 exports.createOrganization = functions.https.onCall(async (data, context) => {
@@ -71,7 +71,7 @@ exports.createOrganization = functions.https.onCall(async (data, context) => {
             })
     
             // Add the user to their own organization
-            await join(orgName, transaction, 'owner', uid, name.displayName, data.phonenumber, data.schedulename)
+            await join(orgName, transaction, 'owner', uid, name.displayName, data.schedulename)
         });
         
         // Send a welcome message to the owner

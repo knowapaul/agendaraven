@@ -47,7 +47,9 @@ export default function AvFields(props) {
                 :
                 <Box >
                     <Paper sx={{padding: 1, margin: 1, height: '60px'}}>
-                        Please add an availability field to continue
+                        <Typography>
+                            Please add an availability field to continue
+                        </Typography>
                     </Paper>
                 </Box>
                 }

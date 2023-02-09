@@ -13,7 +13,7 @@ import Typography from '@mui/material/Typography';
 import { useLoaderData } from 'react-router-dom';
 import AuthCheck from '../components/AuthCheck';
 import DashModel from '../components/DashModel';
-import { wTheme } from '../resources/Themes';
+import { uTheme, wTheme } from '../resources/Themes';
 import Account from '../user-subpages/Account.js';
 import Availability from '../user-subpages/Availability.js';
 import Inbox from '../user-subpages/Inbox.js';
@@ -64,7 +64,7 @@ function Logo() {
         color: theme.palette.text.secondary
         }}
         >
-          AgendaRaven
+          
         </Typography>
       </Stack>
     </Link>
@@ -91,11 +91,15 @@ export function Dashboard(props) {
 
   return (
     <AuthCheck >
-      <ThemeProvider theme={wTheme}>
+      <ThemeProvider theme={uTheme}>
         <CssBaseline />
           <DashModel 
           menuItems={menu} 
-          logo={<Logo />} 
+          logo={{
+            title: 'AgendaRaven', 
+            href: '/', 
+            icon: <img src='../favicon.ico' width='32' height='32' alt='logo'/>
+          }} 
           page={page}
           path={`/dashboard/`} 
           >

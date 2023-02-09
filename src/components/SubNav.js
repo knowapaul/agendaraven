@@ -44,14 +44,23 @@ export function SubNav(props) {
     const theme = useTheme();
     return (
         <ThemeProvider theme={responsiveFontSizes(theme)}>
-            <Paper elevation={0} sx={{ display: 'flex', borderRadius: '0px', height: '57.5px'}}>
-                <Box sx={{flexGrow: 1}}>
+            <Paper elevation={0} sx={{ display: 'flex', positon: 'relative', borderRadius: '0px', height: '57.5px' }}>
+                <Box sx={{float: 'left', position: 'absolute'}}>
                     {props.left}
                 </Box>
-                <Typography variant='h5' noWrap sx={{margin: 'auto', flexGrow: 1, color: theme.palette.text.secondary}}>
+                <Typography 
+                variant='h5' 
+                noWrap 
+                sx={{
+                    margin: 'auto', 
+                    color: theme.palette.text.secondary,
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignContent: 'center',
+                }}>
                     {props.title}
                 </Typography>
-                <Box sx={{flex: 0}}>
+                <Box>
                     {props.right}
                 </Box>
             </Paper>

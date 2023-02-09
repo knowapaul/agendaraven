@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 
 // MUI Resources
 import { useTheme } from "@emotion/react";
-import { Clear, Edit, Image, PictureAsPdf, Save } from "@mui/icons-material";
+import { Clear, Edit, Image, PictureAsPdf, Save, Upload } from "@mui/icons-material";
 import { Box, Button, Divider, Fab, IconButton, Paper, Stack, TextField, Typography } from "@mui/material";
 
 // Project Resources
@@ -46,7 +46,7 @@ function FileUpload(props) {
             />
             {props.button === 'fill' 
             ?
-            <Button sx={{width: '100%'}} onClick={() => {inputRef.current.click()}}>Upload File</Button>
+            <Button sx={{width: '100%'}} onClick={() => {inputRef.current.click()}}><Upload sx={{mr: 1}} />Upload File</Button>
             :
             <Fab sx={{mt: -11, ml: 1}} size='small' onClick={() => {inputRef.current.click()}}>
                 <Edit />
@@ -88,7 +88,7 @@ function Header(props) {
                 <AdminCheck org={props.org}>
                     <FileUpload 
                     root={imagePath}
-                    accept={'.jpg'}
+                    accept={['.jpg', '.png', '.gif']}
                     unique={true} 
                     button='hover'
                     refresh={refresh}

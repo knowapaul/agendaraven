@@ -4,7 +4,7 @@ import { useState } from "react";
 
 // MUI Resources
 import { useTheme } from "@emotion/react";
-import { ArrowBack, Public, Save, ViewAgenda } from "@mui/icons-material";
+import { ArrowBack, AutoAwesome, Public, Save, ViewAgenda } from "@mui/icons-material";
 import { Backdrop, Box, Chip, Paper, SpeedDial, SpeedDialAction, SpeedDialIcon, Typography } from "@mui/material";
 
 // Project Resources
@@ -33,7 +33,8 @@ export function Bottom(props) {
         "Schedule": <CalendarMonth />,
         "Forms": <EventAvailable />,
         "Import": <ImportantDevices />,
-        "Availability":  <Group />
+        "Availability":  <Group />,
+        "Automation":  <AutoAwesome />,
     }
     
     return (

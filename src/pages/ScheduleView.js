@@ -2,20 +2,23 @@
 import { useEffect, useState } from "react";
 
 // MUI Resources
-import { ArrowBack, Close, ErrorOutline, Info, Save } from '@mui/icons-material';
+import { ArrowBack, Close, ErrorOutline, Info, Save, VisibilityOff } from '@mui/icons-material';
 import { Box, Button, Chip, CssBaseline, IconButton, Paper, Popover, Stack, TextField, ThemeProvider, Typography, useMediaQuery } from "@mui/material";
 
 // Project Resources
 import { useTheme } from "@emotion/react";
-import { useLoaderData, useNavigate } from "react-router-dom";
+import { useLoaderData, useNavigate, } from "react-router-dom";
 import { CustomSnackbar } from "../components/CustomSnackbar";
 import { NavButton, SubNav } from "../components/SubNav";
 import { getAvailability, getFirebase, getPeople, getSchedule, saveAvailability } from "../resources/Firebase";
-import { cTheme, wTheme } from "../resources/Themes";
+import { cTheme, uTheme, wTheme } from "../resources/Themes";
 import OrgCheck from '../components/OrgCheck'
 import AuthCheck from "../components/AuthCheck";
 import { ErrorBoundary } from "../components/ErrorBoundary";
 import { onAuthStateChanged } from "firebase/auth";
+import Loading from "../components/Loading";
+import Schedules from "../org-subpages/Schedules";
+import AdminCheck from "../components/AdminCheck";
 
 
 function AvForm(props) {
@@ -101,10 +104,11 @@ function InfoButton(props) {
     const id = open ? 'simple-popover' : undefined;
     
     return (
+        props.description ?
         <div>
             <Box onClick={handleClick} sx={{display: 'flex', flexDirection: 'row'}}>
                 <NavButton aria-describedby={id} variant="contained">
-                    <Info sx={{mr: {sm: 1}}}/>
+                    <Info sx={{m: 'auto'}}/>
                     <Typography sx={{display: {xs: 'none', sm: 'block'}}}>
                         {props.title}
                     </Typography>
@@ -126,6 +130,8 @@ function InfoButton(props) {
                 </Paper>
             </Popover>
         </div>
+        :
+        ''
     );
 }
 
@@ -149,9 +155,9 @@ function ScheduleItem(props) {
     } catch (valueError) {
         // console.log("not working: ", valueError)
     }
-    if (!displayText) {
-        displayText = '---'
-    }
+    // if (!displayText) {
+    //     displayText = '---'
+    // }
     return (
         <Box xs={6} display='flex' flexDirection={'row'} sx={{backgroundColor: highlight}}>
             <Typography sx={{margin: 'auto', padding: '3px', textAlign: 'center'}} variant={"body1"}>
@@ -161,137 +167,173 @@ function ScheduleItem(props) {
     )
 }
 
+function Header(props) {
+    const navigate = useNavigate();
+    
+    return (
+        <div className="printHidden" >
+        <SubNav 
+        
+        title={props.sch}
+        left={
+            <NavButton handleClick={() => {navigate(`/${props.org}/schedules/`)}} variant={'contained'} sx={{m: 1}}>
+            <ArrowBack sx={{mr: 1}}/>
+            <Typography
+            sx={{display: {xs: 'none', sm: 'block'}}}
+            noWrap
+            >
+                Schedules
+            </Typography>
+        </NavButton>
+        }
+        right={
+            <InfoButton title={props.data.type} description={description(props.data)} />
+        }
+        />
+    </div>
+    )
+}
+
+const description = (data) => (
+    (data.avDate
+        ?
+        `Availability Due: ${new Date(data.avDate).toLocaleString('en-US', {timeStyle: 'short', dateStyle: 'medium'})}\n`
+        :
+        '')
+        +
+        (data.timestamp
+            ?
+            `Last Edited: ${new Date(data.timestamp).toLocaleString('en-US', {timeStyle: 'short', dateStyle: 'medium'})}`
+            :
+            '')
+            )
+
 function Internal() {
     const theme = useTheme();
     
     const [ openBottom, setOpenBottom ] = useState(true);
     const [ people, setPeople ] = useState(true);
-    const [ error, setError ] = useState('Loading...');
+    const [ error, setError ] = useState('');
+    const [ loading, setLoading ] = useState(true)
 
     
     const [ data, setData ] = useState();
-    const navigate = useNavigate();
     const load = useLoaderData();
-    
-    const description = (data) => (
-        (data.avDate
-            ?
-            `Availability Due: ${new Date(data.avDate).toLocaleString('en-US', {timeStyle: 'short', dateStyle: 'medium'})}\n`
-            :
-            '')
-            +
-            (data.timestamp
-                ?
-                `Last Edited: ${new Date(data.timestamp).toLocaleString('en-US', {timeStyle: 'short', dateStyle: 'medium'})}`
-                :
-                '')
-                )
                 
     useEffect(() => {
-        getSchedule(load.org, load.sch).then(data => { setData(data) }).catch((error) => {setError(error.message)});
+        getSchedule(load.org, load.sch).then(data => { setData(data) }).then(() => {setLoading(false)}).catch((error) => {setError(error.message)});
         getPeople(load.org, setPeople)
     }, [])
 
     return (
-        
-                    
-                    data ?
-                    <Box>
-                        <div className="printHidden" >
-                            <SubNav 
-                            
-                            title={load.sch}
-                            left={
-                                <NavButton handleClick={() => {navigate(`/${load.org}/schedules/`)}} variant={'contained'} sx={{m: 1}}>
-                                <ArrowBack sx={{mr: 1}}/>
-                                <Typography
-                                sx={{display: {xs: 'none', sm: 'block'}}}
-                                noWrap
-                                >
-                                    Back
-                                </Typography>
-                            </NavButton>
-                            }
-                            right={
-                                <InfoButton title={data.type} description={description(data)} />
-                            }
-                            />
-                        </div>
-                        <ErrorBoundary>
-                            <Box padding={1} pb={0} sx={{width: '100%', display: {xs: 'none', md: 'block'}}}>
-                                <Typography whiteSpace={'break-spaces'} >
-                                    {description(data)}
-                                </Typography>
-                            </Box>
-                            
-                            {
-                                (new Date() < new Date(data.avDate)) && !data.contents[0]
-                                ?
-                                <AvForm avFields={data.avFields} org={load.org} title={load.sch} />
-                                :
-                                <div>
-                                    <div className="printHidden">
+        <div>
+            <Header sch={load.sch} data={data ? data : {}} org={load.org} />
+            {
+                loading ?
+                <Loading />
+                :
+                error ?
+                <Typography>{error}</Typography>
+                :
+                data ?
+                <Box>
+                    <ErrorBoundary>
+                        <Box padding={1} pb={0} sx={{width: '100%', display: {xs: 'none', md: 'block'}}}>
+                            <Typography whiteSpace={'break-spaces'} >
+                                {description(data)}
+                            </Typography>
+                        </Box>
+                        
+                        {
+                            (new Date() < new Date(data.avDate)) && !data.contents[0]
+                            ?
+                            <AvForm avFields={data.avFields} org={load.org} title={load.sch} />
+                            :
+                            <div>
+                                <div className="printHidden">
+                                    {
+                                        openBottom ?
+                                        <Paper square  sx={{ display: {xs: 'flex', sm: 'none'}, backgroundColor: wTheme.palette.secondary.main, width: '100%'}}>
+                                            <ErrorOutline sx={{my: 2, ml: 1}}/>
+                                            <Typography sx={{my: 2, ml: 1, flex: 1}} variant='body1'>
+                                                Try turning your phone on it side for a better view
+                                            </Typography>
+                                            <IconButton
+                                            size="small"
+                                            aria-label="close"
+                                            color="inherit"
+                                            onClick={() => {setOpenBottom(false)}}
+                                            sx={{m: 1 }}
+                                            >
+                                                <Close />
+                                            </IconButton>
+                                        </Paper>
+                                        :
+                                        ''
+                                    }
+                                </div>
+                                <table style={{borderCollapse: 'collapse', margin: 8}}>
+                                    <thead>
+                                        <tr>
+                                            {data.fields.map((field, oIndex) => (
+                                                <th key={field}>
+                                                    <Typography sx={{mx: 1, fontWeight: 'bold'}}>
+                                                        {field}
+                                                    </Typography>
+                                                </th>
+                                            ))}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
                                         {
-                                            openBottom ?
-                                            <Paper square  sx={{ display: {xs: 'flex', sm: 'none'}, backgroundColor: wTheme.palette.secondary.main, width: '100%'}}>
-                                                <ErrorOutline sx={{my: 2, ml: 1}}/>
-                                                <Typography sx={{my: 2, ml: 1, flex: 1}} variant='body1'>
-                                                    Try turning your phone on it side for a better view
-                                                </Typography>
-                                                <IconButton
-                                                size="small"
-                                                aria-label="close"
-                                                color="inherit"
-                                                onClick={() => {setOpenBottom(false)}}
-                                                sx={{m: 1 }}
-                                                >
-                                                    <Close />
-                                                </IconButton>
-                                            </Paper>
+                                            data.contents[0]
+                                            ?
+                                            data.contents.map((row, iIndex) => ((
+                                                <tr key={'row' + iIndex}>
+                                                    {data.fields.map((field, oIndex) => (
+                                                        <td key={oIndex + ',' + iIndex} style={{border: `1px solid ${theme.palette.primary.main}`, }}>
+                                                            <ScheduleItem field={field} row={row} data={data} people={people} />
+                                                        </td>
+                                                    ))
+                                                }
+                                                </tr>
+                                            )))
                                             :
                                             ''
                                         }
-                                    </div>
-                                    <table style={{borderCollapse: 'collapse', margin: 8}}>
-                                        <thead>
-                                            <tr>
-                                                {data.fields.map((field, oIndex) => (
-                                                    <th key={field}>
-                                                        <Typography sx={{mx: 1, fontWeight: 'bold'}}>
-                                                            {field}
-                                                        </Typography>
-                                                    </th>
-                                                ))}
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {
-                                                data.contents[0]
-                                                ?
-                                                data.contents.map((row, iIndex) => ((
-                                                    <tr key={'row' + iIndex}>
-                                                        {data.fields.map((field, oIndex) => (
-                                                            <td key={oIndex + ',' + iIndex} style={{border: `1px solid ${theme.palette.primary.main}`, }}>
-                                                                <ScheduleItem field={field} row={row} data={data} people={people} />
-                                                            </td>
-                                                        ))
-                                                    }
-                                                    </tr>
-                                                )))
-                                                :
-                                                ''
-                                            }
-                                        </tbody>
-                                    </table>
-                                    
-                                </div>
-                            }
-                        </ErrorBoundary>
-            
-                    </Box>
-                    :
-                    <Typography>{error}</Typography>
-                    
+                                    </tbody>
+                                </table>
+                                
+                            </div>
+                        }
+                    </ErrorBoundary>
+                </Box>
+                :
+                <div>
+                    <ThemeProvider theme={uTheme}>
+                        <Paper square sx={{ padding: 2, mt: '1px'}}>
+                            <Typography 
+                            variant='subtitle1'
+                            >
+                                <strong>
+                                    Sorry, we couldn't find a schedule with that name.
+                                </strong>
+                                <AdminCheck org={load.org} helperText={'The schedules below are all of the currently posted schedules in your organization.'}>
+                                    Below are all of your organization's schedules. 
+                                    Remember to click the "Publish" button
+                                    on your schedules before attempting to view them here.
+
+                                    Any schedule with a <VisibilityOff fontSize="small" sx={{pt: '3px'}}/> icon before its name 
+                                    is hidden to everyone except administrators using the 
+                                    schedule editor.
+                                </AdminCheck>
+                            </Typography>
+                        </Paper>
+                        <Schedules org={load.org} noHeader={true}/>
+                    </ThemeProvider>
+                </div>
+            }
+        </div>
     )
 }
 

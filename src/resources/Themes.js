@@ -34,7 +34,7 @@ export const mTheme = createTheme({
       main: '#e87a00',
     },
     background: {
-      default: '#001f3d',
+      default: 'rgb(0, 31, 61)',
       paper: '#045174',
     },
     text: {
@@ -216,3 +216,42 @@ export const cTheme = createTheme({
     divider: '#ffffff',
   },
 })
+
+// Test Theme
+export const uTheme = createTheme({
+  components: {
+    MuiPaper: {
+      styleOverrides: {
+        outlined: {
+          backgroundColor: '#ffffff',
+          borderColor: '#045174',
+          color: '#045174'
+        },
+      },
+    },
+    MuiInputBase: {
+      styleOverrides: {
+        root: {
+          color: '#045174',
+        }
+      }
+    }
+  },
+  palette: {
+    type: 'light',
+    primary: {
+      main: '#045174',
+    },
+    secondary: {
+      main: '#e87a00',
+    },
+    text: {
+      primary: '#ffffff',
+      secondary: '#045174',
+    },
+    background: {
+      default: 'rgb(255, 255, 255)',
+      paper: '#045174',
+    },
+  },
+});

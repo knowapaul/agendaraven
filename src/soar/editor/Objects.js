@@ -1,5 +1,5 @@
 // MUI Resources
-import { DeleteForeverOutlined, PunchClock } from "@mui/icons-material";
+import { Category, DeleteForeverOutlined, PunchClock } from "@mui/icons-material";
 import { Backdrop, Box, Button, Menu, MenuItem, Paper, TextField, Tooltip, Typography } from "@mui/material";
 import { useState } from "react";
 
@@ -61,7 +61,7 @@ export function Bucket(props) {
 }
 
 /**
- * ## Generic Drop Location 
+ * ## Generic Draggable Component  
  * 
  * Remember to nest in a react-dnd drag provider
  * 
@@ -217,7 +217,7 @@ export function FieldBucket(props) {
             ''
             }
             <MenuItem onClick={handleDelete}><DeleteForeverOutlined sx={{mr: 1, ml: 0}}/> Delete</MenuItem>
-            <MenuItem onClick={() => {setFormOpen(true); handleClose()}}><DeleteForeverOutlined sx={{mr: 1, ml: 0}}/> Type: {props.cats && props.item ? props.cats[props.item] : 'NONE'}</MenuItem>
+            <MenuItem onClick={() => {setFormOpen(true); handleClose()}}><Category sx={{mr: 1, ml: 0}}/> Type: {props.cats && props.item ? props.cats[props.item] : 'NONE'}</MenuItem>
             {props.cats && props.item ? 
                 props.cats[props.item] === 'time' ?
                 [
@@ -257,6 +257,7 @@ export function FieldBucket(props) {
 
 export function DisplayItem(props) {
     const [anchorEl, setAnchorEl] = useState(null);
+    const [ color, setColor ] = useState();
     const open = Boolean(anchorEl);
 
     const handleDelete = () => {
@@ -277,7 +278,10 @@ export function DisplayItem(props) {
             try {
                 displayText = props.people[props.row[props.field]].schedulename;
             } catch (typeError) {
-                console.log(typeError.message)
+                if (!color) {
+                    setColor('lightgray')
+                }
+                // console.log(typeError.message)
             }
         } else if (props.cats[props.field] === 'time') {
             let iDate = new Date();
@@ -296,7 +300,7 @@ export function DisplayItem(props) {
                 aria-haspopup="true"
                 aria-expanded={open ? 'true' : undefined}
                 onClick={handleClick}
-                sx={{textTransform: 'none', margin: 'auto'}}
+                sx={{textTransform: 'none', margin: 'auto', backgroundColor: color}}
             >
                 {displayText}
             </Typography>
@@ -310,7 +314,7 @@ export function DisplayItem(props) {
                 }}
             >
                 <Typography variant="subtitle1" fontWeight={'bold'} sx={{mx: 2}}>{'Item "' + displayText + '"'}</Typography>
-                <MenuItem onClick={handleDelete} sx={{minWidth: '100px'}}><DeleteForeverOutlined sx={{mr: 1, ml: 0}}/> Delete</MenuItem>
+                <MenuItem onClick={handleDelete} sx={{minWidth: '100px'}}><DeleteForeverOutlined sx={{mr: 1, ml: 0}}/>Delete</MenuItem>
             </Menu>
         </div>
     )

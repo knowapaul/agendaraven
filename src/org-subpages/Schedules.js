@@ -12,7 +12,7 @@ import AdminCheck from "../components/AdminCheck";
 import Cards from "../components/Cards";
 import { ErrorBoundary } from "../components/ErrorBoundary";
 import Form from "../components/Form";
-import { getAllSchedules, saveSchedule } from "../resources/Firebase";
+import { getAllSchedules, internalCheckAdmin, saveSchedule } from "../resources/Firebase";
 import MiniScroll from "../components/MiniScroll";
 
 
@@ -27,7 +27,7 @@ function Icons(props) {
     const navigate = useNavigate();
     return (
         <Box display={'flex'} flexDirection={'row'}>
-            <Tooltip title={"View Schedule"}>
+            <Tooltip title={"View Schedule"} sx={{display: props.published ? 'initial' : 'none'}}>
                 <IconButton color="secondary"
                     onClick={() => {navigate(`/${props.org}/schedules/${props.title}`)}}>
                 
@@ -38,7 +38,7 @@ function Icons(props) {
             <AdminCheck org={props.org}>
                 <Tooltip title={"Edit Schedule"}>
                     <IconButton color="secondary" onClick={() => {
-                        navigate(`/soar/${props.org}/${props.title}`)
+                        navigate(`/soar/${props.org}/${props.title}/schedule`)
                     }}>
                         <Edit />
                     </IconButton>
@@ -53,6 +53,8 @@ function View(props) {
     const [ data, setData ] = useState({});
     const [ open, setOpen ] = useState(false);
     const [ error, setError ] = useState();
+    const [ display, setDisplay ] = useState();
+    const [ loading, setLoading ] = useState(true);
     const navigate = useNavigate();
 
     function handleSubmit() {
@@ -65,7 +67,7 @@ function View(props) {
         })
             .then(() => {
                 console.log('sucess!')
-                navigate(`/soar/${props.org}/${data.schedulename}`)
+                navigate(`/soar/${props.org}/${data.schedulename}/schedule`)
             })
             .catch((e) => {
                 console.log(e)
@@ -73,39 +75,58 @@ function View(props) {
             })
     }
 
-    return (
-        <Cards 
-        data={props.data} 
-        open={true}
-        setOpen={() => {}}
-        helperMessage={"There are currently no schedules to display. If that doesn't seem right, try refreshing the page."} 
-        icons={Icons} 
-        add={
-            <AdminCheck org={props.org} >
-                <AddButton 
-                open={open}
-                setOpen={setOpen}
-                text='New Schedule'
-                tooltip='Create a schedule'
-                formTitle='Create a schedule'
-                form={
-                    <Form
-                    inputs={[
-                        {title: 'Schedule Name', placeholder: 'Case sensitive', type: 'text', required: true, validate: 'document'},
-                        {title: 'Schedule Type', placeholder: 'Describe your schedule', type: 'text', required: true, validate: 'text'},
-                    ]}
-                    data={data}
-                    setData={setData}
-                    buttonText={'Go to SOAR'}
-                    handleSubmit={handleSubmit}
-                    formError=''
-                    />
+    useEffect(() => {
+        let displayDat = [];
+        internalCheckAdmin(props.org).then((isAdmin) => {
+            props.data.forEach((item) => {
+                console.log('item', item, isAdmin)
+                if (item.published || isAdmin) {
+                    displayDat = displayDat.concat(item)
                 }
-                formError={error}
-                />
-            </AdminCheck>
-        }
-        />
+            })
+            setDisplay(displayDat)
+            setLoading(false)
+        })
+    }, [props.data])
+
+    return (
+        <div>
+
+            <Cards 
+            data={display} 
+            loading={loading}
+            open={true}
+            noHeader={props.noHeader}
+            setOpen={() => {}}
+            helperMessage={"There are currently no schedules to display. If that doesn't seem right, try refreshing the page."} 
+            icons={Icons} 
+            add={
+                <AdminCheck org={props.org} >
+                    <AddButton 
+                    open={open}
+                    setOpen={setOpen}
+                    text='New Schedule'
+                    tooltip='Create a schedule'
+                    formTitle='Create a schedule'
+                    form={
+                        <Form
+                        inputs={[
+                            {title: 'Schedule Name', placeholder: 'Case sensitive', type: 'text', required: true, validate: 'document'},
+                            {title: 'Schedule Type', placeholder: 'Describe your schedule', type: 'text', required: true, validate: 'text'},
+                        ]}
+                        data={data}
+                        setData={setData}
+                        buttonText={'Go to SOAR'}
+                        handleSubmit={handleSubmit}
+                        formError=''
+                        />
+                    }
+                    formError={error}
+                    />
+                </AdminCheck>
+            }
+            />
+        </div>
     )
 }
 
@@ -121,7 +142,7 @@ export default function Schedules(props) {
     return (
         <ErrorBoundary>
             <MiniScroll>
-                <View org={props.org} title={props.title} firebase={props.firebase} data={data} />
+                <View {...props} data={data} />
             </MiniScroll>
         </ErrorBoundary>
     )

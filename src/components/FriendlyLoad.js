@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 
 // MUI Resources
-import { CircularProgress, Box, Typography } from "@mui/material";
+import { CircularProgress, Box, Typography, Paper } from "@mui/material";
 
 // Project Resources
 import { accessImage } from "../resources/Firebase";
@@ -49,21 +49,18 @@ export default function FriendlyLoad(props) {
             ?
             <img {...imgProps} alt={props.alt} src={source} /> 
             : 
-            <Box 
-            backgroundColor="primary"
-            display="flex" 
-            alignItems="center"
-            justifyContent="center"
-            sx={{height: props.height}}
+            <Paper 
+            variant='outlined'
+            sx={{height: '100%', width: '100%', display: 'flex', alignItems: "center", justifyContent: "center"}}
             >
                 {
                 ((source === 'ERROR') || fail)
                 ? 
-                <Typography>Error Loading Image</Typography> 
+                <Typography sx={{margin: 'auto'}}>Error Loading Image</Typography> 
                 :
                 <CircularProgress color="secondary"/>
                 }
-            </Box>
+            </Paper>
             }
         </Box>
     )

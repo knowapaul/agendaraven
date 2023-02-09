@@ -143,7 +143,7 @@ export function Palette(props) {
                 <ErrorBoundary>
                     <TextField 
                     sx={{width: '100%', mb: '1px'}}
-                    variant='filled'
+                    variant='standard'
                     value={value}
                     placeholder={'Search'}
                     onChange={(e) => {setValue(e.target.value)}}

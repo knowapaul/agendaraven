@@ -4,7 +4,7 @@ import { useLoaderData, useNavigate } from "react-router-dom";
 // MUI Resources
 import { ThemeProvider } from "@emotion/react";
 import { CalendarToday, Dashboard, DonutLarge, Groups, Home, Logout, Settings } from '@mui/icons-material';
-import { CssBaseline, Stack, Typography } from "@mui/material";
+import { CssBaseline } from "@mui/material";
 
 // Project Resources
 import { useEffect } from "react";
@@ -15,7 +15,7 @@ import OrgHome from "../org-subpages/OrgHome";
 import OrgSettings from "../org-subpages/OrgSettings";
 import People from "../org-subpages/People";
 import Schedules from "../org-subpages/Schedules";
-import { wTheme } from '../resources/Themes';
+import { uTheme } from '../resources/Themes';
 
 
 //  ["Availability", <EventAvailable color={'secondary'} />],
@@ -33,31 +33,6 @@ const menu = [
   ["My Dashboard", <Dashboard color={'secondary'} />],
   ["Log Out", <Logout color={'secondary'} />],
 ]
-
-function Logo(props) {
-  return (
-    <Stack
-      direction="row"
-      spacing={2} 
-      padding={1}
-      height={'100%'}
-      >
-        <DonutLarge fontSize="large"/>
-        <Typography
-        variant="h6"
-        noWrap
-        component="a"
-        sx={{
-        fontFamily: 'quicksand',
-        fontWeight: 700,
-        letterSpacing: '.3rem',
-        }}
-        >
-          {props.org[0].toUpperCase() + props.org.slice(1)}
-        </Typography>
-      </Stack>
-  )
-}
 
 export async function orgLoader({ params }) {
     return [params.org, params.page];
@@ -89,13 +64,13 @@ export function OrgDash(props) {
   return (
     <AuthCheck>
       <OrgCheck org={org}>
-        <ThemeProvider theme={wTheme}>
+        <ThemeProvider theme={uTheme}>
           <CssBaseline />
             <DashModel 
             menuItems={menu} 
             page={page} 
             title={page} 
-            logo={<Logo org={org}/>} 
+            logo={{icon: <DonutLarge fontSize="large"/>, href: `/${org}/home`, title: org[0].toUpperCase() + org.slice(1), }} 
             path={`/${org}/`} 
             >
                 {elementMap[page]}

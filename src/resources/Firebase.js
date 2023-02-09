@@ -36,15 +36,15 @@ function fullRefresh() {
 
 export function setApp(app) {
     auth = getAuth(app);
-    // connectAuthEmulator(auth, "http://localhost:9099")
+    connectAuthEmulator(auth, "http://localhost:9099")
     db = getFirestore(app);
-    // connectFirestoreEmulator(db, 'localhost', 8080);
+    connectFirestoreEmulator(db, 'localhost', 8080);
     functions = getFunctions(app);
-    // connectFunctionsEmulator(functions, 'localhost', 5001);
+    connectFunctionsEmulator(functions, 'localhost', 5001);
     storage = getStorage(app);
-    // connectStorageEmulator(storage, 'localhost', 9199);
-    perf = getPerformance(app);
-    console.log('perf', perf)
+    connectStorageEmulator(storage, 'localhost', 9199);
+    // perf = getPerformance(app);
+    // console.log('perf', perf)
 
 
 // if (window.confirm('Do you want to restore the database?') === true) {
@@ -219,10 +219,9 @@ export async function getPeople(org, setPeople) {
     console.log('done getpeople')
 }
 
-async function internalCheckAdmin(org) {
+export async function internalCheckAdmin(org) {
     const data = await getData(org + '/public/users/' + auth.currentUser.uid);
     return data.admin;
-    
 }
 
 
@@ -293,7 +292,7 @@ export async function getAllAvs(org, setAllAvs, refresh) {
     }
 }
 
-export function saveSchedule(org, title, data, published) {
+export async function saveSchedule(org, title, data, published) {
     console.log('saveschedule')
 
     const description = (data) => (
@@ -315,9 +314,15 @@ export function saveSchedule(org, title, data, published) {
     console.log('address', org + `/agenda/${published ? 'schedules' : 'unpublished'}/` + title)
 
     batch.set(doc(db, org + `/agenda/${published ? 'schedules' : 'unpublished'}/` + title), data, {merge: true})
-    if (published) {
-        batch.set(doc(db, org + '/agenda'), {[title]: {title: title, description: description(data), subtitle: data.type }}, {merge: true})
+
+    const prev = getData(org + '/agenda', true);
+
+    let wasPublished;
+    if (prev[title]) {
+        wasPublished = prev[title][published]
     }
+
+    batch.set(doc(db, org + '/agenda'), {[title]: {title: title, description: description(data), subtitle: data.type, published: Boolean(wasPublished || published), }}, {merge: true})
 
     return batch.commit();
 }
