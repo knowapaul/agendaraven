@@ -26,7 +26,7 @@ export default function DataImport(props) {
 
 
     return (
-        <Box sx={{padding: 1, height: 'calc(100% - 16px)', overflow: 'auto'}}>
+        <Box sx={{padding: 1}}>
             {
                 preview ?
                 <Box>

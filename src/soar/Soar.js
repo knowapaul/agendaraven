@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { DndProvider } from 'react-dnd';
 
 // MUI Resources
-import { ThemeProvider } from "@emotion/react";
+import { ThemeProvider, useTheme } from "@emotion/react";
 import { Box, Typography } from "@mui/material";
 
 // Project Resources
@@ -20,7 +20,7 @@ import { ErrorBoundary } from "../components/ErrorBoundary";
 import { getAllAvs, getPeople, getSchedule, saveSchedule } from "../resources/Firebase";
 import AvFields from "./AvFields";
 import DataImport from "./DataImport";
-import { Bottom, Top } from './Headers';
+import { Top } from './Headers';
 import PeopleAvs from "./PeopleAvs";
 import Automation from "./Automation";
 import DashModel from "../components/DashModel";
@@ -53,6 +53,27 @@ function LoadNav(props) {
     return <div></div>
 }
   
+function Logo(props) {
+    const theme = useTheme();
+    return (
+        <Box 
+        flex={1} 
+        height='100%' 
+        sx={{display: 'flex',
+            alignItems: 'center',
+        }}
+        >
+            <Box paddingLeft={2}>
+            <Typography variant={'h5'} color={theme.palette.primary.main}>
+                {props.title}
+            </Typography>
+            <Typography variant="subtitle2" color={theme.palette.primary.main}>
+                {props.type}
+            </Typography>
+            </Box>
+        </Box>
+    )
+}
 
 /**
  * ## The Soar Scheduling Component
@@ -218,7 +239,6 @@ export default function Soar() {
         ['View All', <Home color="secondary" />]
       ]
     
-
     return (
         <ThemeProvider theme={uTheme}>  
             <AuthCheck>
@@ -228,8 +248,9 @@ export default function Soar() {
                         menuItems={menu} 
                         page={tab} 
                         title={tab} 
-                        logo={{title: load.sch, href: `/${org}/schedules/${load.sch}/`}} 
+                        customLogo={<Logo {...universalProps} />} 
                         path={`/soar/${org}/${load.sch}/`} 
+                        customHeader={<Top {...universalProps} />}
                         >
                             {tabs[tab]}
                         </DashModel>

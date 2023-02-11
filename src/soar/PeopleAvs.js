@@ -51,7 +51,7 @@ function Person(props) {
                             <Grid container>
                                 {props.avFields.map((item) => (
                                     <Grid item key={item.title} xs={6} sx={{padding: 1}}>
-                                        <Typography fontWeight={'bold'} color={ iAv[props.title] ? theme.palette.text.primary : 'lightgrey'}>
+                                        <Typography fontWeight={'bold'} color={ iAv[props.title] ? theme.palette.primary.main : 'lightgrey'}>
                                             {item.title}
                                         </Typography>
                                         {edit ?

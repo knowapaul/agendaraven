@@ -16,3 +16,11 @@ body {
 * {
     box-sizing: border-box;
 }
+
+.blueText {
+    color: '#045174';
+}
+
+.whiteText {
+    color: '#ffffff';
+}

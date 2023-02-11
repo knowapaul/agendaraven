@@ -28,7 +28,7 @@ export const mTheme = createTheme({
   palette: {
     type: 'dark',
     primary: {
-      main: '#001f3d',
+      main: 'rgb(0, 31, 61)',
     },
     secondary: {
       main: '#e87a00',
@@ -217,6 +217,16 @@ export const cTheme = createTheme({
   },
 })
 
+
+// MuiInputBase: {
+//   styleOverrides: {
+//     root: {
+//       color: '#045174',
+//     }
+//   }
+// }
+
+
 // Test Theme
 export const uTheme = createTheme({
   components: {
@@ -229,13 +239,6 @@ export const uTheme = createTheme({
         },
       },
     },
-    MuiInputBase: {
-      styleOverrides: {
-        root: {
-          color: '#045174',
-        }
-      }
-    }
   },
   palette: {
     type: 'light',

@@ -116,7 +116,7 @@ function Left(props) {
     return (
         <div>
             <Header org={props.org} />
-            <Paper sx={{mx: 2, padding: 2}}>
+            <Paper sx={{mx: 2, my: 1, padding: 2}}>
                 {edit ? 
                 <div>
                     <TextField 
@@ -235,8 +235,8 @@ function FileItem(props) {
             justifyContent: 'left', 
             textAlign: 'left',
             borderRadius: 0,
-            borderRight: {xs: `1px solid ${theme.palette.primary.main}`},
-            borderLeft: {xs: `1px solid ${theme.palette.primary.main}`},
+            borderRight: `1px solid ${theme.palette.primary.main}`,
+            borderLeft: `1px solid ${theme.palette.primary.main}`,
             borderBottom: `1px solid ${theme.palette.primary.main}`,
         }}
         >   
@@ -315,32 +315,23 @@ export default function OrgHome(props) {
     const theme = useTheme();
 
     return (
-        <MiniScroll>
-            <Box display={'flex'} flexDirection={{ xs: 'column', md: 'row', }}>
-                <Box 
-                width={{ xs: '100%', md: '50%'}}            >
-                    <ErrorBoundary>
-                        <Left org={props.org} />
-                    </ErrorBoundary>
-                </Box>
-                <Box 
-                width={{ xs: '100%', md: '50%'}} 
-                height={'100%'}
-                display={'flex'}
-                flexDirection={'row'}
-                padding={{ xs: 2, md: 0}}
-                >
-                    <Box
-                    width={'1px'}
-                    display={{xs: `none`, md: 'block'}}
-                    height={'100%'}
-                    sx={{backgroundColor: theme.palette.primary.main}}
-                    />
-                    <ErrorBoundary>
-                        <Right org={props.org} />
-                    </ErrorBoundary>
-                </Box>
+        <Box display={'flex'} flexDirection={{ xs: 'column', md: 'row', }}>
+            <Box 
+            width={{ xs: '100%', md: '50%'}}            >
+                <ErrorBoundary>
+                    <Left org={props.org} />
+                </ErrorBoundary>
             </Box>
-        </MiniScroll>
+            <Box 
+            width={{ xs: '100%', md: '50%'}} 
+            display={'flex'}
+            flexDirection={'row'}
+            padding={{ xs: 2, md: 0}}
+            >
+                <ErrorBoundary>
+                    <Right org={props.org} />
+                </ErrorBoundary>
+            </Box>
+        </Box>
     )
 }

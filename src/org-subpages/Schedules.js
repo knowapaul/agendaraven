@@ -50,7 +50,7 @@ function Icons(props) {
 
 // View posted schedules
 function View(props) {
-    const [ data, setData ] = useState({});
+    const [ data, setData ] = useState({schedulename: '', scheduletype: ''});
     const [ open, setOpen ] = useState(false);
     const [ error, setError ] = useState();
     const [ display, setDisplay ] = useState();
@@ -141,9 +141,7 @@ export default function Schedules(props) {
 
     return (
         <ErrorBoundary>
-            <MiniScroll>
-                <View {...props} data={data} />
-            </MiniScroll>
+            <View {...props} data={data} />
         </ErrorBoundary>
     )
 }

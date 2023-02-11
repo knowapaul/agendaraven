@@ -6,7 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@emotion/react';
-import { Box, Divider, Drawer, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, Stack, ThemeProvider, Paper } from '@mui/material';
+import { Box, Divider, Drawer, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, Stack, ThemeProvider, Paper, AppBar } from '@mui/material';
 
 // Project Resources
 import AuthCheck from '../components/AuthCheck';
@@ -106,10 +106,12 @@ function Menu(props) {
  * 
  * @param  {Map} props
  * *React props:*
- * - props.menuItems: map of menu items in the format *name : icon*
- * - props.page: the path of the currently selected menu item
- * - props.logo: {title, icon, href}
- * - props.path: the root path of the page
+ * - *props.menuItems: map of menu items in the format *name : icon*
+ * - *props.page: the path of the currently selected menu item
+ * - *props.path: the root path of the page
+ * - props.logo: {title, icon, href} the logo props
+ * - props.customLogo: a logo to display instead of the default logo
+ * - props.customHeader: a header to display instead of the default header
  */
 export default function DashModel(props) {
     const { win } = props;
@@ -119,46 +121,6 @@ export default function DashModel(props) {
     const handleDrawerToggle = () => {
       setMobileOpen(!mobileOpen);
     };
-
-    // const contrastTheme = createTheme({
-    //     components: {
-    //         MuiPaper: {
-    //           styleOverrides: {
-    //             outlined: {
-    //               backgroundColor: theme.palette.background.paper,
-    //               color: theme.palette.text.primary,
-    //             },
-    //           },
-    //         },
-    //         MuiInputBase: {
-    //             styleOverrides: {
-    //                 root: {
-    //                     color: theme.palette.text.primary
-    //                 }
-    //             }
-    //         }
-    //       },
-    //     palette: {
-    //         type: theme.palette.type,
-    //         primary: {
-    //           main: theme.palette.background.default,
-    //         },
-    //         secondary: {
-    //           main: theme.palette.secondary.main,
-    //         },
-    //         background: {
-    //           paper: theme.palette.background.default,
-    //         },
-    //         text: {
-    //           primary: theme.palette.background.paper,
-    //           secondary: theme.palette.background.default,
-    //         },
-    //         warning: {
-    //           main: 'rgb(178, 149, 0)',
-    //         },
-    //         divider: theme.palette.background.default,
-    //       },
-    // })
   
     const drawer = (
         <div>
@@ -166,7 +128,10 @@ export default function DashModel(props) {
             disableGutters  
             sx={{boxShadow: 'none'}}      
           >
-              <Logo {...props.logo} />
+                {props.customLogo ?
+                props.customLogo :
+                <Logo {...props.logo} />
+                }
           </Toolbar>
           <Divider sx={{borderColor: uTheme.palette.primary.main}} />
           <Menu path={props.path} page={props.page} items={props.menuItems}/>
@@ -186,6 +151,8 @@ export default function DashModel(props) {
             }
         }
       })    
+
+      console.log('customheader', props.customHeader)
   
     return (
         <ThemeProvider theme={uTheme}>
@@ -213,8 +180,11 @@ export default function DashModel(props) {
                         >
                         {drawer}
                         </Drawer>
-                        <Box
+                        <Paper
+                        square
                         sx={{
+                            backgroundColor: uTheme.palette.background.default,
+                            zIndex: 1201,
                             position: 'fixed',
                             width: drawerWidth,
                             display: { xs: 'none', sm: 'block' },
@@ -223,10 +193,10 @@ export default function DashModel(props) {
                         }}
                         >
                         {drawer}
-                        </Box>
+                        </Paper>
                     </Box>
                     <Box flex={1} >
-                        <Paper 
+                        <Paper
                         square
                         elevation={atTop ? 0 : 10}
                         sx={{
@@ -235,36 +205,39 @@ export default function DashModel(props) {
                             backgroundColor: uTheme.palette.background.default.replace(')', ', .6)').replace('rgb', 'rgba'),
                             flex: '0 1 auto',
                             zIndex: 1200,
-                            boxShadow: 'none',
                             ml: '1px',
                             WebkitBackdropFilter: 'blur(10px)',
                             backdropFilter: 'blur(10px)',
                         }}
                         >
-                            <Toolbar  sx={{height: '100%' }} >
-                            <IconButton
-                                color="inherit"
-                                aria-label="open drawer"
-                                edge="start"
-                                onClick={handleDrawerToggle}
-                                sx={{ mr: 2, display: { sm: 'none' } }}
-                            >
-                                <MenuIcon color="primary" />
-                            </IconButton>
-                            <Box sx={{ flexGrow: 1, display:'flex', justifyContent: 'center' }}>
-                                <Typography 
-                                variant="h5" 
-                                noWrap 
-                                component="div"
-                                textAlign='center'
-                                sx={{color: uTheme.palette.text.secondary}}
+                            {props.customHeader ?
+                                props.customHeader
+                                :
+                                <Toolbar  sx={{height: '100%' }} >
+                                <IconButton
+                                    color="inherit"
+                                    aria-label="open drawer"
+                                    edge="start"
+                                    onClick={handleDrawerToggle}
+                                    sx={{ mr: 2, display: { sm: 'none' } }}
                                 >
-                                    {props.page[0].toUpperCase() + props.page.slice(1)}
-                                </Typography>
-                            </Box>
-                            <CustomAvatar />
-                            </Toolbar>
-                            <Divider sx={{borderColor: uTheme.palette.primary.main}} />
+                                    <MenuIcon color="primary" />
+                                </IconButton>
+                                <Box sx={{ flexGrow: 1, display:'flex', justifyContent: 'center' }}>
+                                    <Typography 
+                                    variant="h5" 
+                                    noWrap 
+                                    component="div"
+                                    textAlign='center'
+                                    sx={{color: uTheme.palette.text.secondary}}
+                                    >
+                                        {props.page[0].toUpperCase() + props.page.slice(1)}
+                                    </Typography>
+                                </Box>
+                                <CustomAvatar />
+                                </Toolbar>                                
+                            }
+                            <Divider sx={{borderColor: uTheme.palette.primary.main, display: {xs: 'none', sm: 'block'}}} />
                         </Paper>
                         <ErrorBoundary>
                             <Box sx={{height: {xs: '59px', sm: '65px'}}} />
