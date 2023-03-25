@@ -30,52 +30,52 @@ import Schedules from '../user-subpages/Schedules.js';
 
 // ["Account", <AccountCircle color="secondary" />],
 
-//   ["Account", <AccountCircle color="secondary" />],
+//     ["Account", <AccountCircle color="secondary" />],
 
 
 
 const menu = [
-  ["My Organizations", <DashboardCustomize color="secondary" />],
-  ["1", ""],
-  ["Log Out", <Logout color="secondary" />]
+    ["My Organizations", <DashboardCustomize color="secondary" />],
+    ["1", ""],
+    ["Log Out", <Logout color="secondary" />]
 ]
 
 
 export async function dashLoader({ params }) {
-  const page = params.page ? params.page : 'organizations'
-  return page;
+    const page = params.page ? params.page : 'organizations'
+    return page;
 }
 
-export function Dashboard(props) {  
-  const page = useLoaderData();
+export function Dashboard(props) {    
+    const page = useLoaderData();
 
-  const elementMap = {
-    organizations: <Organizations />,
-    inbox: <Inbox />,
-    schedules: <Schedules />,
-    availability: <Availability />,
-    insights: <Insights />,
-    payments: <Payments />,
-    account: <Account />
-  };
+    const elementMap = {
+        organizations: <Organizations />,
+        inbox: <Inbox />,
+        schedules: <Schedules />,
+        availability: <Availability />,
+        insights: <Insights />,
+        payments: <Payments />,
+        account: <Account />
+    };
 
-  return (
-    <AuthCheck >
-      <ThemeProvider theme={uTheme}>
-        <CssBaseline />
-          <DashModel 
-          menuItems={menu} 
-          logo={{
-            title: 'AgendaRaven', 
-            href: '/', 
-            icon: <img src='/favicon.ico' width='48' height='48' alt='logo'/>
-          }} 
-          page={page}
-          path={`/dashboard/`} 
-          >
-            {elementMap[page]}
-          </DashModel>
-      </ThemeProvider>
-    </AuthCheck>
-  )
+    return (
+        <AuthCheck >
+            <ThemeProvider theme={uTheme}>
+                <CssBaseline />
+                    <DashModel 
+                    menuItems={menu} 
+                    logo={{
+                        title: 'AgendaRaven', 
+                        href: '/', 
+                        icon: <img src='/favicon.ico' width='48' height='48' alt='logo'/>
+                    }} 
+                    page={page}
+                    path={`/dashboard/`} 
+                    >
+                        {elementMap[page]}
+                    </DashModel>
+            </ThemeProvider>
+        </AuthCheck>
+    )
 }

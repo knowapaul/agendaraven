@@ -336,7 +336,7 @@ function Internal() {
                 setLoading(false); 
                 const tOverdue = new Date() > new Date(nData?.avDate) 
                 console.log('overdue', tOverdue, nData?.avDate)
-                setView(nData?.avFields?.length > 0  && tOverdue && !nData.contents[0] ? 'availability' : 'schedule');
+                setView(nData?.avFields?.length > 0  && !tOverdue && !nData.contents[0] ? 'availability' : 'schedule');
                 setOverdue(tOverdue);
             }).catch((error) => {setError(error.message)});
         getPeople(load.org, setPeople)

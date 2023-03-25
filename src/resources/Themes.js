@@ -25,22 +25,22 @@ import { createTheme } from '@mui/material';
  * Text: Transparent white?
  */
 export const mTheme = createTheme({
-  palette: {
-    type: 'dark',
-    primary: {
-      main: 'rgb(0, 31, 61)',
+    palette: {
+        type: 'dark',
+        primary: {
+            main: 'rgb(0, 31, 61)',
+        },
+        secondary: {
+            main: '#e87a00',
+        },
+        background: {
+            default: 'rgb(0, 31, 61)',
+            paper: '#045174',
+        },
+        text: {
+            primary: 'rgba(255,255,255,0.87)',
+        },
     },
-    secondary: {
-      main: '#e87a00',
-    },
-    background: {
-      default: 'rgb(0, 31, 61)',
-      paper: '#045174',
-    },
-    text: {
-      primary: 'rgba(255,255,255,0.87)',
-    },
-  },
 });
 
 /**
@@ -63,27 +63,27 @@ export const mTheme = createTheme({
  * Divider: Neptune
  */
 export const wTheme = createTheme({
-  palette: {
-    type: 'light',
-    primary: {
-      main: '#ffffff',
+    palette: {
+        type: 'light',
+        primary: {
+            main: '#ffffff',
+        },
+        secondary: {
+            main: '#e87a00',
+        },
+        background: {
+            paper: '#ffffff',
+            default: '#045174',
+        },
+        text: {
+            primary: '#045174',
+            secondary: '#001f3d',
+        },
+        warning: {
+            main: 'rgb(178, 149, 0)',
+        },
+        divider: '#045174',
     },
-    secondary: {
-      main: '#e87a00',
-    },
-    background: {
-      paper: '#ffffff',
-      default: '#045174',
-    },
-    text: {
-      primary: '#045174',
-      secondary: '#001f3d',
-    },
-    warning: {
-      main: 'rgb(178, 149, 0)',
-    },
-    divider: '#045174',
-  },
 });
 
 /**
@@ -105,26 +105,26 @@ export const wTheme = createTheme({
  * 
  */
 export const oTheme = createTheme({
-  palette: {
-    type: 'light',
-    primary: {
-      main: '#001f3d',
+    palette: {
+        type: 'light',
+        primary: {
+            main: '#001f3d',
+        },
+        secondary: {
+            main: '#001f3d',
+        },
+        background: {
+            default: '#e87a00',
+            paper: '#045174',
+        },
+        text: {
+            primary: '#ffffff',
+            secondary: '#ffffff',
+        },
+        warning: {
+            main: 'rgb(178, 149, 0)',
+        },
     },
-    secondary: {
-      main: '#001f3d',
-    },
-    background: {
-      default: '#e87a00',
-      paper: '#045174',
-    },
-    text: {
-      primary: '#ffffff',
-      secondary: '#ffffff',
-    },
-    warning: {
-      main: 'rgb(178, 149, 0)',
-    },
-  },
 });
 
 /**
@@ -146,26 +146,26 @@ export const oTheme = createTheme({
  * Divider: White
  */
 export const bTheme = createTheme({
-  palette: {
-    type: 'dark',
-    primary: {
-      main: '#001f3d',
+    palette: {
+        type: 'dark',
+        primary: {
+            main: '#001f3d',
+        },
+        secondary: {
+            main: '#e87a00',
+        },
+        background: {
+            default: '#045174',
+            paper: '#001f3d',
+        },
+        text: {
+            primary: '#ffffff',
+        },
+        warning: {
+            main: 'rgb(178, 149, 0)',
+        },
+        divider: '#ffffff',
     },
-    secondary: {
-      main: '#e87a00',
-    },
-    background: {
-      default: '#045174',
-      paper: '#001f3d',
-    },
-    text: {
-      primary: '#ffffff',
-    },
-    warning: {
-      main: 'rgb(178, 149, 0)',
-    },
-    divider: '#ffffff',
-  },
 });
 /**
  * Light Theme
@@ -185,82 +185,82 @@ export const bTheme = createTheme({
  * Divider: White
  */
 export const cTheme = createTheme({
-  components: {
-    MuiPaper: {
-      styleOverrides: {
-        outlined: {
-          backgroundColor: '#ffffff',
-          borderColor: '#045174',
+    components: {
+        MuiPaper: {
+            styleOverrides: {
+                outlined: {
+                    backgroundColor: '#ffffff',
+                    borderColor: '#045174',
+                },
+            },
         },
-      },
     },
-  },
-  palette: {
-    type: 'light',
-    primary: {
-      main: '#045174',
+    palette: {
+        type: 'light',
+        primary: {
+            main: '#045174',
+        },
+        secondary: {
+            main: '#001f3d',
+            light: '#e87a00'
+        },
+        text: {
+            primary: '#001f3d',
+            secondary: '#ffffff',
+        },
+        background: {
+            default: '#ffffff',
+            paper: '#045174',
+        },
+        divider: '#ffffff',
     },
-    secondary: {
-      main: '#001f3d',
-      light: '#e87a00'
-    },
-    text: {
-      primary: '#001f3d',
-      secondary: '#ffffff',
-    },
-    background: {
-      default: '#ffffff',
-      paper: '#045174',
-    },
-    divider: '#ffffff',
-  },
 })
 
 
 // MuiInputBase: {
-//   styleOverrides: {
-//     root: {
-//       color: '#045174',
+//     styleOverrides: {
+//         root: {
+//             color: '#045174',
+//         }
 //     }
-//   }
 // }
 
 
 // Test Theme
 export const uTheme = createTheme({
-  components: {
-    MuiPaper: {
-      styleOverrides: {
-        outlined: {
-          backgroundColor: '#ffffff',
-          borderColor: '#045174',
-          color: '#045174'
+    components: {
+        MuiPaper: {
+            styleOverrides: {
+                outlined: {
+                    backgroundColor: '#ffffff',
+                    borderColor: '#045174',
+                    color: '#045174'
+                },
+            },
         },
-      },
+        MuiInputBase: {
+                styleOverrides: {
+                    root: {
+                        color: '#045174',
+                    }
+                }
+            }
     },
-    MuiInputBase: {
-        styleOverrides: {
-          root: {
-            color: '#045174',
-          }
-        }
-      }
-  },
-  palette: {
-    type: 'light',
-    primary: {
-      main: '#045174',
+    palette: {
+        type: 'light',
+        primary: {
+            main: '#045174',
+        },
+        secondary: {
+            main: '#e87a00',
+        },
+        text: {
+            primary: '#ffffff',
+            secondary: '#045174',
+        },
+        background: {
+            default: 'rgb(255, 255, 255)',
+            paper: '#045174',
+        },
     },
-    secondary: {
-      main: '#e87a00',
-    },
-    text: {
-      primary: '#ffffff',
-      secondary: '#045174',
-    },
-    background: {
-      default: 'rgb(255, 255, 255)',
-      paper: '#045174',
-    },
-  },
 });
