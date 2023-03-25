@@ -1,11 +1,9 @@
-import { useTheme } from "@emotion/react";
 import { Box, Button, TextField, Tooltip, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { CustomSnackbar } from "../components/CustomSnackbar";
 import { getFirebase, getUserData, handleUpdatePassword } from "../resources/Firebase";
 
 export default function Account(props) {
-    const theme = useTheme();
 
     const [ changing, setChanging ] = useState(false);
     const [ name, setName ] = useState('');

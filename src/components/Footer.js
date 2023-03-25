@@ -19,12 +19,12 @@ export default function Footer() {
             divider={<Divider orientation="vertical" />}
             >
                 <Typography
-                fontFamily="Quicksand"
+                className='quicksand'
                 >
                     AgendaRaven 2022
                 </Typography>
                 <Link
-                fontFamily="Quicksand"
+                className='quicksand'
                 >
                     Contact Us
                 </Link>

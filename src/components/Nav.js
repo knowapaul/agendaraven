@@ -3,12 +3,12 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 // MUI Resources
-import { ThemeProvider, useTheme } from '@emotion/react';
-import { AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Button, MenuItem } from '@mui/material';
+import { ThemeProvider } from '@emotion/react';
 import { Menu as MenuIcon } from '@mui/icons-material';
+import { AppBar, Box, Button, IconButton, Menu, MenuItem, responsiveFontSizes, Toolbar, Typography } from '@mui/material';
 
 // Project Resources
-import { mTheme } from '../resources/Themes.js'
+import { mTheme } from '../resources/Themes.js';
 import CustomAvatar from './CustomAvatar.js';
 
 
@@ -19,6 +19,7 @@ function nameToURL(name) {
 export default function Nav() {
   const [ anchorElNav, setAnchorElNav ] = useState(null);
   const [ atTop, setAtTop ] = useState(true);
+  const [ verySmall, setVerySmall ] = useState(false);
   const navigate = useNavigate();
 
   const handleOpenNavMenu = (event) => {
@@ -39,12 +40,27 @@ export default function Nav() {
             }
         }
     }
+    
+    function checkVs() {
+        if (window.innerWidth < 350) {
+            if (!verySmall) {
+                setVerySmall(true)
+            }
+        } else {
+            if (verySmall) {
+                setVerySmall(false)
+            }
+        }
+    }
+    checkVs()
+    window.onresize = checkVs
   })
 
-  const theme = useTheme();
 
   const pages = ['Dashboard', 'Help'];
   const title = 'AgendaRaven';
+
+  const rTheme = responsiveFontSizes(mTheme)
 
   return (
     <ThemeProvider theme={mTheme}>
@@ -56,29 +72,29 @@ export default function Nav() {
             WebkitBackdropFilter: 'blur(10px)',
             backdropFilter: 'blur(10px)',
         }}>
-            <Toolbar>
-                <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }}>
-                    <img src='/favicon.ico' width='32' height='32' />
+            <Toolbar disableGutters>
+                <Box sx={{ display: { xs: 'none', md: 'flex' }, ml: 2, mr: 1 }}>
+                    <img alt='' src='/favicon.ico' width='32' height='32' />
                 </Box>
                 <Typography
                     variant="h6"
                     noWrap
                     component="a"
                     href={"/"}
+                    className='quicksand'
                     sx={{
-                    mr: 2,
-                    display: { xs: 'none', md: 'flex' },
-                    fontFamily: 'quicksand',
-                    fontWeight: 700,
-                    letterSpacing: '.3rem',
-                    color: 'inherit',
-                    textDecoration: 'none',
+                        mr: 2,
+                        display: { xs: 'none', md: 'flex' },
+                        fontWeight: 700,
+                        letterSpacing: '.3rem',
+                        color: 'inherit',
+                        textDecoration: 'none',
                     }}
                 >
                     {title}
                 </Typography>
 
-                <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+                <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' }, ml: {xs: 0, sm: 1}}}>
                     <IconButton
                     size="large"
                     aria-label="account of current user"
@@ -97,10 +113,6 @@ export default function Nav() {
                         horizontal: 'left',
                     }}
                     keepMounted
-                    transformOrigin={{
-                        vertical: 'atTop',
-                        horizontal: 'left',
-                    }}
                     open={Boolean(anchorElNav)}
                     onClose={handleCloseNavMenu}
                     sx={{
@@ -114,34 +126,36 @@ export default function Nav() {
                     ))}
                     </Menu>
                 </Box>
-                <Box sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} >
-                    <img src='/favicon.ico' width='32' height='32' />
+                <Box sx={{ display: { xs: verySmall ? 'none' : 'flex', md: 'none' }, mr: 1 }} >
+                    <img alt='' src='/favicon.ico' width='32' height='32' />
                 </Box>
-                <Typography
-                    variant="h5"
-                    noWrap
-                    component="a"
-                    href="/"
-                    sx={{
-                    mr: 2,
-                    display: { xs: 'flex', md: 'none' },
-                    flexGrow: 1,
-                    fontFamily: 'Quicksand',
-                    fontWeight: 700,
-                    letterSpacing: '.3rem',
-                    color: 'inherit',
-                    textDecoration: 'none',
-                    }}
-                >
-                    AgendaRaven
-                </Typography>
+                <ThemeProvider theme={rTheme}>
+                    <Typography
+                        variant="h6"
+                        noWrap
+                        component="a"
+                        href="/"
+                        className='quicksand'
+                        sx={{
+                            display: { xs: 'flex', md: 'none' },
+                            flexGrow: 1,
+                            fontWeight: 700,
+                            letterSpacing: '.3rem',
+                            color: 'inherit',
+                            textDecoration: 'none',
+                        }}
+                    >
+                        AgendaRaven
+                    </Typography>
+                </ThemeProvider>
                 <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                     {pages.map((page) => (
                     <Button
                         key={page}
                         href={'/' + nameToURL(page)}
                         onClick={handleCloseNavMenu}
-                        sx={{ my: 2, color: 'white', display: 'block', fontFamily: 'Quicksand'}}
+                        className='quicksand'
+                        sx={{ color: 'white', display: 'block', }}
                     >
                         {page}
                     </Button>

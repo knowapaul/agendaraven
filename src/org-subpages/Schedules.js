@@ -2,8 +2,8 @@
 import { useEffect, useState } from "react";
 
 // MUI Resources
-import { Edit, Visibility } from '@mui/icons-material';
-import { Box, IconButton, Tooltip } from "@mui/material";
+import { Archive, Edit, Visibility } from '@mui/icons-material';
+import { Box, IconButton, Tooltip, Typography } from "@mui/material";
 
 // Project Resources
 import { useNavigate } from "react-router-dom";
@@ -12,15 +12,9 @@ import AdminCheck from "../components/AdminCheck";
 import Cards from "../components/Cards";
 import { ErrorBoundary } from "../components/ErrorBoundary";
 import Form from "../components/Form";
+import { NavButton } from "../components/SubNav";
 import { getAllSchedules, internalCheckAdmin, saveSchedule } from "../resources/Firebase";
-import MiniScroll from "../components/MiniScroll";
 
-
-{/* <Tooltip title={"My Availability"}>
-    <IconButton color="secondary">
-        <EventAvailable />
-    </IconButton>
-</Tooltip> */}
 
 // Options for the View component
 function Icons(props) {
@@ -29,7 +23,9 @@ function Icons(props) {
         <Box display={'flex'} flexDirection={'row'}>
             <Tooltip title={"View Schedule"} sx={{display: props.published ? 'initial' : 'none'}}>
                 <IconButton color="secondary"
-                    onClick={() => {navigate(`/${props.org}/schedules/${props.title}`)}}>
+                onClick={() => {navigate(`/${props.org}/schedules/${props.title}`)}}
+                sx={{width: '36px', height: '36px'}}
+                >
                 
                     <Visibility />
                 </IconButton>
@@ -37,9 +33,11 @@ function Icons(props) {
             
             <AdminCheck org={props.org}>
                 <Tooltip title={"Edit Schedule"}>
-                    <IconButton color="secondary" onClick={() => {
-                        navigate(`/soar/${props.org}/${props.title}/schedule`)
-                    }}>
+                    <IconButton 
+                    color="secondary" 
+                    onClick={() => {navigate(`/soar/${props.org}/${props.title}/schedule`)}}
+                    sx={{width: '36px', height: '36px'}}
+                    >
                         <Edit />
                     </IconButton>
                 </Tooltip>
@@ -55,11 +53,11 @@ function View(props) {
     const [ error, setError ] = useState();
     const [ display, setDisplay ] = useState();
     const [ loading, setLoading ] = useState(true);
+    const [ header, setHeader ] = useState(true);
     const navigate = useNavigate();
 
     function handleSubmit() {
         saveSchedule(props.org, data.schedulename, {
-            title: data.schedulename, 
             type: data.scheduletype,
             contents: [],
             fields: [],
@@ -84,10 +82,11 @@ function View(props) {
                     displayDat = displayDat.concat(item)
                 }
             })
+            setHeader(!isAdmin)
             setDisplay(displayDat)
             setLoading(false)
         })
-    }, [props.data])
+    }, [props.data, props.org])
 
     return (
         <div>
@@ -96,11 +95,21 @@ function View(props) {
             data={display} 
             loading={loading}
             open={true}
-            noHeader={props.noHeader}
+            noHeader={header}
             setOpen={() => {}}
             helperMessage={"There are currently no schedules to display. If that doesn't seem right, try refreshing the page."} 
             icons={Icons} 
-            add={
+            left={
+                <AdminCheck org={props.org}>
+                    <NavButton title="View Archived Schedules" handleClick={() => {navigate(`/${props.org}/archives`)}}>
+                        <Archive sx={{mr: 1}}/>
+                        <Typography>
+                            Archives
+                        </Typography>
+                    </NavButton>
+                </AdminCheck>
+            }
+            right={
                 <AdminCheck org={props.org} >
                     <AddButton 
                     open={open}
@@ -137,7 +146,7 @@ export default function Schedules(props) {
 
     useEffect(() => {
         getAllSchedules(props.org, setData)
-    }, [])
+    }, [props.org])
 
     return (
         <ErrorBoundary>

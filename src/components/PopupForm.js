@@ -1,15 +1,21 @@
 // MUI Resources
 import { CancelOutlined } from "@mui/icons-material";
-import { useTheme } from "@emotion/react";
 import { Paper, Backdrop, Typography, ClickAwayListener, Box, IconButton } from "@mui/material";
+import { uTheme } from "../resources/Themes";
 
-
+/**
+ * ## Popup form
+ * @param {Map} props React props:
+ * - open
+ * - setOpen
+ * - title
+ * @returns React component
+ */
 export default function PopupForm(props) {
-    const theme = useTheme();
 
     return (
         <Backdrop
-        sx={{ color: '#fff', position: "absolute", zIndex: "appBar", top: 0, left: 0 }}
+        sx={{ color: '#fff', position: "fixed", zIndex: 1300, top: 0, left: 0 }}
         open={props.open}
         >
             {props.open ?
@@ -18,7 +24,7 @@ export default function PopupForm(props) {
                     sx={{
                         padding: 'min(24px, 5%)',
                         pt: 0, 
-                        backgroundColor: theme.palette.secondary.main,
+                        backgroundColor: uTheme.palette.secondary.main,
                         width: props.width,
                     }}
                     >   

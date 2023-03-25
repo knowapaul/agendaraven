@@ -1,17 +1,18 @@
 // MUI Resources
 import { Category, DeleteForeverOutlined, PunchClock } from "@mui/icons-material";
-import { Backdrop, Box, Button, Menu, MenuItem, Paper, TextField, Tooltip, Typography } from "@mui/material";
+import { Backdrop, Box, Button, Menu, MenuItem, Paper, Tooltip, Typography } from "@mui/material";
 import { useState } from "react";
 
 // Project Resources
+import { uTheme } from "../../resources/Themes";
 
 // MUI Resources
-import { ThemeProvider, useTheme } from "@emotion/react";
+import { ThemeProvider } from "@emotion/react";
 
 // Other Resources
 import { useDrag, useDrop } from 'react-dnd';
+import { mTheme } from "../../resources/Themes";
 import { getPeopleHighlight } from "./Highlight";
-import { bTheme, mTheme, oTheme, wTheme } from "../../resources/Themes";
 
 
 /**
@@ -28,7 +29,6 @@ import { bTheme, mTheme, oTheme, wTheme } from "../../resources/Themes";
  * - highlight = {Color} The color of the bucket when a droppable item is grabbed
  */
 export function Bucket(props) {
-    const theme = useTheme();
     const [{ canDrop, isOver }, drop] = useDrop(() => ({
       // The type (or types) to accept - strings or symbols
       accept: props.accept,
@@ -42,7 +42,7 @@ export function Bucket(props) {
 
     const highlight = props.highlight ? props.highlight : 'green'
 
-    const color = isOver ? theme.palette.warning.light : (canDrop ? highlight : theme.palette.background.default)
+    const color = isOver ? uTheme.palette.warning.light : (canDrop ? highlight : uTheme.palette.background.default)
   
     return (
         <Box 
@@ -84,7 +84,7 @@ export function Drag(props) {
   
     return (
         <div ref={dragPreview} style={{ opacity: isDragging ? 0.5 : 1, height: '100%'}}>
-            <div role="Handle" ref={drag} style={{padding: 1, height: '100%'}} onMouseOver={props.handleClick}>
+            <div ref={drag} style={{padding: 1, height: '100%'}} onMouseOver={props.handleClick}>
                 {props.children}
             </div>
         </div>
@@ -244,6 +244,9 @@ export function FieldBucket(props) {
                     </Button>
                     <Button sx={{margin: 1}} variant='contained' onClick={() => {handleCat('person')}}>
                         Person
+                    </Button>
+                    <Button sx={{margin: 1}} variant='contained' onClick={() => {handleCat('target')}}>
+                        Target
                     </Button>
                     <Button sx={{margin: 1}} variant='contained' onClick={() => {handleCat('NONE')}}>
                         NONE

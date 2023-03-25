@@ -1,19 +1,18 @@
 // MUI Resources
-import { useTheme } from "@emotion/react";
 import { ExpandMore } from "@mui/icons-material";
 import { Accordion, AccordionDetails, AccordionSummary, Paper, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import AdminCheck from "../components/AdminCheck";
 import { ErrorBoundary } from "../components/ErrorBoundary";
-
+import { FileUpload } from "../components/FileUpload";
+import { uTheme } from "../resources/Themes";
 
 function CustomAccordion(props) {
-    const theme = useTheme()
 
     return (
         <Accordion>
             <AccordionSummary
-            expandIcon={<ExpandMore sx={{color: theme.palette.background.default}}/>}
+            expandIcon={<ExpandMore sx={{color: uTheme.palette.background.default}}/>}
             >
                 <Typography
                 variant="h6"
@@ -41,9 +40,11 @@ export default function OrgSettings(props) {
         <ErrorBoundary>
             <AdminCheck 
             helperText={
-                <Typography padding={6} width={'100%'} textAlign={'center'}>
-                    Sorry, your role in this organization does not allow you to view this page.
-                </Typography>
+                <Paper sx={{margin: 2, padding: 2}}>
+                    <Typography padding={6} width={'100%'} textAlign={'center'}>
+                        Sorry, your role in this organization does not allow you to view this page.
+                    </Typography>
+                </Paper>
             }
             org={props.org}
             >
@@ -57,7 +58,17 @@ export default function OrgSettings(props) {
                         Contents
                     </CustomAccordion>
                     <CustomAccordion title={"Customization"}>
-                        Contents
+                        <Typography variant="h6">
+                            Logo Icon
+                        </Typography>
+                        <Typography variant="body">
+                            Upload a logo icon here. Refresh page for changes to take effect.
+                        </Typography>
+                        <FileUpload 
+                        path={props.org + '/index/icon'}
+                        button={"fill"}
+                        accept={'.jpg,.png,.pdf'}
+                        />
                     </CustomAccordion>
                     <CustomAccordion title={"Payments"}>
                         AgendaRaven is currently free, but in order to keep 

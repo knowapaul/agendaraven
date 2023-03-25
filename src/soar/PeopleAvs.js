@@ -1,26 +1,24 @@
-import { useTheme } from "@emotion/react";
-import { Edit, Save } from "@mui/icons-material";
-import { ClickAwayListener, Grid, IconButton, Paper, TextField, Typography } from "@mui/material";
+import { Check, Clear, Edit, Save } from "@mui/icons-material";
+import { ClickAwayListener, Grid, IconButton, Paper, Stack, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useEffect, useState } from "react";
 import { getAllAvs, saveAvailability } from "../resources/Firebase";
+import { uTheme } from "../resources/Themes";
 
 
 function Person(props) {
     const [ edit, setEdit ] = useState(false);
-    const theme = useTheme();
-    const [ data, setData ] = useState({})
+    const [ data, setData ] = useState({});
+    const [ myAv, setMyAv ] = useState({});
 
-    let iAv;
-    if (props.avs) {
-        iAv = props.avs[props.people[props.person].uid]
-    }
+
     useEffect(() => {
-        if (iAv) {
-            setData(iAv[props.title] || {})
-        }
-    }, [])
-    if (!iAv) {iAv = []}
+        setData(myAv[props.title] || {})
+    }, [myAv, props.title])
+
+    useEffect(() => {
+        setMyAv(props.avs[props.people[props.person].uid] || {})
+    }, [props.avs, props.people, props.person])
 
     return (
         <ClickAwayListener onClickAway={() => {setEdit(false)}}>
@@ -31,6 +29,14 @@ function Person(props) {
                             <Typography  sx={{fontWeight: 'bold'}}>
                                 {props.person}
                             </Typography>
+                            <Stack direction={'row'}>
+                                <Check fontSize="small" sx={{ display: myAv[props.title] ? 'initial' : 'none'}}/>
+                                <Clear fontSize="small" sx={{ display: myAv[props.title] ? 'none' : 'initial'}}/>
+                                <Typography variant="body2" sx={{ml: 1}}>
+                                    {myAv[props.title] ? 'Submitted' : 'Not Submitted'}
+                                </Typography>
+                            </Stack>
+
                         </Box>
                         {edit ? 
                         <IconButton 
@@ -51,7 +57,7 @@ function Person(props) {
                             <Grid container>
                                 {props.avFields.map((item) => (
                                     <Grid item key={item.title} xs={6} sx={{padding: 1}}>
-                                        <Typography fontWeight={'bold'} color={ iAv[props.title] ? theme.palette.primary.main : 'lightgrey'}>
+                                        <Typography fontWeight={'bold'} color={ myAv[props.title] ? uTheme.palette.primary.main : 'lightgrey'}>
                                             {item.title}
                                         </Typography>
                                         {edit ?
@@ -63,7 +69,7 @@ function Person(props) {
                                         />
                                             :
                                         <Typography>
-                                            {iAv[props.title] ? iAv[props.title][item.title] || '---' : '---'}
+                                            {myAv[props.title] ? myAv[props.title][item.title] || '---' : '---'}
                                         </Typography>
                                         }
                                     </Grid>
@@ -80,9 +86,8 @@ function Person(props) {
 }
 
 export default function PeopleAvs(props) {
-    console.log('avshere', props.avs)
     return (
-        <Grid container width={'100%'} maxHeight={'100%'} overflow={'auto'}>
+        <Grid container width={'100%'}>
             {
                 props.people ?
                 Object.keys(props.people).sort().map(person => (

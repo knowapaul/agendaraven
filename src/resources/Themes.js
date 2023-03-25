@@ -167,7 +167,6 @@ export const bTheme = createTheme({
     divider: '#ffffff',
   },
 });
-
 /**
  * Light Theme
  * 
@@ -239,6 +238,13 @@ export const uTheme = createTheme({
         },
       },
     },
+    MuiInputBase: {
+        styleOverrides: {
+          root: {
+            color: '#045174',
+          }
+        }
+      }
   },
   palette: {
     type: 'light',

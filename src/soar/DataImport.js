@@ -1,12 +1,13 @@
-import { useTheme } from "@emotion/react";
 import { ArrowBack, Save } from "@mui/icons-material";
 import { Box, Button, Paper, TextField, Typography } from "@mui/material";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { uTheme } from "../resources/Themes";
 
 export default function DataImport(props) {
-    const theme = useTheme();
     const [ data, setData ] = useState('');
     const [ preview, setPreview ] = useState(false);
+    const navigate = useNavigate();
 
     function saveData() {
         const [ header, ...rows ] = data.split('\n');
@@ -21,7 +22,7 @@ export default function DataImport(props) {
 
         props.setFields(props.fields.concat(header.split('\t')))
         props.setItems(props.items.concat(newRows))
-        props.setTab('schedule')
+        navigate(`/soar/${props.org}/${props.title}/schedule`)
     }
 
 
@@ -61,7 +62,7 @@ export default function DataImport(props) {
                                 data.split('\n').slice(1).map((row, rIndex) => (
                                     <tr key={rIndex}>
                                         {row.split('\t').map((item, iIndex) => (
-                                            <td key={iIndex} style={{padding: '3px', border: `1px solid ${theme.palette.primary.main}`, }}>
+                                            <td key={iIndex} style={{padding: '3px', border: `1px solid ${uTheme.palette.primary.main}`, }}>
                                                 <Typography>
                                                     {item}
                                                 </Typography>
@@ -89,6 +90,7 @@ export default function DataImport(props) {
                     value={data}
                     fullWidth
                     multiline
+                    inputProps={{style: {color: uTheme.palette.primary.main}}}
                     />
                 </Paper>
             }

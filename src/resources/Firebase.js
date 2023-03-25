@@ -1,8 +1,8 @@
 // Firebase Resources
-import { collection, doc, getDoc, setDoc, getDocs, query, writeBatch } from "firebase/firestore"; 
+import { collection, doc, getDoc, setDoc, getDocs, query, writeBatch, deleteDoc } from "firebase/firestore"; 
 import { ref, getDownloadURL, uploadBytes, listAll } from "firebase/storage"; 
 
-import { getAuth, connectAuthEmulator, updateProfile, sendPasswordResetEmail, updatePassword, createUserWithEmailAndPassword, reauthenticateWithCredential, EmailAuthProvider, confirmPasswordReset, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, connectAuthEmulator, updateProfile, sendPasswordResetEmail, updatePassword, createUserWithEmailAndPassword, reauthenticateWithCredential, confirmPasswordReset, signInWithEmailAndPassword } from "firebase/auth";
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
 import { getStorage, connectStorageEmulator } from "firebase/storage";
@@ -53,8 +53,8 @@ export function setApp(app) {
     connectFunctionsEmulator(functions, 'localhost', 5001);
     storage = getStorage(app);
     connectStorageEmulator(storage, 'localhost', 9199);
-    // perf = getPerformance(app);
-    // console.log('perf', perf)
+    perf = getPerformance(app);
+    console.log('perf', perf)
 
 
 // if (window.confirm('Do you want to restore the database?') === true) {
@@ -226,8 +226,6 @@ export async function internalCheckAdmin(org) {
  * @param {Function} setIsAdmin the set function
  */
 export async function checkAdmin(org, setIsAdmin) {
-    console.log('checkadmin')
-
     try {
         setIsAdmin(await internalCheckAdmin(org))
     } catch (error) {
@@ -276,9 +274,6 @@ async function getData(path, refresh) {
     }
 }
 
-async function setData(path, contents, refresh, overwrite) {
-
-}
 
 // ---------- READ FUNCTIONS ----------
 export async function getSubscriptions(org, uid) {
@@ -314,7 +309,6 @@ export async function getPeople(org, setPeople) {
     }
 
     setPeople(adaptedPeople)
-    console.log('done getpeople')
 }
 
 export async function getMemo(org, setTitle, setPerson, setContents) {
@@ -327,7 +321,9 @@ export async function getMemo(org, setTitle, setPerson, setContents) {
 
 export async function getAvailability(org, schedule, setAvailability) {
     const data = await getData(org + '/agenda/availability/' + auth.currentUser.uid)
-    setAvailability(data[schedule] || {})
+    if (data) {
+        setAvailability(data[schedule] || {})
+    }
 }
 
 export async function getAllAvs(org, setAllAvs, refresh) {
@@ -337,8 +333,7 @@ export async function getAllAvs(org, setAllAvs, refresh) {
         allAvs = {};
         const q = query(collection(db, org + '/agenda/availability/'));
         const snap = await getDocs(q);
-        console.log('snap', snap)
-        snap.forEach(item => {allAvs[item.id] = item.data(); console.log('dat', item.data())})
+        snap.forEach(item => {allAvs[item.id] = item.data()})
         setAllAvs(allAvs)
     }
 }
@@ -358,11 +353,22 @@ export async function getAllSchedules(org, setContents) {
 
 }
 
+async function refreshScheduleIndex(org) {
+    console.log('reuse,pending', reuseDocs, pendingDocs)
+    reuseDocs[org + '/agenda'] = undefined;
+    pendingDocs[org + '/agenda'] = undefined;
+}
+
 export async function getSchedule(org, title, unpublished, refresh) {
     const data = await getData(org + `/agenda/${unpublished ? 'unpublished' : 'schedules'}/` + title, refresh);
-
     return data;
 }
+
+export async function getArchivedSchedules(org) {
+    const data = await getData(org + `/agenda/archives/==index-file==`);
+    return data;
+}
+
 
 // ---------- WRITE FUNCTIONS ----------
 /**
@@ -417,7 +423,7 @@ export function saveAvailability(org, schedule, data, otherUser) {
  * @param {Boolean} published whether the schedule is publicly visible to members
  * @returns a promise resolved with the result of the batch commit
  */
-export async function saveSchedule(org, title, data, published) {
+export async function saveSchedule(org, title, data, location) {
     console.log('saveschedule')
 
     const description = (data) => (
@@ -436,21 +442,86 @@ export async function saveSchedule(org, title, data, published) {
 
     const batch = writeBatch(db);
 
-    console.log('address', org + `/agenda/${published ? 'schedules' : 'unpublished'}/` + title)
+    const prev = await getData(org + '/agenda', true);
 
-    batch.set(doc(db, org + `/agenda/${published ? 'schedules' : 'unpublished'}/` + title), data, {merge: true})
+    if (location === 'archive') {
+        console.log('location === archive')
+        // Move to archive
+        if (title === '__index-file__') {
+            throw Error('Bad file name (==index-file==)')
+        }
 
-    const prev = getData(org + '/agenda', true);
+        batch.set(doc(db, org + `/agenda/archives/` + title), data)
+        batch.set(doc(db, org + `/agenda/archives/==index-file==`), {[title]: {type: data.type, timestamp: data.timestamp}}, {merge: true})
 
-    let wasPublished;
-    if (prev[title]) {
-        wasPublished = prev[title][published]
+        batch.delete(doc(db, org + `/agenda/schedules/` + title))
+        batch.delete(doc(db, org + `/agenda/unpublished/` + title))
+        
+        let temp = prev
+        delete temp[title] 
+
+        // Delete old reference to it
+        batch.set(doc(db, org + '/agenda'), temp)
+    } else {
+
+        let wasPublished;
+        if (prev[title]) {
+            wasPublished = prev[title].published
+        }
+
+        if (location === 'publish') {
+            batch.set(doc(db, org + `/agenda/schedules/` + title), data, {merge: true})
+        }
+
+        batch.set(doc(db, org + `/agenda/unpublished/` + title), data, {merge: true})
+    
+        batch.set(
+            doc(db, org + '/agenda'), 
+            {[title]: {
+                title: title, 
+                description: description(data), 
+                subtitle: data.type, 
+                published: Boolean(wasPublished || location === 'publish'), 
+            }}, 
+            {merge: true}
+        )
     }
 
-    batch.set(doc(db, org + '/agenda'), {[title]: {title: title, description: description(data), subtitle: data.type, published: Boolean(wasPublished || published), }}, {merge: true})
+    refreshScheduleIndex(org)
 
-    return batch.commit();
+    return await batch.commit();
 }
+
+async function removeArchiveIndex(org, title) {
+    let temp = await getData(org + `/agenda/archives/==index-file==`);
+    delete temp[title]
+    
+    setDoc(doc(db, org + `/agenda/archives/==index-file==`), temp)
+}
+
+export async function unArchive(org, title) {
+    const data = await getData(org + `/agenda/archives/` + title);
+
+    await removeArchiveIndex(org, title)
+
+    deleteDoc(doc(db, org + `/agenda/archives/` + title))
+
+    refreshScheduleIndex(org)
+    reuseDocs[org + `/agenda/archives/==index-file==`] = undefined
+    pendingDocs[org + `/agenda/archives/==index-file==`] = undefined
+    
+
+    return saveSchedule(org, title, data);
+}
+
+export async function deleteSchedule(org, title) {
+    await removeArchiveIndex(org, title)
+
+    refreshScheduleIndex(org)
+
+    return deleteDoc(doc(db, org + `/agenda/archives/` + title));
+}
+
 
 // ---------- STORAGE ----------
 export function accessImage(location, setURL, refresh) {
@@ -468,12 +539,10 @@ export function accessImage(location, setURL, refresh) {
     }
 }
 
-export async function uploadFile(file, root, unique) {
-    const path =  (root ? root : '') + (unique ? '' : file.name);
-
+export async function uploadFile(file, path) {
     const storageRef = ref(storage, path);
 
-    orgFiles[root] = undefined
+    orgFiles[path] = undefined
 
     // 'file' comes from the Blob or File API
     return uploadBytes(storageRef, file)

@@ -3,12 +3,10 @@
 import { useState } from "react";
 
 // MUI Resources
-import { useTheme } from "@emotion/react";
-import { ArrowBack, AutoAwesome, Public, Save, ViewAgenda } from "@mui/icons-material";
-import { Backdrop, Box, Button, Chip, Paper, SpeedDial, SpeedDialAction, SpeedDialIcon, Tooltip, Typography } from "@mui/material";
+import { AutoAwesome, Check, Close, Public, Save, SettingsSuggest } from "@mui/icons-material";
+import { Backdrop, Badge, Box, Button, ButtonGroup, SpeedDial, SpeedDialAction, SpeedDialIcon, Tooltip, Typography } from "@mui/material";
 
 // Project Resources
-import { MenuIcon } from './MenuIcon';
 
 // Other Resources
 
@@ -24,8 +22,6 @@ function nameToURL(name) {
 
 
 export function Bottom(props) {
-    const theme = useTheme();
-
     const [ open, setOpen ] = useState(false);
 
     const options = {
@@ -63,34 +59,43 @@ export function Bottom(props) {
     )
 }
 
-function TopButton(props) {
-    return (
-        <Tooltip title={props.title}>
-            <Button 
-            variant={props.selected ? "text" : "contained" }
-            onClick={props.handleClick}
-            sx={{
-                textTransform: 'none', 
-                margin: 2
-            }}
-            >
-                <Box minWidth='64px'>
-                    {props.children}
-                    <Typography sx={{fontSize: '12px'}} margin={0}>
-                        {props.title}
-                    </Typography>
-                </Box>
-            </Button>
-        </Tooltip>
-    )
-}
-
 /**
  * @param  {Map} props
  * 
  * props.db
  */
 export function Top(props) {
+    //  COUNT?,outputLine,itemIndex;GREATER?,ans,1;MULTIPLY,ans,100;
+    // COUNT?,outputs,itemIndex;EXP,ans,2
+    // COUNT,outputLine,itemIndex;GREATER,ans,1;MULTIPLY,ans,100;
+    // COUNT,outputs,itemIndex;EXP,ans,2
+
+    // items: {'bob': [1, 2, 3], 'jeff': [4, 5, 6], 'steve': [5, 1, 2], 'chris': [1 ,5, 1]}
+    const handleAutomate = () => {
+
+        let tempFuncs = [...Object.values(props.funcs)]
+        // Add exclamation points 
+        tempFuncs = tempFuncs.map((func) => (
+            func.slice(0, -1).concat(
+                [[func.slice(-1)[0][0] + '!'].concat(func.slice(-1)[0].slice(1))]
+            ) 
+        ))
+        // Stringify
+        tempFuncs = [].concat(...tempFuncs).join(';')
+
+        const automateParams = {
+            targets: '1,2,3', 
+            itemkeys: Object.values(props.people).map((val) => (val.schedulename)).join(','),
+            itemvalues: '1,2,3;4,5,6;5,1,2;1,5,1',
+            funcs: tempFuncs
+        }
+        fetch('http://127.0.0.1:5000/schedule', { 
+            method: 'POST', 
+            body: JSON.stringify(automateParams)
+        })
+            .then((res) => (res.json()))
+            .then((data) => {console.log(data)})
+    }
     return (
         <Box 
         flex={0} 
@@ -98,35 +103,39 @@ export function Top(props) {
         flexDirection={'row'}
         sx={{height: '64px', width: '100%'}}
         >
-            <Button
-            onClick={() => {props.save(false)}}
-            sx={{textTransform: 'none', margin: 1}}
-            variant='contained'
-            >
-                <Save sx={{mr: 1}}/>
-                <Typography>Save</Typography>
-            </Button>
-            <Button
-            onClick={() => {props.save(false)}}
-            sx={{textTransform: 'none', margin: 1}}
-            variant='contained'
-            >
-                <Public sx={{mr: 1}}/>
-                <Typography>Publish</Typography>
-            </Button>
-            <Chip label={props.isSaved ? "Saved" : "Not Saved"} sx={{my: 'auto', float: 'right'}} color={props.isSaved ? 'success' : 'error'} />
+            <ButtonGroup sx={{margin: 1}} variant='outlined'>
+                <Tooltip title={'Save (\u2318S)'}>
+                    <Button
+                    onClick={props.save}
+                    sx={{textTransform: 'none'}}
+                    >
+                        <Badge badgeContent={props.isSaved ? <Check fontSize='8px' /> : <Close fontSize='8px' />} color={props.isSaved ? 'success' : 'error'}>
+                            <Save  />
+                        </Badge>
+                        <Typography sx={{display: {xs: 'none', sm: 'initial', }, ml: 2}} fontStyle={props.isSaved ? 'initial' : 'italic'}>{props.isSaved ? "Saved" : "Not Saved"}</Typography>
+                    </Button>
+                </Tooltip>
+                <Button
+                onClick={() => {props.save('publish')}}
+                sx={{textTransform: 'none'}}
+                >
+                    <Public sx={{mr: {xs: 0, sm: 1}}}/>
+                    <Typography sx={{display: {xs: 'none', sm: 'initial'}}}>Publish</Typography>
+                </Button>
+                {
+                props.tab === 'schedule' ?
+                <Button
+                onClick={handleAutomate}
+                sx={{textTransform: 'none' }}
+                >
+                    <SettingsSuggest sx={{mr: {xs: 0, sm: 1}}}/>
+                    <Typography sx={{display: {xs: 'none', sm: 'initial'}}}>Automate</Typography>
+                </Button>
+                :
+                ''
+                }
+            </ButtonGroup>
 
         </Box>
     )
 }
-
-{/* <MenuIcon title="Undo">
-        <Undo />
-    </MenuIcon>
-    <MenuIcon title="Redo">
-        <Redo />
-    </MenuIcon> 
-    <MenuIcon title="Download">
-        <Download/> 
-    </MenuIcon>
-                */}

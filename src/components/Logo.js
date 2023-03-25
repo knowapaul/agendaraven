@@ -2,18 +2,16 @@
 import { Link } from 'react-router-dom';
 
 // MUI Resources
-import { useTheme } from '@emotion/react';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
 // Project Resources
+import uTheme from '../resources/Themes'
 
 /**
  * ## Basic logo component for 
  */
-export default function Logo(props) {
-    const theme = useTheme();
-  
+export default function Logo(props) {  
     return (
       <Link to={props.href} style={{textDecoration: 'none'}}>
         <Stack
@@ -25,11 +23,11 @@ export default function Logo(props) {
           <Typography
           variant="h6"
           noWrap
+          className='quicksand'
           sx={{
-          fontFamily: 'quicksand',
-          fontWeight: 700,
-          letterSpacing: '.3rem',
-          color: theme.palette.text.secondary
+            fontWeight: 700,
+            letterSpacing: '.3rem',
+            color: uTheme.palette.text.secondary
           }}
           >
             {props.title}

@@ -92,27 +92,6 @@ export default function Help(props) {
 
                 For the most part, it will just take time to resolve issues. My apologies in advance!
             </Paper>
-            <Paper sx={{margin: 2, padding: 2}}>
-                <Typography variant={'h5'}>
-                    How to resolve an error message.
-                </Typography>
-                Since this is a new site, there will inevitably be a lot of errors. I appreciate your patience in dealing with them.
-
-                If refreshing the page does not resolve the error, try clearing your browser's cache.
-                <ul>
-                    <li>
-                        On a laptop or PC this can be done by holding shift and clicking the refresh button simultaneously. 
-                    </li>
-                    <li>
-                        On a phone, this can be done by going to settings and clearing your browsers cache for this website.
-                    </li>
-                </ul>
-
-                If that does not resolve the error, you can send a screenshot of what's going on and a 
-                description to agendaraven@gmail.com. I can do my best to resolve the problem from there.
-
-                For the most part, it will just take time to resolve issues. My apologies in advance!
-            </Paper>
         </ThemeProvider>
     )
 }

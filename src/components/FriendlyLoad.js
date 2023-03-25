@@ -42,13 +42,17 @@ export default function FriendlyLoad(props) {
         <Box 
         height={props.height}
         width={props.width}
-        sx={{aspectRatio: props.style.aspectRatio}}
+        sx={{aspectRatio: props.style ? props.style.aspectRatio : props.style}}
         >
             {
             (source && source !== 'ERROR') 
             ?
             <img {...imgProps} alt={props.alt} src={source} /> 
             : 
+            ((source === 'ERROR') || fail) && props.alt
+            ?
+            props.alt
+            :
             <Paper 
             variant='outlined'
             sx={{height: '100%', width: '100%', display: 'flex', alignItems: "center", justifyContent: "center"}}
@@ -56,7 +60,7 @@ export default function FriendlyLoad(props) {
                 {
                 ((source === 'ERROR') || fail)
                 ? 
-                <Typography sx={{margin: 'auto'}}>Error Loading Image</Typography> 
+                <Typography sx={{margin: 'auto'}}>Error Loading Image</Typography>                 
                 :
                 <CircularProgress color="secondary"/>
                 }

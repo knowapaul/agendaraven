@@ -40,9 +40,9 @@ export default function CreateAccount() {
                 <Typography 
                 variant='h5'
                 noWrap
+                className='quicksand'
                 sx={{
                     mt: -2,
-                    fontFamily: 'Quicksand'
                 }}
                 textAlign='center'
                 >

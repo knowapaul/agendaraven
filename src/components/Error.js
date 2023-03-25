@@ -65,3 +65,20 @@ export default function Error(props) {
         </div>
     )
 }
+
+export function FriendlyError(props) {
+    return (
+        <ThemeProvider theme={mTheme}>
+            <CssBaseline />
+            <Nav />
+            <Paper sx={{margin: 2, padding: 2}}>
+                <Typography variant='h5'>
+                    {props.title}
+                </Typography>
+                <Typography>
+                    {props.text}
+                </Typography>
+            </Paper>
+        </ThemeProvider>            
+    )
+}

@@ -1,30 +1,31 @@
 // React Resources
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { DndProvider } from 'react-dnd';
 
 // MUI Resources
-import { ThemeProvider, useTheme } from "@emotion/react";
-import { Box, Typography } from "@mui/material";
+import { ThemeProvider } from "@emotion/react";
+import { Box, Tooltip, Typography } from "@mui/material";
 
 // Project Resources
-import { bTheme, cTheme, mTheme, uTheme } from "../resources/Themes";
+import { uTheme } from "../resources/Themes";
 import { Schedule } from './editor/Schedule';
 
 // Other Resources
+import { AutoAwesome, CalendarMonth, EventAvailable, Group, GroupWork, Home, ImportantDevices, Settings } from "@mui/icons-material";
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { useLoaderData, useNavigate } from "react-router-dom";
+import { Link, useLoaderData, useNavigate } from "react-router-dom";
 import AdminCheck from "../components/AdminCheck";
 import AuthCheck from "../components/AuthCheck";
 import { CustomSnackbar } from "../components/CustomSnackbar";
-import { ErrorBoundary } from "../components/ErrorBoundary";
+import DashModel from "../components/DashModel";
 import { getAllAvs, getPeople, getSchedule, saveSchedule } from "../resources/Firebase";
+import Automation from "./Automation";
 import AvFields from "./AvFields";
 import DataImport from "./DataImport";
 import { Top } from './Headers';
+import Parameters from "./Parameters";
 import PeopleAvs from "./PeopleAvs";
-import Automation from "./Automation";
-import DashModel from "../components/DashModel";
-import { AutoAwesome, CalendarMonth, Circle, DonutLarge, EventAvailable, FormatPaint, Group, Home, ImportantDevices, ImportExport, ScheduleOutlined } from "@mui/icons-material";
+import SoarSettings from "./SoarSettings";
 
 
 // export async function newLoader({ params }) {
@@ -48,30 +49,34 @@ function LoadNav(props) {
   
     useEffect(() => {
       navigate(props.to)
-    }, [])
+    }, [navigate, props.to])
   
     return <div></div>
 }
   
 function Logo(props) {
-    const theme = useTheme();
     return (
-        <Box 
-        flex={1} 
-        height='100%' 
-        sx={{display: 'flex',
-            alignItems: 'center',
-        }}
-        >
-            <Box paddingLeft={2}>
-            <Typography variant={'h5'} color={theme.palette.primary.main}>
-                {props.title}
-            </Typography>
-            <Typography variant="subtitle2" color={theme.palette.primary.main}>
-                {props.type}
-            </Typography>
-            </Box>
-        </Box>
+        <Link to={`/${props.org}/schedules/${props.title}`} style={{textDecoration: 'none'}}>
+            <Tooltip title="View as a User">
+                <Box 
+                flex={1} 
+                height='100%' 
+                sx={{display: 'flex',
+                    alignItems: 'center',
+                    
+                }}
+                >
+                    <Box paddingLeft={2}>
+                    <Typography variant={'h5'} color={uTheme.palette.primary.main}>
+                        {props.title}
+                    </Typography>
+                    <Typography variant="subtitle2" color={uTheme.palette.primary.main}>
+                        {props.type}
+                    </Typography>
+                    </Box>
+                </Box>
+            </Tooltip>
+        </Link>
     )
 }
 
@@ -97,6 +102,13 @@ export default function Soar() {
 
     const [ highlight, setHighlight ] = useState();
 
+    const [ funcs, setFuncs ] = useState({});
+    const [ params, setParams ] = useState({});
+    const [ paramFields, setParamFields ] = useState([]);
+
+    const [ selectTargets, setSelectTargets ] = useState(false);
+    const [ targets, setTargets ] = useState([]);
+
     // const [ tab, setTab ] = useState('schedule');
 
     const [ cats, setCats ] = useState({});
@@ -112,26 +124,43 @@ export default function Soar() {
     //     return "You have attempted to leave this page.  If you have made any changes to the fields without clicking the Save button, your changes will be lost.  Are you sure you want to exit this page?";
     // }
 
-    function getData() {
-        console.log('running...', org, load.sch)
+    const getData = useCallback(() => {
         getSchedule(org, load.sch, true, true).then((data) => {
-            console.log('data', data)
-            setTitle(data.title)
+            setTitle(load.sch)
             setType(data.type)
             setFields(data.fields)
             setItems(data.contents)
+            if (data.paramFields) {setParamFields(data.paramFields)};
+            if (data.params) {setParams(data.params)};
             if (data.avFields) {setAvFields(data.avFields)}
             if (data.avDate) {setAvDate(data.avDate)}
             if (data.cats) {setCats(data.cats)}
+            let unpackedFuncs = {};
+            Object.entries(data.funcs).forEach(
+                (item) => {
+                    unpackedFuncs[item[0]] = item[1].split(';').map((line) => (line.split(',')))
+                }
+            )
+            if (data.funcs) {setFuncs(unpackedFuncs)}
         })
-    }
+      }, [load.sch, org])
+      
     useEffect(() => {
         getData()
         getAllAvs(org, setAllAvs);
         getPeople(org, setPeople)
-    }, [])
+    }, [org, getData])
 
-    function save(publish) {
+    const handleShortcuts = (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.keyCode === 83) {
+            e.preventDefault()
+            save()
+        }
+    }
+
+    document.onkeydown = handleShortcuts
+
+    async function save(location) {
         // Remove empty rows
         let ol = []
         for (let i in items) {
@@ -140,8 +169,8 @@ export default function Soar() {
             }
         }
 
-        console.log('fields', fields)
-
+        let tempFuncs = {...funcs}
+        Object.keys(tempFuncs).forEach((key) => {tempFuncs[key] = tempFuncs[key].join(';')})
         const data = {
             type: type,
             fields: fields,
@@ -149,26 +178,22 @@ export default function Soar() {
             avFields: avFields,
             avDate: avDate,
             cats: cats,
+            funcs: tempFuncs,
+            paramFields: paramFields,
+            params: params,
             timestamp: new Date().toString()
         }
 
         console.log('savedata', data)
         
-        saveSchedule(org, title, data)
-            .then(() => {
-                console.log('publish', publish)
-                if (publish) {
-                    return saveSchedule(org, title, data, true)
-                } else {
-                    return false;
-                }
-            })
-            .then(() => {
-                setIsSaved(true)
-                getData()
-            })
-        
-        
+        await saveSchedule(org, title, data, location)
+
+        if (location !== 'archive') {
+            setIsSaved(true)
+            getData()
+        }
+
+        return;
     }
 
     // Pass all schedule related states to children
@@ -193,9 +218,6 @@ export default function Soar() {
         
         avFields: avFields,
         setAvFields: (v) => {setAvFields(v); setIsSaved(false)},
-        
-        palette: palette,
-        setPalette: setPalette,
 
         cats: cats,
         setCats: setCats,
@@ -210,13 +232,27 @@ export default function Soar() {
         avDate: avDate,
         setAvDate: (v) => {setAvDate(v); setIsSaved(false)},
 
+        funcs: funcs,
+        setFuncs: (v) => {setFuncs(v); setIsSaved(false)},
+
+        params: params,
+        setParams: (v) => {setParams(v); setIsSaved(false)},
+
+        paramFields: paramFields,
+        setParamFields: (v) => {setParamFields(v); setIsSaved(false)},
+
+        selectTargets: selectTargets,
+        setSelectTargets: setSelectTargets,
+
+        targets: targets,
+        setTargets: setTargets,
+
         save: save,
 
         isSaved: isSaved,
-
         setIsSaved: setIsSaved,
 
-        // setTab: setTab
+        tab: tab,
     }
 
 
@@ -226,7 +262,9 @@ export default function Soar() {
         import: <DataImport {...universalProps} />,
         availability: <PeopleAvs {...universalProps} />,
         automation: <Automation {...universalProps} />,
-        all: <LoadNav to={`/${org}/schedules/`} />
+        all: <LoadNav to={`/${org}/schedules/`} />,
+        parameters: <Parameters {...universalProps} />,
+        settings: <SoarSettings {...universalProps} />
     }
 
     const menu = [
@@ -234,8 +272,11 @@ export default function Soar() {
         ["Forms", <EventAvailable color="secondary"/>],
         ["Import", <ImportantDevices color="secondary"/>],
         ["Availability",  <Group color="secondary"/>],
-        ["Automation",  <AutoAwesome color="secondary"/>],
         ['1', ''],
+        ["Automation",  <AutoAwesome color="secondary"/>],
+        ["Member Parameters",  <GroupWork color="secondary"/>],
+        ["Settings",  <Settings color="secondary"/>],
+        ['2', ''],
         ['View All', <Home color="secondary" />]
       ]
     

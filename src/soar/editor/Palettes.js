@@ -2,36 +2,34 @@
 import { useEffect, useState } from "react";
 
 // MUI Resources
-import { useTheme } from "@emotion/react";
 import { GridOn, Group, OtherHouses } from "@mui/icons-material";
 import { Box, Button, Grid, Paper, Switch, TextField, Tooltip, Typography } from "@mui/material";
 
 // Project Resources
 import { searchSort } from "../../resources/SearchSort";
 import { DraggablePerson } from './Objects'
-
+import { Drag } from "./Objects";
+import { uTheme } from "../../resources/Themes";
 
 // Other Resources
 import { Stack } from "@mui/system";
 import { ErrorBoundary } from "../../components/ErrorBoundary";
 import { getPeople } from "../../resources/Firebase";
 
-import { Drag } from "./Objects";
 
 
 function ItemsPalette(props) {
-    const theme = useTheme();
     const [ people, setPeople] = useState({});
 
     useEffect(() => {
         getPeople(props.org, setPeople)
-    }, [])
+    }, [props.org])
 
 
     return (
         <Grid container padding={2} width={'270px'} sx={{margin: 0, padding: 0}}>
             {searchSort(props.value, Object.keys(people)).map((key) => {
-                const firstName = key.split(' ')[0][0].toUpperCase() + key.split(' ')[0].slice(1).toLowerCase();
+                // const firstName = key.split(' ')[0][0].toUpperCase() + key.split(' ')[0].slice(1).toLowerCase();
                 return (
                     <Grid key={key}  item sx={{margin: 1}}>
                         <DraggablePerson person={key} people={people} {...props} />
@@ -123,7 +121,6 @@ function Tabs(props) {
 }
 
 export function Palette(props) {
-    const theme = useTheme();
     const [ value, setValue ] = useState('');
     
     const fieldItems = ['Time', 'Place', 'Day'];
@@ -136,10 +133,20 @@ export function Palette(props) {
     // const dragItems =  props.palette === 'people' ? peopleItems : fieldItems
     return (
         <Box 
-        borderLeft={`2px solid ${theme.palette.primary.main}`}
         flex={0}
         >
-            <Box sx={{width: '270px'}} height={'calc(100% - 54px)'}>
+            <Box sx={{width: {xs: 0, md: '270px'}}}  />
+            <Box sx={{
+                display: {xs: 'none', md: 'initial'}, 
+                width: '270px', 
+                position: 'fixed', 
+                top: 64, 
+                left: 250, 
+                zIndex: 2400
+            }}         
+            borderRight={`1px solid ${uTheme.palette.primary.main}`}
+            height={'calc(100vh - 64px)'}
+            >
                 <ErrorBoundary>
                     <TextField 
                     sx={{width: '100%', mb: '1px'}}
@@ -147,13 +154,23 @@ export function Palette(props) {
                     value={value}
                     placeholder={'Search'}
                     onChange={(e) => {setValue(e.target.value)}}
+                    inputProps={{style: {color: uTheme.palette.primary.main}}}
+
                     />
                         <Tabs {...props} value={value} setValue={setValue} />
 
                     {palettes[props.palette]}
                 </ErrorBoundary>
+                {props.selectTargets ? 
+                <Button variant="contained" onClick={() => {props.setSelectTargets(false)}}>
+                    Done
+                </Button>
+                :
+                <Button variant="contained" onClick={() => {props.setSelectTargets(true)}}>
+                    Select Automation Targets
+                </Button>
+                }
             </Box>
-            
         </Box>
     )
 }

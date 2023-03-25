@@ -42,9 +42,7 @@ export default function Login(props) {
                 <Typography 
                 variant='h5'
                 noWrap
-                sx={{
-                    fontFamily: 'Quicksand'
-                }}
+                className='quicksand'
                 textAlign='center'
                 >
                     Login

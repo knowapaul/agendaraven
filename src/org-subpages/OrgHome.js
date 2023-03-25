@@ -1,69 +1,22 @@
 // React Resources
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 // MUI Resources
-import { useTheme } from "@emotion/react";
-import { Clear, Edit, Image, PictureAsPdf, Save, Upload } from "@mui/icons-material";
-import { Box, Button, Divider, Fab, IconButton, Paper, Stack, TextField, Typography } from "@mui/material";
+import { Clear, Edit, Image, PictureAsPdf, Save } from "@mui/icons-material";
+import { Box, Button, Divider, IconButton, Paper, Stack, TextField, Typography } from "@mui/material";
 
 // Project Resources
 import { getDownloadURL } from "firebase/storage";
 import AdminCheck from "../components/AdminCheck";
 import { CustomSnackbar } from "../components/CustomSnackbar";
 import { ErrorBoundary } from "../components/ErrorBoundary";
+import { FileUpload } from "../components/FileUpload";
 import FriendlyLoad from "../components/FriendlyLoad";
-import { getMemo, getOrgFiles, setMemo, uploadFile } from "../resources/Firebase";
-import MiniScroll from "../components/MiniScroll";
+import { getMemo, getOrgFiles, setMemo } from "../resources/Firebase";
+import { uTheme } from "../resources/Themes";
 
-
-function FileUpload(props) {
-    const inputRef = useRef();
-    const [ open, setOpen ] = useState(false);
-    const [ error, setError ] = useState(false);
-
-    const handleUpload = () => {
-        uploadFile(inputRef.current.files.item(0), props.root, props.unique)
-            .then(() => {
-                setError(false);
-                setOpen(true);
-                if (props.setRefresh) {
-                    props.setRefresh(true)
-                }
-            })
-            .catch(() => {
-                setError(true);
-                setOpen(true);
-            })
-    }
-    return (
-        <Box width={'100%'}>
-            <input 
-            ref={inputRef}
-            type="file" 
-            accept={props.accept}
-            onChange={handleUpload}
-            style={{display: 'none'}}
-            />
-            {props.button === 'fill' 
-            ?
-            <Button sx={{width: '100%'}} onClick={() => {inputRef.current.click()}}><Upload sx={{mr: 1}} />Upload File</Button>
-            :
-            <Fab sx={{mt: -11, ml: 1}} size='small' onClick={() => {inputRef.current.click()}}>
-                <Edit />
-            </Fab>
-            }
-            <CustomSnackbar
-            text={error ? 'The file could not be saved' : 'File saved'}
-            error={error ? 'error' : 'success'}
-            open={open}
-            setOpen={setOpen}
-            />
-        </Box>
-    )
-}
 
 function Header(props) {
-    const theme = useTheme();
     const imagePath = props.org + '/index/image.jpg';
     const [ refresh, setRefresh ] = useState();
     return (
@@ -81,9 +34,10 @@ function Header(props) {
             source={imagePath} 
             width={'288px'}
             height={'162px'}
-            style={{ objectFit: 'cover', borderRadius: theme.shape.borderRadius}}
+            style={{ objectFit: 'cover', borderRadius: uTheme.shape.borderRadius}}
             refresh={refresh}
             setRefresh={setRefresh}
+            alt={<img alt="default organization background" src='/abdfallback.png' width='288px' height='162px' />}
             />
                 <AdminCheck org={props.org}>
                     <FileUpload 
@@ -106,12 +60,11 @@ function Left(props) {
     const [ title, setTitle ] = useState('');
     const [ contents, setContents ] = useState('');
     const [ person, setPerson ] = useState('');
-    const [ updated, setUpdated ] = useState(false);
     const [ open, setOpen ] = useState(false);
 
     useEffect(() => {
         getMemo(props.org, setTitle, setPerson, setContents)
-    }, [])
+    }, [props.org])
 
     return (
         <div>
@@ -127,7 +80,8 @@ function Left(props) {
                     onChange={e => {setTitle(e.target.value)}}
                     inputProps={{
                         style: {
-                            fontSize: '25px'
+                            fontSize: '25px',
+                            color: uTheme.palette.background.default
                         },
                         }}/>
                     <TextField 
@@ -136,6 +90,11 @@ function Left(props) {
                     placeholder={'Memo contents'} 
                     value={contents}
                     onChange={e => {setContents(e.target.value)}}
+                    inputProps={{
+                        style: {
+                            color: uTheme.palette.background.default
+                        },
+                        }}
                     />
                 </div>
                 : 
@@ -182,7 +141,7 @@ function Left(props) {
                                 }>
                                 <Save color="secondary" />
                             </IconButton>
-                            <IconButton onClick={() => {setEdit(false); setUpdated(false)}}>
+                            <IconButton onClick={() => {setEdit(false)}}>
                                 <Clear color="secondary" />
                             </IconButton>
                         </Box>
@@ -208,7 +167,6 @@ function Left(props) {
 
 
 function FileItem(props) {
-    const theme = useTheme();
     const [ url, setUrl ] = useState();
     getDownloadURL(props.item).then((url) => {
         setUrl(url)
@@ -235,9 +193,9 @@ function FileItem(props) {
             justifyContent: 'left', 
             textAlign: 'left',
             borderRadius: 0,
-            borderRight: `1px solid ${theme.palette.primary.main}`,
-            borderLeft: `1px solid ${theme.palette.primary.main}`,
-            borderBottom: `1px solid ${theme.palette.primary.main}`,
+            borderRight: `1px solid ${uTheme.palette.primary.main}`,
+            borderLeft: `1px solid ${uTheme.palette.primary.main}`,
+            borderBottom: `1px solid ${uTheme.palette.primary.main}`,
         }}
         >   
             <Box height={'100%'} padding={'auto'}>
@@ -260,27 +218,26 @@ function FileItem(props) {
 }
 
 function Right(props) {
-    const theme = useTheme();
     const [ files, setFiles ] = useState();
     const [ refresh, setRefresh ] = useState();
 
     useEffect(() => {
         getOrgFiles(props.org + '/', setFiles)
-    }, [refresh])
+    }, [refresh, props.org])
 
     return (
         <Stack width={'100%'}>
             <Paper 
             sx={{
-                borderTopLeftRadius: { xs: theme.shape.borderRadius, md: 0},
-                borderTopRightRadius: { xs: theme.shape.borderRadius, md: 0},
+                borderTopLeftRadius: { xs: uTheme.shape.borderRadius, md: 0},
+                borderTopRightRadius: { xs: uTheme.shape.borderRadius, md: 0},
                 borderRadius: 0,
             }}
             >
                 <Typography 
                 variant="h5" 
                 padding={1} 
-                sx={{borderBottom: `1px solid ${theme.palette.primary.main}`}}
+                sx={{borderBottom: `1px solid ${uTheme.palette.primary.main}`}}
                 >
                     Resources
                 </Typography>
@@ -312,8 +269,6 @@ function Right(props) {
 }
 
 export default function OrgHome(props) {
-    const theme = useTheme();
-
     return (
         <Box display={'flex'} flexDirection={{ xs: 'column', md: 'row', }}>
             <Box 

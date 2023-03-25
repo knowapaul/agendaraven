@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 // MUI Resources
-import { ThemeProvider, useTheme } from "@emotion/react";
+import { ThemeProvider } from "@emotion/react";
 import { Paper, Typography, Divider, Backdrop, CircularProgress, Stack, Box } from "@mui/material";
 
 // Project Resources
@@ -26,7 +26,6 @@ export default function CreateOrJoin(props) {
     const [ loading, setLoading ] = useState(false);
 
     const navigate = useNavigate();
-    const theme = useTheme();
 
     const firebase = getFirebase();
     const functions = firebase.functions
@@ -105,8 +104,8 @@ export default function CreateOrJoin(props) {
         <ThemeProvider theme={mTheme}>
             { loading ? 
             <Backdrop
-                sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                open={true}
+            sx={{ zIndex: mTheme.zIndex.drawer + 1 }}
+            open={true}
             >
                 <Stack spacing={3}>
                     <Typography>
@@ -123,7 +122,7 @@ export default function CreateOrJoin(props) {
             </Backdrop>
             :
             <PopupForm width={'350px'} open={props.open} setOpen={props.setOpen} title="Create or Join">
-                <Paper sx={{padding: 2, backgroundColor: theme.palette.primary}}>
+                <Paper sx={{padding: 2, backgroundColor: mTheme.palette.primary}}>
                     <Typography
                     variant='h6'
                     textAlign='center'
@@ -156,7 +155,7 @@ export default function CreateOrJoin(props) {
                     />
                 </Paper>
                 <Divider sx={{margin: 2, }}/>
-                <Paper sx={{padding: 2, backgroundColor: theme.palette.primary, }}>
+                <Paper sx={{padding: 2, backgroundColor: mTheme.palette.primary, }}>
                     <Typography
                     variant='h6'
                     textAlign='center'

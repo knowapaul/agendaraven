@@ -83,7 +83,7 @@ class Input extends React.Component {
             type={this.props.type} 
             required={this.props.required}
             multiline={this.props.multiline}
-            value={this.props.data[cleanName(this.props.name)]} 
+            value={this.props.data[cleanName(this.props.name)] || ''} 
             placeholder={this.props.placeholder}
             error={((this.state.check || this.props.check) && (this.state.error || error))}
             helperText={(this.state.check || this.props.check) ? help : ''}

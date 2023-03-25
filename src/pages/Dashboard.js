@@ -1,19 +1,16 @@
 // React Resources
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 
 // MUI Resources
-import { ThemeProvider, useTheme } from '@emotion/react';
-import { AccountCircle, DashboardCustomize, Logout } from '@mui/icons-material';
+import { ThemeProvider } from '@emotion/react';
+import { DashboardCustomize, Logout } from '@mui/icons-material';
 import CssBaseline from '@mui/material/CssBaseline';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 
 // Project Resources
 import { useLoaderData } from 'react-router-dom';
 import AuthCheck from '../components/AuthCheck';
 import DashModel from '../components/DashModel';
-import { uTheme, wTheme } from '../resources/Themes';
+import { uTheme } from '../resources/Themes';
 import Account from '../user-subpages/Account.js';
 import Availability from '../user-subpages/Availability.js';
 import Inbox from '../user-subpages/Inbox.js';
@@ -43,33 +40,6 @@ const menu = [
   ["Log Out", <Logout color="secondary" />]
 ]
 
-function Logo() {
-  const theme = useTheme();
-
-  return (
-    <Link to="/" style={{textDecoration: 'none'}}>
-      <Stack
-      direction="row"
-      spacing={2} 
-      margin={1}
-      >
-        <img src='../favicon.ico' width='32' height='32' alt='logo'/>
-        <Typography
-        variant="h6"
-        noWrap
-        sx={{
-        fontFamily: 'quicksand',
-        fontWeight: 700,
-        letterSpacing: '.3rem',
-        color: theme.palette.text.secondary
-        }}
-        >
-          
-        </Typography>
-      </Stack>
-    </Link>
-  )
-}
 
 export async function dashLoader({ params }) {
   const page = params.page ? params.page : 'organizations'
@@ -98,7 +68,7 @@ export function Dashboard(props) {
           logo={{
             title: 'AgendaRaven', 
             href: '/', 
-            icon: <img src='../favicon.ico' width='32' height='32' alt='logo'/>
+            icon: <img src='/favicon.ico' width='48' height='48' alt='logo'/>
           }} 
           page={page}
           path={`/dashboard/`} 

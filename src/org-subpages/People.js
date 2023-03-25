@@ -1,22 +1,22 @@
 // React Resources
-import { useEffect, useState } from "react"
-import { useDocument } from 'react-firebase-hooks/firestore';
+import { useEffect, useState } from "react";
 
 // MUI Resources
-import { Stack, Paper, Box, Typography, Avatar, Button } from "@mui/material"
 import { ArrowBack, Visibility } from "@mui/icons-material";
+import { Avatar, Box, Button, Paper, Stack, Typography } from "@mui/material";
 
 // Project Resources
-import { getFirebase, getRolesDoc } from "../resources/Firebase";
+import Cards from "../components/Cards";
 import Form from "../components/Form";
 import UserSearch from "../components/UserSearch";
-import Cards from "../components/Cards";
+import { getFirebase, getRolesDoc } from "../resources/Firebase";
 
 // Firebase Resources
 import { httpsCallable } from "firebase/functions";
 import AddButton from "../components/AddButton";
 import AdminCheck from "../components/AdminCheck";
 import { ErrorBoundary } from "../components/ErrorBoundary";
+import { NavButton } from "../components/SubNav";
 
 
 function User(props) {
@@ -143,7 +143,7 @@ function Roles(props) {
     
     useEffect(() => {
         getRolesDoc(props.org, setRoles, setLoading)
-    }, [])
+    }, [props.org])
 
     return (
         <Cards
@@ -159,11 +159,20 @@ function Roles(props) {
         }
         helperMessage={"You currently have no roles in your organization. Click 'Add Role' to begin."}
         loading={loading}
-        back={{
-            handleBack: () => {props.setWidget('users')},
-            tooltip: 'Back to People',
-        }}
-        add={
+        left={
+            <NavButton
+            title={'Back to People'}
+            handleClick={() => {props.setWidget('users')}}
+            >
+                <ArrowBack sx={{mr: 1}}/>
+                <Typography
+                noWrap
+                >
+                    Back
+                </Typography>
+            </NavButton>
+        }
+        right={
             <AdminCheck org={props.org}  >
                 <AddButton 
                 form={<NewForm />}

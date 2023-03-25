@@ -28,6 +28,8 @@ export default function ForgotPassword(props) {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
 
+    console.log('error main', error)
+
     return (
         <ThemeProvider theme={mTheme}>
             <CssBaseline />
@@ -39,8 +41,8 @@ export default function ForgotPassword(props) {
                         <Typography 
                         variant='h5'
                         noWrap
+                        className='quicksand'
                         sx={{
-                            fontFamily: 'Quicksand',
                             mb: 3
                         }}
                         textAlign='center'
@@ -60,8 +62,8 @@ export default function ForgotPassword(props) {
                         <Typography 
                         variant='h5'
                         noWrap
+                        className='quicksand'
                         sx={{
-                            fontFamily: 'Quicksand',
                             mb: 3
                         }}
                         textAlign='center'
@@ -95,7 +97,7 @@ export default function ForgotPassword(props) {
                         }}
                         data={data}
                         setData={setData}
-                        error={error}
+                        formError={error}
                         />
                     </div>
                 :
@@ -106,9 +108,7 @@ export default function ForgotPassword(props) {
                             <Typography 
                             variant='h5'
                             noWrap
-                            sx={{
-                                fontFamily: 'Quicksand'
-                            }}
+                            className='quicksand'
                             textAlign='center'
                             >
                                 Link Sent!
@@ -124,9 +124,7 @@ export default function ForgotPassword(props) {
                             <Typography 
                             variant='h5'
                             noWrap
-                            sx={{
-                                fontFamily: 'Quicksand'
-                            }}
+                            className='quicksand'
                             textAlign='center'
                             >
                                 Reset Password
@@ -146,17 +144,19 @@ export default function ForgotPassword(props) {
                             ]}
                             buttonText="Send Reset Email"
                             handleSubmit={(event) => {
+                                console.log('submitted!')
                                 forgotPassword(data.email)
                                     .then(() => {
                                         setSent(true)
                                     })
                                     .catch((e) => {  
+                                        console.log('error detected')
                                         setError(e.message)
                                     })
                             }}
                             data={data}
                             setData={setData}
-                            error={error}
+                            formError={error}
                             />
                         </div>
                         }

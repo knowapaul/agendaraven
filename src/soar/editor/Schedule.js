@@ -50,7 +50,7 @@ function RowHandle(props) {
 
 function DisplaySchedule(props) { 
     return (
-        <Box display={'flex'} flexDirection={'row'} height={'100%'} width={'100%'} padding={1} overflow={'auto'} >
+        <Box display={'flex'} flexDirection={'row'} width={'100%'} padding={1} >
             {
                 props.fields[0]
                 ?
@@ -138,8 +138,8 @@ export function Schedule(props) {
     return (
         <ErrorBoundary>
             <Box display={'flex'} flexDirection='row' height={'100%'} width={'100%'}>
-                <DisplaySchedule {...props}/>
                 <Palette {...props}/>
+                <DisplaySchedule {...props}/>
             </Box>
         </ErrorBoundary>
     )

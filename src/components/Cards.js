@@ -1,11 +1,10 @@
 // MUI Resources
-import { useTheme } from "@emotion/react";
-import { ArrowBack, PrivacyTipOutlined, VisibilityOff } from "@mui/icons-material";
-import { Box, Divider, Grid, Paper, Stack, Typography } from "@mui/material";
+import { VisibilityOff } from "@mui/icons-material";
+import { Box, Divider, Grid, Paper, Skeleton, Stack, Typography } from "@mui/material";
+import { uTheme } from "../resources/Themes";
 
 // Project Resources
-import { MiniLoad } from "./Loading";
-import { NavButton, SubNav } from "./SubNav";
+import { SubNav } from "./SubNav";
 
 
 
@@ -22,8 +21,6 @@ import { NavButton, SubNav } from "./SubNav";
  * },]
  * 
  * - props.helperMessage -> Display this if there is no data available
- * - props.form -> The form to add a card 
- * - props.formTitle -> The form's title
  * - props.loading -> Whether form data is still loading
  * - props.open -> form open state
  * - props.setOpen -> form setOpen function
@@ -32,37 +29,35 @@ import { NavButton, SubNav } from "./SubNav";
  * 
  */
 export default function Cards(props) {
-    const theme = useTheme();
     return (
         <div>
             <div style={{display: props.noHeader ? 'none' : 'initial'}}>
                 <SubNav 
                 title={props.title}
-                left={
-                    <div>
-                        {props.back ? 
-                        <NavButton
-                        title={props.back.tooltip}
-                        handleClick={props.back.handleBack}
-                        >
-                            <ArrowBack sx={{mr: 1}}/>
-                            <Typography
-                            noWrap
-                            >
-                                Back
-                            </Typography>
-                        </NavButton> : '' 
-                        }
-                    </div>
-                }
-                right={
-                    props.add
-                }
+                left={props.left}
+                right={props.right}
                 >
                 </SubNav>
             </div>
             {
-            props.loading ? <MiniLoad />
+            props.loading ? 
+            <Grid container 
+            padding={1} 
+            spacing={2} 
+            rowSpacing={0}
+            sx={{mt: 0}}
+            >   
+                {
+                [1, 2, 3].map((item) => (
+                    <Grid item 
+                    xs={12} sm={12} md={6} lg={4} xl={3}  
+                    key={item}
+                    >
+                        <Skeleton variant="rounded"  width='100%' height='200px' sx={{backgroundColor: 'grey.500'}} />
+                    </Grid>
+                ))
+                }
+            </Grid>
             :
             <Grid container 
             padding={1} 
@@ -126,11 +121,10 @@ export default function Cards(props) {
                     )
                 )       
                 :
-                <Typography padding={4} textAlign={'center'} color={theme.palette.text.secondary}>
+                <Typography padding={4} textAlign={'center'} color={uTheme.palette.text.secondary}>
                     {props.helperMessage}
                 </Typography>   
             }
-                
             </Grid>
             }
         </div>

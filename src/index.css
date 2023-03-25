@@ -24,3 +24,8 @@ body {
 .whiteText {
     color: '#ffffff';
 }
+
+
+.quicksand.quicksand {
+    font-family: Quicksand, "Roboto", "Helvetica", "Arial", sans-serif;
+}

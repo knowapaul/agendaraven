@@ -28,9 +28,7 @@ export default function AdminCheck(props) {
                 ? 
                 props.children
                 :
-                <div>
-                    {props.helperText}
-                </div>
+                props.helperText
             }
         </div>
     )

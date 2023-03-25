@@ -12,9 +12,9 @@ function nameToURL(name) {
 }
 
 export default function CustomAvatar(props) {
-    const [user, loading] = useAuthState(getFirebase().auth)
+    const [ user ] = useAuthState(getFirebase().auth)
 
-    const [anchorElUser, setAnchorElUser] = useState(null);
+    const [ anchorElUser, setAnchorElUser ] = useState(null);
     const navigate = useNavigate();
 
     // 'Account', 
@@ -38,7 +38,7 @@ export default function CustomAvatar(props) {
 
     return (
         <ThemeProvider theme={mTheme}>
-            <Box sx={{ flexGrow: 0 }}>
+            <Box sx={{ flexGrow: 0, mr: {xs: 1, sm : 2} }}>
                 <Tooltip title={user ? "Menu" : "Login"}>
                     <IconButton onClick={(event) => handleOpenUserMenu(event, user)} sx={{ p: 0 }}>
                     {

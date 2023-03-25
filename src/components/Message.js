@@ -1,9 +1,7 @@
 // MUI Resources
-import { useTheme } from "@emotion/react";
 import { Paper, Box } from "@mui/material"
 
 export default function Message(props) {
-    const theme = useTheme();
 
     const b = props.side === 'right'
     const l = b ? '' : 0
