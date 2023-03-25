@@ -9,16 +9,13 @@ import { uTheme } from "../resources/Themes";
 function Person(props) {
     const [ edit, setEdit ] = useState(false);
     const [ data, setData ] = useState({});
-    const [ myAv, setMyAv ] = useState({});
 
+    const myAv = props.avs[props.people[props.person].uid] || {}
 
     useEffect(() => {
         setData(myAv[props.title] || {})
     }, [myAv, props.title])
 
-    useEffect(() => {
-        setMyAv(props.avs[props.people[props.person].uid] || {})
-    }, [props.avs, props.people, props.person])
 
     return (
         <ClickAwayListener onClickAway={() => {setEdit(false)}}>

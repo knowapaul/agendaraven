@@ -545,7 +545,8 @@ export async function uploadFile(file, path) {
     orgFiles[path] = undefined
 
     // 'file' comes from the Blob or File API
-    return uploadBytes(storageRef, file)
+    console.log('ires', await uploadBytes(storageRef, file))
+    return;
 }
 
 export async function getOrgFiles(path, setFiles) {

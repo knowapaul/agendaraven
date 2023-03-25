@@ -257,7 +257,8 @@ function Right(props) {
             org={props.org}
             >
                 <FileUpload 
-                root={props.org + '/'}
+                appendFileName
+                path={props.org + '/'}
                 button={"fill"}
                 accept={'.jpg,.png,.pdf'}
                 refresh={refresh}

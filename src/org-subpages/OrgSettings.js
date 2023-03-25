@@ -67,7 +67,7 @@ export default function OrgSettings(props) {
                         <FileUpload 
                         path={props.org + '/index/icon'}
                         button={"fill"}
-                        accept={'.jpg,.png,.pdf'}
+                        accept={'.jpg,.png,.gif'}
                         />
                     </CustomAccordion>
                     <CustomAccordion title={"Payments"}>

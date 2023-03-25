@@ -40,6 +40,11 @@ import { mTheme, uTheme } from "../resources/Themes";
 //     )
 // }
 
+/**
+ * 
+ * props.text - the text to display on the loading screen
+ * @returns 
+ */
 export function MiniLoad(props) {
     return (
         <Box
