@@ -46,15 +46,15 @@ function fullRefresh() {
  */
 export function setApp(app) {
     auth = getAuth(app);
-    connectAuthEmulator(auth, "http://localhost:9099")
+    // connectAuthEmulator(auth, "http://localhost:9099")
     db = getFirestore(app);
-    connectFirestoreEmulator(db, 'localhost', 8080);
+    // connectFirestoreEmulator(db, 'localhost', 8080);
     functions = getFunctions(app);
-    connectFunctionsEmulator(functions, 'localhost', 5001);
+    // connectFunctionsEmulator(functions, 'localhost', 5001);
     storage = getStorage(app);
-    connectStorageEmulator(storage, 'localhost', 9199);
-    perf = getPerformance(app);
-    console.log('perf', perf)
+    // connectStorageEmulator(storage, 'localhost', 9199);
+    // perf = getPerformance(app);
+    // console.log('perf', perf)
 
 
 // if (window.confirm('Do you want to restore the database?') === true) {
