@@ -1,5 +1,3 @@
 export default function Inbox() {
-    return (
-        <p>Inbox</p>
-    )
+  return <p>Inbox</p>;
 }

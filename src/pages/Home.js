@@ -1,20 +1,22 @@
 // MUI Resources
-import { CssBaseline, Box, Typography } from '@mui/material';
-import { ThemeProvider } from '@emotion/react';
+import { CssBaseline, Box, Typography } from "@mui/material";
+import { ThemeProvider } from "@emotion/react";
 
 // Project Resources
-import Nav from '../components/Nav.js'
-import { mTheme } from '../resources/Themes.js';
+import Nav from "../components/Nav.js";
+import { mTheme } from "../resources/Themes.js";
 
-
-{/* <Box padding={7} bgcolor={oTheme.palette.primary.main}>
+{
+  /* <Box padding={7} bgcolor={oTheme.palette.primary.main}>
     <video width="100%" autoPlay muted loop>
         <source src="homepage.mp4" type="video/mp4"/>
         Your browser does not support the video tag.
     </video>
-</Box> */}
+</Box> */
+}
 
-{/* <SideVideo videoURL='https://www.youtube.com/embed/Ww_tuVeGmYU'>
+{
+  /* <SideVideo videoURL='https://www.youtube.com/embed/Ww_tuVeGmYU'>
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Aliquam vestibulum morbi blandit cursus risus at ultrices. Eu scelerisque felis imperdiet proin fermentum leo vel orci. Amet cursus sit amet dictum sit amet justo. Est ullamcorper eget nulla facilisi etiam dignissim diam. Nisi porta lorem mollis aliquam ut porttitor. Faucibus vitae aliquet nec ullamcorper sit amet. Elit ut aliquam purus sit amet. Eget sit amet tellus cras adipiscing enim eu turpis. Mattis pellentesque id nibh tortor. Integer feugiat scelerisque varius morbi enim nunc. Aliquam ultrices sagittis orci a scelerisque purus semper.
 
 Odio facilisis mauris sit amet massa vitae tortor condimentum lacinia. In aliquam sem fringilla ut morbi tincidunt augue. Tristique risus nec feugiat in fermentum. Enim lobortis scelerisque fermentum dui faucibus in ornare quam viverra. Ut faucibus pulvinar elementum integer enim neque volutpat ac tincidunt. At consectetur lorem donec massa sapien faucibus et molestie. Aliquam purus sit amet luctus venenatis lectus. Nisl condimentum id venenatis a. Egestas tellus rutrum tellus pellentesque. Dui faucibus in ornare quam viverra orci. Aliquet nec ullamcorper sit amet. Eu volutpat odio facilisis mauris sit amet massa vitae tortor. Placerat orci nulla pellentesque dignissim enim sit. Tristique sollicitudin nibh sit amet commodo. Netus et malesuada fames ac turpis egestas integer eget aliquet. Sed adipiscing diam donec adipiscing tristique risus nec feugiat. Nibh ipsum consequat nisl vel pretium. Consequat semper viverra nam libero justo laoreet sit amet cursus. Orci phasellus egestas tellus rutrum tellus pellentesque. Eu augue ut lectus arcu.
@@ -36,28 +38,23 @@ Facilisis sed odio morbi quis commodo odio aenean. Aliquam id diam maecenas ultr
 
 Dignissim enim sit amet venenatis urna cursus eget nunc. Urna duis convallis convallis tellus. Condimentum id venenatis a condimentum. Egestas sed sed risus pretium quam. Ut faucibus pulvinar elementum integer enim neque volutpat ac tincidunt. Cursus turpis massa tincidunt dui ut ornare. Pharetra vel turpis nunc eget lorem dolor sed. Sed libero enim sed faucibus turpis. Sit amet est placerat in egestas erat imperdiet sed. Et ultrices neque ornare aenean. Enim tortor at auctor urna nunc id. Ac auctor augue mauris augue neque. In tellus integer feugiat scelerisque. Varius vel pharetra vel turpis nunc.
 </SideVideo>
-<Footer /> */}
+<Footer /> */
+}
 
 export default function Home() {
-    return (
-        <div>
-            <ThemeProvider theme={mTheme}>
-                <CssBaseline />
-                <Nav />
-                
-                <Box padding={2}>
-                    <Typography
-                    variant={'h6'}
-                    >
-                        Welcome to AgendaRaven!
-                    </Typography>
-                    <Typography
-                    variant='h6'
-                    >
-                        Click "dashboard" and create an account to get started.
-                    </Typography>
-                </Box>
-            </ThemeProvider>
-        </div>
-    )
+  return (
+    <div>
+      <ThemeProvider theme={mTheme}>
+        <CssBaseline />
+        <Nav />
+
+        <Box padding={2}>
+          <Typography variant={"h6"}>Welcome to AgendaRaven!</Typography>
+          <Typography variant="h6">
+            Click "dashboard" and create an account to get started.
+          </Typography>
+        </Box>
+      </ThemeProvider>
+    </div>
+  );
 }

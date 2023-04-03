@@ -1,5 +1,3 @@
 export default function Availability() {
-    return (
-        <p>Availability</p>
-    )
+  return <p>Availability</p>;
 }

@@ -12,19 +12,20 @@ import Loading from "../components/Loading";
 import { signOut } from "firebase/auth";
 import { getFirebase } from "../resources/Firebase";
 
-
 export default function Logout() {
-    const navigate = useNavigate();
-    
-    signOut(getFirebase().auth).then(() => {
-        navigate('/')
-    }).catch((error) => {
-        console.error(error)
-    })
+  const navigate = useNavigate();
 
-    return (
-        <ThemeProvider theme={mTheme}>
-            <Loading />
-        </ThemeProvider>
-    )
+  signOut(getFirebase().auth)
+    .then(() => {
+      navigate("/");
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+
+  return (
+    <ThemeProvider theme={mTheme}>
+      <Loading />
+    </ThemeProvider>
+  );
 }

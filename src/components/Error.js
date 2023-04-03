@@ -5,19 +5,19 @@ import { ThemeProvider } from "@emotion/react";
 import { CssBaseline, Paper, Typography } from "@mui/material";
 
 // Project Resources
-import Nav from '../components/Nav';
+import Nav from "../components/Nav";
 import { mTheme } from "../resources/Themes";
 
-
 function Paragraph(props) {
-    return (
-        <Typography variant="body" margin={1} display="block">
-            {props.children}
-        </Typography>
-    )
+  return (
+    <Typography variant="body" margin={1} display="block">
+      {props.children}
+    </Typography>
+  );
 }
 
-{/* <Paragraph>
+{
+  /* <Paragraph>
                         Your experience on this site matters deeply to us,
                         and we would like to do everything we can to get you
                         back on the site as soon as possible. 
@@ -38,47 +38,43 @@ function Paragraph(props) {
                      
                     <Button variant="contained">
                         Release analytics data
-                    </Button> */}
+                    </Button> */
+}
 
 export default function Error(props) {
-    return (
-        <div>
-            <Nav />
-            <ThemeProvider theme={mTheme}>
-                <CssBaseline />
-                <Paper sx={{padding: 3, margin: 3}}>
-                    <Typography variant="h6" sx={{mb: 3}}>
-                        Sorry, an error has occured
-                    </Typography>
+  return (
+    <div>
+      <Nav />
+      <ThemeProvider theme={mTheme}>
+        <CssBaseline />
+        <Paper sx={{ padding: 3, margin: 3 }}>
+          <Typography variant="h6" sx={{ mb: 3 }}>
+            Sorry, an error has occured
+          </Typography>
 
-                    <Typography sx={{mb: 2}}>
-                        Try refreshing the page and attempting 
-                            your last action again. 
-                    </Typography>
-                    <Typography>
-                        Since this website is very new, it is likely that
-                        you will see this message often. It is the best
-                        I can do so far. Your patience is greatly appreciated.
-                    </Typography>
-                </Paper>
-            </ThemeProvider>
-        </div>
-    )
+          <Typography sx={{ mb: 2 }}>
+            Try refreshing the page and attempting your last action again.
+          </Typography>
+          <Typography>
+            Since this website is very new, it is likely that you will see this
+            message often. It is the best I can do so far. Your patience is
+            greatly appreciated.
+          </Typography>
+        </Paper>
+      </ThemeProvider>
+    </div>
+  );
 }
 
 export function FriendlyError(props) {
-    return (
-        <ThemeProvider theme={mTheme}>
-            <CssBaseline />
-            <Nav />
-            <Paper sx={{margin: 2, padding: 2}}>
-                <Typography variant='h5'>
-                    {props.title}
-                </Typography>
-                <Typography>
-                    {props.text}
-                </Typography>
-            </Paper>
-        </ThemeProvider>            
-    )
+  return (
+    <ThemeProvider theme={mTheme}>
+      <CssBaseline />
+      <Nav />
+      <Paper sx={{ margin: 2, padding: 2 }}>
+        <Typography variant="h5">{props.title}</Typography>
+        <Typography>{props.text}</Typography>
+      </Paper>
+    </ThemeProvider>
+  );
 }
