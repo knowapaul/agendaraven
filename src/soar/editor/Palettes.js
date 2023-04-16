@@ -15,15 +15,15 @@ import {
 } from "@mui/material";
 
 // Project Resources
-import { searchSort } from "../../resources/SearchSort";
+import { searchSort } from "../../common/resources/SearchSort";
 import { DraggablePerson } from "./Objects";
 import { Drag } from "./Objects";
-import { uTheme } from "../../resources/Themes";
+import { uTheme } from "../../common/resources/Themes";
 
 // Other Resources
 import { Stack } from "@mui/system";
-import { ErrorBoundary } from "../../components/ErrorBoundary";
-import { getPeople } from "../../resources/Firebase";
+import { ErrorBoundary } from "../../common/errors/ErrorBoundary";
+import { getPeople } from "../../common/resources/Firebase";
 
 function ItemsPalette(props) {
   const [people, setPeople] = useState({});

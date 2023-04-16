@@ -17,14 +17,14 @@ import {
 import { useState } from "react";
 
 // Project Resources
-import { uTheme } from "../../resources/Themes";
+import { uTheme } from "../../common/resources/Themes";
 
 // MUI Resources
 import { ThemeProvider } from "@emotion/react";
 
 // Other Resources
 import { useDrag, useDrop } from "react-dnd";
-import { mTheme } from "../../resources/Themes";
+import { mTheme } from "../../common/resources/Themes";
 import { getPeopleHighlight } from "./Highlight";
 
 /**

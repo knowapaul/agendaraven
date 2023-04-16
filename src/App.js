@@ -2,23 +2,23 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
 // Project Resources
-import Home from "./pages/Home.js";
-import { Dashboard, dashLoader } from "./pages/Dashboard.js";
-import Logout from "./pages/Logout.js";
-import { OrgDash, orgLoader } from "./pages/OrgDash";
-import Loading from "./components/Loading.js";
-import Error from "./components/Error";
-import CreateAccount from "./pages/CreateAccount.js";
-import Page404 from "./components/404";
+import Home from "./home";
+import { Dashboard, dashLoader } from "./user";
+import Logout from "./account/Logout.js";
+import { OrgDash, orgLoader } from "./organization";
+import Loading from "./common/load/Loading.js";
+import Error from "./common/errors/Error";
+import CreateAccount from "./account/CreateAccount.js";
+import Page404 from "./common/errors/404";
 
 // Firebase Resources
 import { initializeApp } from "firebase/app";
-import Soar, { schLoader } from "./soar/Soar.js";
+import Soar, { schLoader } from "./soar";
 // import ViewSubpages from './org-subpages/ViewSubpages.js';
-import { setApp } from "./resources/Firebase.js";
-import Help from "./pages/Help.js";
-import { ScheduleView } from "./pages/ScheduleView.js";
-import ForgotPassword from "./pages/ForgotPassword.js";
+import { setApp } from "./common/resources/Firebase.js";
+import Help from "./help";
+import { ScheduleView } from "./schedule";
+import ForgotPassword from "./account/ForgotPassword.js";
 
 // import { getAnalytics } from "firebase/analytics";
 
